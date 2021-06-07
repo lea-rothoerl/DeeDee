@@ -1,0 +1,164 @@
+---
+title: "DeeDee User Guide"
+author: "Lea Rothörl"
+date: "4/14/2021"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: cosmo
+    code_folding: show
+    code_download: true
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, results = "hide"}
+source("~/Development/DeeDee_wip/testdata_macrophage.R", local = knitr::knit_global())
+source("~/Development/DeeDee_wip/deedee_venn.R", local = knitr::knit_global())
+source("~/Development/DeeDee_wip/deedee_upSet.R", local = knitr::knit_global())
+source("~/Development/DeeDee_wip/deedee_heatmap.R", local = knitr::knit_global())
+source("~/Development/DeeDee_wip/deedee_qq.R", local = knitr::knit_global())
+source("~/Development/DeeDee_wip/deedee_cat.R", local = knitr::knit_global())
+source("~/Development/DeeDee_wip/deedee_scatter.R", local = knitr::knit_global())
+source("~/Development/DeeDee_wip/deedee_idr.R", local = knitr::knit_global())
+```
+
+## What DeeDee is for
+
+When you want to compare results from multiple Differential Expression Analyses (DEAs), the DeeDee package is your friend. It contains various functions that help shed light on the similarities and differences between the experiments in question. DeeDee is designed to be used after the application of a DE analysis program (like DESeq2, edgeR or limma) on the single DEAs. 
+
+
+## How to Install
+
+To use DeeDee, the following packages need to be installed in your environment: 
+
+ * checkmate
+ * DescTools
+ * dplyr
+ * ffpe
+ * ggplot2
+ * ggplotify
+ * ggvenn
+ * gplots
+ * idr
+ * tibble
+ * UpSetR
+ * viridis
+
+
+## Example Dataset Used in this Vignette
+
+The examples in the following chapters utilize the data from the Bioconductor package `macrophage`([Human macrophage immune response](https://bioconductor.org/packages/release/data/experiment/html/macrophage.html "Bioconductor - macrophage")). The macrophage dataset includes data from 24 RNA-seq samples of human macrophages exposed to different conditions: naive, associated with IFNg (an interferon), SL1344 (a strain of Salmonella), or both. The preprocessing of the data was done using DESeq2, obtaining the following four DEAs: naive vs. IFNg, IFNg vs. both, naive vs. Salmonella, and Salmonella vs. both. 
+
+
+## What to Provide
+
+The main DeeDee functions work on tables of logFC- ("logFC") and p-values ("pval") from DEAs, with the gene identifiers as row names. This table can be built by the user manually or by using `deedee_prepare`. The `deedee_prepare` function accepts results from three of the most used R DE analysis packages (DESeq2, edgeR, limma) and converts them to digestible tables. Which of these packages was used to analyze the raw data needs to be specified using the parameter `input_type`. If, for example, you have a DESeq2 result called `DESeq2_res` and want to convert it to a DeeDee table, you can use the following code chunk to do so. 
+
+```{r, warning = FALSE, message = FALSE, eval = FALSE}
+inp <- deedee_prepare(data = DESeq2_res, input_type = 'DESeq2')
+```
+
+Every [DeeDee main function](#main-functions) needs to be fed with a (named) list of at least two of these tables as input (`data`). A threshold for p-values can be specified with the parameter `pthresh` (default = 0.05). Besides these, most functions have additional parameters which will be explained in the respective sections below. All functions produce colorblind-friendly output.
+
+For our example, the `deedee_prepare` results are `inp1` - `inp4` (naive vs. IFNg, IFNg vs. both, naive vs. Salmonella, and Salmonella vs. both from [macrophage](#example-dataset-used-in-this-vignette)). The named input list is created as follows. 
+
+```{r, warning = FALSE, message = FALSE, results = "hide"}
+mydata <- list(naive_IFNg = inp1, IFNg_both = inp2, naive_Salm = inp3, Salm_both = inp4)
+```
+
+
+### DESeq2
+
+When `DESeq2` is applied to analyze the raw data, `deedee_prepare` accepts the output from the `results()` function. 
+
+
+### edgeR
+
+When `edgeR` is applied to analyze the raw data, `deedee_prepare` accepts the output from the `topTable()` function. 
+
+
+### limma
+
+When `limma` is applied to analyze the raw data, `deedee_prepare` accepts the output from the `exactTest()` function. 
+
+
+\pagebreak
+## Main Functions
+### DeeDee Venn diagram
+
+The function `deedee_venn` creates a Venn diagram depicting the overlaps of differentially expressed genes in the input datasets. To keep the Venn diagram easy on the eye, the `data` list may contain no more than four datasets. To compare more DEAs in a similar, set-based manner, [`deedee_upSet`](#deedee-upset-plot) can be used. The parameter `mode` can be set to `up`, `down`, or `both` (default), specifying if only up-regulated, down-regulated or both DE genes shall be counted. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+deedee_venn(data = mydata, mode = "both")
+```
+
+
+\pagebreak
+### DeeDee UpSet plot
+
+The function `deedee_upSet` creates an UpSet plot depicting the overlaps of differentially expressed genes in the input datasets. Contrary to [`deedee_venn`](#deedee-venn-diagram), the UpSet plot can compare multiple (and even more than four) datasets in a visually pleasing way. The parameter `mode` can be set to `up`, `down`, `both` (default), or `both_colored`, specifying if only up-regulated, down-regulated or both DE genes shall be depicted. If `both_colored` is chosen, the result is the same UpSet plot as for `both`, but the shares of the intersections where all samples have positive/negative logFC values are colored dark-violet/light-beige. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+deedee_upSet(data = mydata, mode = "both_colored")
+```
+
+
+\pagebreak
+### DeeDee scatter plot
+
+The function `deedee_scatter` creates a scatterplot of logFC values of the genes in two input datasets. If the input data list contains more than two datasets (like our example `mydata` does),  the `select1` (default = 1) and `select2` (default = 2) parameters specify which ones are to be used. `deedee_scatter` includes a `color_by` parameter that can be set to "pval1" (default), "pval2", "pval_mean", or "idr". The points will be colored from blue to red (low to high values). For more information on the "idr" coloring option, see [`deedee_idr`](#deedee-idr).
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+deedee_scatter(data = mydata, select1 = 2, select2 = 3, color_by = "pval_mean")
+```
+
+
+\pagebreak
+### DeeDee heatmap
+
+The function `deedee_heatmap` creates a heatmap of the logFC values for all common genes in every input dataset. A color key with a histogram of the times a certain color was used are displayed in the top left corner. Additionally to the standard parameters explained in [Input](#what-to-provide), heatmap takes a numeric `show_first` value (default = 500), specifying the number of genes depicted (if the total number of genes is smaller than `show_first`, all genes are shown), and a logical `show_gene_names` value (default = FALSE) that determines if the gene identifiers (rownames in `deedee_prepare` results) will be displayed in the heatmap. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+deedee_heatmap(data = mydata)
+```
+
+
+\pagebreak
+### DeeDee QQ plot
+
+The function `deedee_qq` compares the statistical distributions of two input datasets. If the input data list contains more than two datasets (like our example `mydata` does),  the `select1` (default = 1) and `select2` (default = 2) parameters specify which ones are to be used. If the resulting curve resembles a straight line with a slope of 1, the distributions are similar (perfect straight line = identical distributions). `deedee_qq` includes a `color_by` parameter that can be set to "logFC1", "logFC2", "pval1" (default), or "pval2". The points generating the curve will be colored from blue to red (low to high values). 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+deedee_qq(data = mydata, select1 = 1, select2 = 3, color_by = "pval2")
+```
+
+
+\pagebreak
+### DeeDee CAT plot
+
+The function `deedee_cat` creates a Concordance At the Top plot depicting the share of genes that are concordant in the upper x ranks of two logFC-sorted input datasets. If the input data list contains more than two datasets (like our example `mydata` does),  the `select1` (default = 1) and `select2` (default = 2) parameters specify which ones are to be used. The highest rank for which the concordance is calculated is given by the `maxrank` (default = 1000) parameter. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+deedee_cat(data = mydata, select1 = 2, select2 = 3, maxrank = 15000)
+```
+
+
+\pagebreak
+### DeeDee IDR
+
+The function `deedee_idr` creates a table of [Irreproducible Discovery Rates](https://www.uio.no/english/services/it/research/sensitive-data/use-tsd/hpc/software/idr.html) for the intersection of genes in the input datasets. [`deedee_scatter`](#deede-scatter-plot) uses this calculation as a coloring option. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE, eval = FALSE}
+deedee_idr(data = mydata)
+```
+
+
+
+
+ 
+ 
