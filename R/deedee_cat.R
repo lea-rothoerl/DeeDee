@@ -1,6 +1,6 @@
 #' Title
 #'
-#' @description "deedee_CAT2" creates a Concordance at the Top plot depicting
+#' @description "deedee_cat" creates a Concordance at the Top plot depicting
 #' the concordance of genes in the first n elements of the logFC-ranked lists
 #' for the given input datasets.
 #'
@@ -15,7 +15,7 @@
 #' @export
 #'
 
-deedee_cat2 <- function(data,
+deedee_cat <- function(data,
                        pthresh = 0.05,
                        maxrank = 1000) {
 
