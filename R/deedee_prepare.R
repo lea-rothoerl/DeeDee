@@ -1,12 +1,14 @@
 #' DeeDee Prepare
 #'
-#' @description
+#' @description create DeeDee object from DEA result
 #'
 #' @param data result from DESeq2, limma or edgeR
 #' @param input_type the program the data comes from ("DESeq2", "limma" or
 #'                  "edgeR")
 #'
 #' @return table to be used as input for other DeeDee functions
+#'
+#' @export
 #'
 
 deedee_prepare <- function(data, input_type) {

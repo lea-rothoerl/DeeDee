@@ -13,6 +13,8 @@
 #'
 #' @examples
 #'
+#' @export
+#'
 
 deedee_venn <- function(data,
                         pthresh = 0.05,

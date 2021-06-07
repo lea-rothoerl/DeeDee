@@ -13,11 +13,9 @@
 #'
 #' @return ggplot object (plottable with show()/print())
 #'
-#' @examples deedee_scatter(list(one = inp1, two = inp2, three = inp3,
-#'                               four = inp4),
-#'                          select1 = 2,
-#'                          select2 = 4,
-#'                          color_by = "pval1")
+#' @examples
+#'
+#' @export
 #'
 
 deedee_scatter <- function(data,
@@ -43,13 +41,13 @@ deedee_scatter <- function(data,
   for(i in 1:length(data_red)){
     data_red[i][[1]] <- subset(data_red[i][[1]],
                                data_red[i][[1]]$pval < pthresh)
-    data_red[i][[1]] <- rownames_to_column(data_red[i][[1]])
+    data_red[i][[1]] <- tibble::rownames_to_column(data_red[i][[1]])
   }
-  comp <- inner_join(data_red[1][[1]],
+  comp <- dplyr::inner_join(data_red[1][[1]],
                      data_red[2][[1]],
                      by = "rowname",
                      copy = FALSE)
-  comp <- comp[complete.cases(comp[colnames(comp)]), ]  # remove rows with NAs
+  comp <- comp[stats::complete.cases(comp[colnames(comp)]), ]  # remove rows with NAs
 
   if (color_by == "pval_mean") {
     comp$col <- (comp$pval.x + comp$pval.y)/2  # mean of p-values
@@ -69,8 +67,8 @@ deedee_scatter <- function(data,
       # names(comp)[names(comp) == 'idr'] <- 'col'
     # }
 
-  comp <- subset(comp, select = -c(pval.y, pval.x)) # removing single p-values
-  comp <- column_to_rownames(comp, "rowname")
+  comp <- subset(comp, select = -c(comp$pval.y, comp$pval.x)) # removing single p-values
+  comp <- tibble::column_to_rownames(comp, "rowname")
 
   # -------------------------------- coloring ---------------------------------
   comp$col <- viridis::viridis(1000, option = "magma")[as.numeric(cut(comp$col,

@@ -13,9 +13,9 @@
 #'
 #' @return upset element (plottable with show()/print())
 #'
-#' @examples deedee_upSet(list(one = inp1, two = inp2, three = inp3,
-#'                             four = inp4),
-#'                        mode = "up")
+#' @examples
+#'
+#' @export
 #'
 
 deedee_upSet <- function(data,
@@ -49,7 +49,7 @@ deedee_upSet <- function(data,
     if (mode == "down") {
       data[i][[1]] <- subset(data[i][[1]], data[i][[1]]$logFC == -1)
     }
-    data[i][[1]] <- rownames_to_column(data[i][[1]])
+    data[i][[1]] <- tibble::rownames_to_column(data[i][[1]])
     if (mode != "both_colored") {
       data[i][[1]] <- subset(data[i][[1]], select = "rowname")
       colnames(data[i][[1]]) <- names(data)[i]
@@ -59,12 +59,12 @@ deedee_upSet <- function(data,
 
   # -------------------------------- coloring ---------------------------------
   if (mode == "both_colored") {
-    comp <- full_join(data[1][[1]], data[2][[1]], by = "rowname", copy = FALSE)
+    comp <- dplyr::full_join(data[1][[1]], data[2][[1]], by = "rowname", copy = FALSE)
     for (i in 3:length(data)) {
       comp <- full_join(comp, data[i][[1]], by = "rowname", copy = FALSE)
     }
 
-    comp <- column_to_rownames(comp, "rowname")
+    comp <- tibble::column_to_rownames(comp, "rowname")
     count <- vector(mode = "numeric", length = length(comp["logFC.x"]))
     comp <- cbind(comp, count)
     comp["count"] <- rowSums(comp, na.rm = TRUE)
@@ -114,7 +114,7 @@ deedee_upSet <- function(data,
                                      color = col_down, active = TRUE)))
   }
   else {
-    res <- UpSetR::upset(fromList(data), order.by = "freq")
+    res <- UpSetR::upset(UpSetR::fromList(data), order.by = "freq")
   }
 
   # --------------------------------- return ----------------------------------

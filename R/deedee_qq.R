@@ -13,8 +13,9 @@
 #'
 #' @return ggplot object (plottable with show()/print())
 #'
-#' @examples deedee_qq(list(one = inp1, two = inp2, three = inp3, four = inp4),
-#'           pthresh = 0.08, select1 = 1, select2 = 3, color_by = "pval2")
+#' @examples
+#'
+#' @export
 #'
 
 deedee_qq <- function(data,
@@ -26,7 +27,7 @@ deedee_qq <- function(data,
   # ----------------------------- argument check ------------------------------
   checkmate::assert_list(data, type = "data.frame", min.len = 2)
   for (i in 1:length(data)) {
-    assert_data_frame(data[[i]], type = "numeric")
+    checkmate::assert_data_frame(data[[i]], type = "numeric")
   }
   checkmate::assert_number(pthresh, lower = 0)
   checkmate::assert_number(select1, lower = 1, upper = length(data))
@@ -64,7 +65,7 @@ deedee_qq <- function(data,
    }
 
   # ------------------- creation of the resulting qq plot ---------------------
-  res <- ggplotify::as.ggplot(function() (processR::qqplot(data_red[1][[1]]$logFC,
+  res <- ggplotify::as.ggplot(function() (qqplot(data_red[1][[1]]$logFC,
                 data_red[2][[1]]$logFC,
                 plot.it = TRUE,
                 xlab = names(data)[select1],

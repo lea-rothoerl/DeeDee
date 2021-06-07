@@ -12,8 +12,9 @@
 #'
 #' @return ggplot object (plottable with show()/print())
 #'
-#' @examples deedee_heatmap(list(one = inp1, two = inp2, three = inp3,
-#'                               four = inp4))
+#' @examples
+#'
+#' @export
 #'
 
 deedee_heatmap <- function(data,
@@ -45,7 +46,7 @@ deedee_heatmap <- function(data,
   }
 
   row.names(comp) <- comp$rowname
-  comp <- subset(comp, select = -c(rowname))  # removing column with rownames
+  comp <- subset(comp, select = -c(comp$rowname))  # removing column with rownames
   comp <- comp[stats::complete.cases(comp[colnames(comp)]),]   # removing rows with NAs
   comp <- as.matrix(comp)
 

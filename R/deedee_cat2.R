@@ -10,10 +10,9 @@
 #'
 #' @return ggplot object (plottable with show()/print())
 #'
-#' @examples deedee_CAT2(list(one = inp1, two = inp2, three = inp3, four = inp4),
-#'                      pthresh = 0.08,
-#'                      select1 = 1,
-#'                      select2 = 4)
+#' @examples
+#'
+#' @export
 #'
 
 deedee_cat2 <- function(data,
