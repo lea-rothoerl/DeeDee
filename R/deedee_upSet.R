@@ -61,7 +61,7 @@ deedee_upSet <- function(data,
   if (mode == "both_colored") {
     comp <- dplyr::full_join(data[1][[1]], data[2][[1]], by = "rowname", copy = FALSE)
     for (i in 3:length(data)) {
-      comp <- full_join(comp, data[i][[1]], by = "rowname", copy = FALSE)
+      comp <- dplyr::full_join(comp, data[i][[1]], by = "rowname", copy = FALSE)
     }
 
     comp <- tibble::column_to_rownames(comp, "rowname")

@@ -65,7 +65,7 @@ deedee_qq <- function(data,
    }
 
   # ------------------- creation of the resulting qq plot ---------------------
-  res <- ggplotify::as.ggplot(function() (qqplot(data_red[1][[1]]$logFC,
+  res <- ggplotify::as.ggplot(function() (stats::qqplot(data_red[1][[1]]$logFC,
                 data_red[2][[1]]$logFC,
                 plot.it = TRUE,
                 xlab = names(data)[select1],
