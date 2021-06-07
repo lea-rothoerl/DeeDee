@@ -1,5 +1,6 @@
 Package: DeeDee
-Title: What the Package Does (One Line, Title Case)
+Title: Comparative Evaluation and Visualization of Differential Expression 
+    Analyses
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Lea",
@@ -7,7 +8,8 @@ Authors@R:
            role = c("aut", "cre"),
            email = "lea.rothoerl@posteo.de",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Description: DeeDee is a collection of functions to compare the results of two 
+    or more Differential Expression Analyses. blablabla
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
 Encoding: UTF-8
@@ -15,14 +17,17 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: 
-    dplyr,
-    tibble,
     checkmate,
-    viridis,
-    ggvenn,
-    ggplotify,
     DescTools,
-    ggplot2,
+    dplyr,
     gplots,
+    ggplot2,
+    ggplotify,
+    ggvenn,
+    stats,
+    tibble,
     UpSetR,
-    stats
+    viridis
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
