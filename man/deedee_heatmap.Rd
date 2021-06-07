@@ -25,7 +25,5 @@ measure of the differential expression of the first genes in the given
 datasets.
 }
 \examples{
-deedee_heatmap(list(one = inp1, two = inp2, three = inp3,
-                              four = inp4))
 
 }

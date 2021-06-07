@@ -25,8 +25,5 @@ upset element (plottable with show()/print())
 differentially expressed genes in the input datasets.
 }
 \examples{
-deedee_upSet(list(one = inp1, two = inp2, three = inp3,
-                            four = inp4),
-                       mode = "up")
 
 }

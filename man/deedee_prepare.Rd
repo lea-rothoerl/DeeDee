@@ -16,5 +16,5 @@ deedee_prepare(data, input_type)
 table to be used as input for other DeeDee functions
 }
 \description{
-
+create DeeDee object from DEA result
 }

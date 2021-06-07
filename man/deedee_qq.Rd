@@ -27,7 +27,5 @@ ggplot object (plottable with show()/print())
 distribution of the logFC of the genes in two input datasets.
 }
 \examples{
-deedee_qq(list(one = inp1, two = inp2, three = inp3, four = inp4),
-          pthresh = 0.08, select1 = 1, select2 = 3, color_by = "pval2")
 
 }

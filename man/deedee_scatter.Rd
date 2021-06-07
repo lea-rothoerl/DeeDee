@@ -33,10 +33,5 @@ ggplot object (plottable with show()/print())
 datasets based on their logFC values.
 }
 \examples{
-deedee_scatter(list(one = inp1, two = inp2, three = inp3,
-                              four = inp4),
-                         select1 = 2,
-                         select2 = 4,
-                         color_by = "pval1")
 
 }
