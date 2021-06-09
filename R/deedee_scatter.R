@@ -22,7 +22,8 @@ deedee_scatter <- function(data,
                            pthresh = 0.05,
                            select1 = 1,
                            select2 = 2,
-                           color_by = "pval1") {
+                           color_by = "pval1",
+                           ggplot = FALSE) {
 
   # ----------------------------- argument check ------------------------------
   checkmate::assert_list(data, type = "data.frame", min.len = 2)
@@ -68,14 +69,15 @@ deedee_scatter <- function(data,
     # }
 
   comp <- subset(comp, select = -c(comp$pval.y, comp$pval.x)) # removing single p-values
-  comp <- tibble::column_to_rownames(comp, "rowname")
+  # comp <- tibble::column_to_rownames(comp, "rowname")
 
   # -------------------------------- coloring ---------------------------------
   comp$col <- viridis::viridis(1000, option = "magma")[as.numeric(cut(comp$col,
                                                              breaks = 1000))]
 
   # ----------------- creation of the resulting scatter plot ------------------
-  res <- ggplotify::as.ggplot(function() (plot(comp$logFC.x,
+  if (ggplot == FALSE) {
+    res <- ggplotify::as.ggplot(function() (plot(comp$logFC.x,
               comp$logFC.y,
               xlab = names(data)[select1],
               ylab = names(data)[select2],
@@ -83,6 +85,12 @@ deedee_scatter <- function(data,
               pch = 20,
               xlim=c(min(comp$logFC.x), max(comp$logFC.x)),
               ylim=c(min(comp$logFC.y), max(comp$logFC.y)))))
+  }
+
+  else {
+    res <- ggplot2::ggplot(data = comp, aes(logFC.x, logFC.y)) +
+      geom_point(colour = comp$col)
+  }
 
   # --------------------------------- return ----------------------------------
   return(res)
