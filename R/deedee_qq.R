@@ -22,7 +22,8 @@ deedee_qq <- function(data,
                       pthresh = 0.05,
                       select1 = 1,
                       select2 = 2,
-                      color_by = "pval1") {
+                      color_by = "pval1",
+                      ggplot = FALSE) {
 
   # ----------------------------- argument check ------------------------------
   checkmate::assert_list(data, type = "data.frame", min.len = 2)
@@ -65,7 +66,8 @@ deedee_qq <- function(data,
    }
 
   # ------------------- creation of the resulting qq plot ---------------------
-  res <- ggplotify::as.ggplot(function() (stats::qqplot(data_red[1][[1]]$logFC,
+  if (ggplot == FALSE) {
+    res <- ggplotify::as.ggplot(function() (stats::qqplot(data_red[1][[1]]$logFC,
                 data_red[2][[1]]$logFC,
                 plot.it = TRUE,
                 xlab = names(data)[select1],
@@ -76,6 +78,16 @@ deedee_qq <- function(data,
                 ylim = c(min(data_red[2][[1]]$logFC),
                          max(data_red[2][[1]]$logFC)),
                 col = data_red$col)))
+  }
+
+  else {
+    qq <- as.data.frame(qqplot(data_red[1][[1]]$logFC,
+                               data_red[2][[1]]$logFC,
+                               plot.it=FALSE,
+                               col = data_red$col))
+    res <- ggplot2::ggplot(qq, aes(x, y)) +
+      geom_point(aes(colour = col))
+  }
 
   # --------------------------------- return ----------------------------------
   return(res)
