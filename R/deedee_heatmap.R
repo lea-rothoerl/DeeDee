@@ -19,7 +19,7 @@
 
 deedee_heatmap <- function(data,
                            pthresh = 0.05,
-                           show_first = 500,
+                           show_first = 25,
                            show_gene_names = FALSE) {
 
   # ----------------------------- argument check ------------------------------
@@ -46,7 +46,7 @@ deedee_heatmap <- function(data,
   }
 
   row.names(comp) <- comp$rowname
-  comp <- subset(comp, select = -c(comp$rowname))  # removing column with rownames
+  comp <- subset(comp, select = -c(rowname))  # removing column with rownames
   comp <- comp[stats::complete.cases(comp[colnames(comp)]),]   # removing rows with NAs
   comp <- as.matrix(comp)
 
