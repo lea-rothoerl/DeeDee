@@ -141,10 +141,10 @@ deedee_qq(data = mydata, select1 = 1, select2 = 3, color_by = "pval2")
 \pagebreak
 ### DeeDee CAT plot
 
-The function `deedee_cat` creates a Concordance At the Top plot depicting the share of genes that are concordant in the upper x ranks of two or more logFC-sorted input datasets. If the input data list contains more than two datasets (like our example `mydata` does),  the `select1` (default = 1) and `select2` (default = 2) parameters specify which ones are to be used. The highest rank for which the concordance is calculated is given by the `maxrank` (default = 1000) parameter. 
+The function `deedee_cat` creates a Concordance At the Top plot depicting the share of genes that are concordant in the upper x ranks of two or more logFC-sorted input datasets. The highest rank for which the concordance is calculated is given by the `maxrank` (default = 1000) parameter. 
 
 ```{r, echo = TRUE, warning = FALSE, message = FALSE}
-deedee_cat(data = mydata, select1 = 2, select2 = 3, maxrank = 15000)
+deedee_cat(data = mydata, maxrank = 15000)
 ```
 
 
