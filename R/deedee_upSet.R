@@ -59,7 +59,8 @@ deedee_upSet <- function(data,
 
   # -------------------------------- coloring ---------------------------------
   if (mode == "both_colored") {
-    comp <- dplyr::full_join(data[1][[1]], data[2][[1]], by = "rowname", copy = FALSE)
+    comp <- dplyr::full_join(data[1][[1]], data[2][[1]], by = "rowname",
+                             copy = FALSE)
     for (i in 3:length(data)) {
       comp <- dplyr::full_join(comp, data[i][[1]], by = "rowname", copy = FALSE)
     }
@@ -87,10 +88,19 @@ deedee_upSet <- function(data,
       }
     }
 
-    comp <- select(comp, -c("count", "na_count"))
+    comp <- subset(comp, select = -c(count, na_count))
     comp[is.na(comp)] <- 0
     comp[comp == -1] <- 1
     colnames(comp) <- c(names(data), "all_up", "all_down")
+
+    same_dir <- vector(mode = "logical", length = length(comp[, "all_up"]))
+    comp <- cbind(comp, same_dir)
+
+    for (i in 1:length(comp[, "all_up"])) {
+      if (comp[i, "all_up"] == TRUE || comp[i, "all_down"] == TRUE) {
+        comp[i, "same_dir"] <- TRUE
+      }
+    }
 
     for (i in 1:(length(data))) {
       data[i][[1]] <- subset(data[i][[1]], select = "rowname")
@@ -99,6 +109,8 @@ deedee_upSet <- function(data,
     }
   }
 
+
+
   # ------------------ creation of the resulting UpSet plot -------------------
   col_up = viridis::viridis(n = 1, begin = 0.4, option="magma")
   col_down = viridis::viridis(n = 1, begin = 0.9, option="magma")
@@ -106,10 +118,10 @@ deedee_upSet <- function(data,
   if (mode == "both_colored") {
     res <- UpSetR::upset(comp,
                  order.by = "freq",
-                 queries = list(list(query = elements,
-                                     params = list("all_up", TRUE),
+                 queries = list(list(query = UpSetR::elements,
+                                     params = c("same_dir", TRUE),
                                      color = col_up, active = TRUE),
-                                list(query = elements,
+                                list(query = UpSetR::elements,
                                      params = list("all_down", TRUE),
                                      color = col_down, active = TRUE)))
   }
