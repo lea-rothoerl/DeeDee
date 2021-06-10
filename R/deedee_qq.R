@@ -82,14 +82,14 @@ deedee_qq <- function(data,
   }
 
   else {
-    qq <- as.data.frame(qqplot(data_red[1][[1]]$logFC,
+    qq <- as.data.frame(stats::qqplot(data_red[1][[1]]$logFC,
                                data_red[2][[1]]$logFC,
                                plot.it=FALSE,
                                col = data_red$col))
-    res <- ggplot2::ggplot(qq, aes(x, y)) +
-      geom_point() +
-      xlab(names(data)[select1]) +
-      ylab(names(data)[select2])
+    res <- ggplot2::ggplot(qq, ggplot2::aes(x, y)) +
+      ggplot2::geom_point() +
+      ggplot2::xlab(names(data)[select1]) +
+      ggplot2::ylab(names(data)[select2])
   }
 
   # --------------------------------- return ----------------------------------

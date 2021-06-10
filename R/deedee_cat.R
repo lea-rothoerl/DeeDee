@@ -71,7 +71,8 @@ deedee_cat <- function(data,
   }
 
   else {
-    res <- ggplot2::ggplot(data = output, aes(rank, concordance)) + geom_line()
+    res <- ggplot2::ggplot(data = output, ggplot2::aes(rank, concordance)) +
+      ggplot2::geom_line()
   }
   # --------------------------------- return ----------------------------------
   # print(paste("Area under curve: ", round(auc, 2), sep=""))
