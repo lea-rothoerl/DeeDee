@@ -10,6 +10,7 @@
 #' @param color_by indicates which set of values the output should be colored by
 #'                 (possible values = "logFC1", "logFC2", "pval1" (default),
 #'                 "pval2")
+#' @param ggplot output as ggplot (default = FALSE)
 #'
 #' @return ggplot object (plottable with show()/print())
 #'

@@ -7,6 +7,7 @@
 #' @param data (named) list of results from deedee_prepare
 #' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
 #' @param maxrank highest rank that should be displayed (default = 1000)
+#' @param ggplot output as ggplot (default = FALSE)
 #'
 #' @return ggplot object (plottable with show()/print())
 #'
