@@ -58,7 +58,8 @@ deedee_venn <- function(data,
                 fill_alpha = 0.2,
                 fill_color = pal,
                 show_percentage = FALSE,
-                stroke_color = "grey80")
+                stroke_color = "grey80",
+                set_name_size = 4)
 
   # --------------------------------- return ----------------------------------
   return(res)
