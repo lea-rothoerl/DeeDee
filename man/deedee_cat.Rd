@@ -12,6 +12,8 @@ deedee_cat(data, pthresh = 0.05, maxrank = 1000, ggplot = FALSE)
 \item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
 
 \item{maxrank}{highest rank that should be displayed (default = 1000)}
+
+\item{ggplot}{output as ggplot (default = FALSE)}
 }
 \value{
 ggplot object (plottable with show()/print())
