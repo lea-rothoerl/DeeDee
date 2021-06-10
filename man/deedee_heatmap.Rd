@@ -4,7 +4,7 @@
 \alias{deedee_heatmap}
 \title{DeeDee Heatmap}
 \usage{
-deedee_heatmap(data, pthresh = 0.05, show_first = 500, show_gene_names = FALSE)
+deedee_heatmap(data, pthresh = 0.05, show_first = 25, show_gene_names = FALSE)
 }
 \arguments{
 \item{data}{(named) list of 2-5 results from deedee_format}

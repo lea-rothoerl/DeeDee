@@ -9,7 +9,8 @@ deedee_scatter(
   pthresh = 0.05,
   select1 = 1,
   select2 = 2,
-  color_by = "pval1"
+  color_by = "pval1",
+  ggplot = FALSE
 )
 }
 \arguments{

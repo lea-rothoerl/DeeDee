@@ -4,7 +4,14 @@
 \alias{deedee_qq}
 \title{DeeDee QQ Plot}
 \usage{
-deedee_qq(data, pthresh = 0.05, select1 = 1, select2 = 2, color_by = "pval1")
+deedee_qq(
+  data,
+  pthresh = 0.05,
+  select1 = 1,
+  select2 = 2,
+  color_by = "pval1",
+  ggplot = FALSE
+)
 }
 \arguments{
 \item{data}{(named) list of results from deedee_prepare}
