@@ -89,7 +89,9 @@ deedee_scatter <- function(data,
 
   else {
     res <- ggplot2::ggplot(data = comp, aes(logFC.x, logFC.y)) +
-      geom_point(colour = comp$col)
+      geom_point(colour = comp$col)+
+      xlab(names(data)[select1]) +
+      ylab(names(data)[select2])
   }
 
   # --------------------------------- return ----------------------------------
