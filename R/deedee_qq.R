@@ -86,7 +86,9 @@ deedee_qq <- function(data,
                                plot.it=FALSE,
                                col = data_red$col))
     res <- ggplot2::ggplot(qq, aes(x, y)) +
-      geom_point()
+      geom_point() +
+      xlab(names(data)[select1]) +
+      ylab(names(data)[select2])
   }
 
   # --------------------------------- return ----------------------------------
