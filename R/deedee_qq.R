@@ -64,7 +64,7 @@ deedee_qq <- function(data,
     else if (color_by == "pval2") {
        data_red$col <- pal[as.numeric(cut(data_red[[2]]$pval2,
                                             breaks = 1000))]
-   }
+    }
 
   # ------------------- creation of the resulting qq plot ---------------------
   if (ggplot == FALSE) {
@@ -82,11 +82,36 @@ deedee_qq <- function(data,
   }
 
   else {
-    qq <- as.data.frame(stats::qqplot(data_red[1][[1]]$logFC,
-                               data_red[2][[1]]$logFC,
-                               plot.it=FALSE,
-                               col = data_red$col))
-    res <- ggplot2::ggplot(qq, ggplot2::aes(x, y)) +
+    x <- data_red[1][[1]]$logFC
+    y <- data_red[2][[1]]$logFC
+    if (color_by == "pval1" || color_by == "logFC1") {
+      names(x) <- data_red$col
+    }
+    else {
+      names(y) <- data_red$col
+    }
+
+    sx <- sort(x)
+    sy <- sort(y)
+    lenx <- length(sx)
+    leny <- length(sy)
+
+    if (leny < lenx)
+      sx <- approx(1L:lenx, sx, n = leny)$y
+    if (leny > lenx)
+      sy <- approx(1L:leny, sy, n = lenx)$y
+
+    qq <- list(x = sx, y = sy)
+    qq <- as.data.frame(qq)
+
+    if (color_by == "pval1" || color_by == "logFC1") {
+      qq$col <- names(sx)
+    }
+    else {
+      qq$col <- names(sy)
+    }
+
+    res <- ggplot2::ggplot(qq, ggplot2::aes(x, y, color = col)) +
       ggplot2::geom_point() +
       ggplot2::xlab(names(data)[select1]) +
       ggplot2::ylab(names(data)[select2])
