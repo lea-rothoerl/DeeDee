@@ -4,14 +4,7 @@
 \alias{deedee_qq}
 \title{DeeDee QQ Plot}
 \usage{
-deedee_qq(
-  data,
-  pthresh = 0.05,
-  select1 = 1,
-  select2 = 2,
-  color_by = "pval1",
-  ggplot = FALSE
-)
+deedee_qq(data, pthresh = 0.05, select1 = 1, select2 = 2, color_by = "pval1")
 }
 \arguments{
 \item{data}{(named) list of results from deedee_prepare}
@@ -23,10 +16,8 @@ deedee_qq(
 \item{select2}{index of second data-list element to be used (default = 2)}
 
 \item{color_by}{indicates which set of values the output should be colored by
-(possible values = "logFC1", "logFC2", "pval1" (default),
+(possible values = "pval1" (default),
 "pval2")}
-
-\item{ggplot}{output as ggplot (default = FALSE)}
 }
 \value{
 ggplot object (plottable with show()/print())
