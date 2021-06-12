@@ -5,9 +5,8 @@
 #' for the given input datasets.
 #'
 #' @param data (named) list of results from deedee_prepare
-#' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
+#' @param pthresh threshold for p-values to be in-/excluded (default = 0.05
 #' @param maxrank highest rank that should be displayed (default = 1000)
-#' @param ggplot output as ggplot (default = FALSE)
 #'
 #' @return ggplot object (plottable with show()/print())
 #'
@@ -18,8 +17,7 @@
 
 deedee_cat <- function(data,
                        pthresh = 0.05,
-                       maxrank = 1000,
-                       ggplot = FALSE) {
+                       maxrank = 1000) {
 
   # ----------------------------- argument check ------------------------------
   checkmate::assert_list(data, type = "data.frame", min.len = 2)
@@ -63,17 +61,9 @@ deedee_cat <- function(data,
   # auc <- mean(output$concordance)
 
   # ------------------- creation of the resulting CAT plot --------------------
-  if (ggplot == FALSE) {
-    res <- ggplotify::as.ggplot(function() (plot(concordance~rank,data=output,type='l')))
-    res <- res + ggplot2::annotate("text",
-                        x = 0.875, y = 0.925,
-                        label = paste("AUC =", round(auc, 2), sep = " "))
-  }
-
-  else {
-    res <- ggplot2::ggplot(data = output, ggplot2::aes(rank, concordance)) +
+  res <- ggplot2::ggplot(data = output, ggplot2::aes(rank, concordance)) +
       ggplot2::geom_line()
-  }
+
   # --------------------------------- return ----------------------------------
   # print(paste("Area under curve: ", round(auc, 2), sep=""))
   return(res)

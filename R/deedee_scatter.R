@@ -10,7 +10,6 @@
 #' @param color_by indicates which set of values the output should be colored by
 #'                 (possible values = "pval1" (default), "pval2", "pval_mean",
 #'                 "idr") (blue -> lower values, red -> higher values)
-#' @param ggplot output as ggplot (default = FALSE)
 #'
 #' @return ggplot object (plottable with show()/print())
 #'
@@ -23,8 +22,7 @@ deedee_scatter <- function(data,
                            pthresh = 0.05,
                            select1 = 1,
                            select2 = 2,
-                           color_by = "pval1",
-                           ggplot = FALSE) {
+                           color_by = "pval1") {
 
   # ----------------------------- argument check ------------------------------
   checkmate::assert_list(data, type = "data.frame", min.len = 2)
@@ -77,23 +75,10 @@ deedee_scatter <- function(data,
                                                              breaks = 1000))]
 
   # ----------------- creation of the resulting scatter plot ------------------
-  if (ggplot == FALSE) {
-    res <- ggplotify::as.ggplot(function() (plot(comp$logFC.x,
-              comp$logFC.y,
-              xlab = names(data)[select1],
-              ylab = names(data)[select2],
-              col = comp$col,
-              pch = 20,
-              xlim=c(min(comp$logFC.x), max(comp$logFC.x)),
-              ylim=c(min(comp$logFC.y), max(comp$logFC.y)))))
-  }
-
-  else {
-    res <- ggplot2::ggplot(data = comp, ggplot2::aes(logFC.x, logFC.y)) +
+  res <- ggplot2::ggplot(data = comp, ggplot2::aes(logFC.x, logFC.y)) +
       ggplot2::geom_point(colour = comp$col)+
       ggplot2::xlab(names(data)[select1]) +
       ggplot2::ylab(names(data)[select2])
-  }
 
   # --------------------------------- return ----------------------------------
   return(res)
