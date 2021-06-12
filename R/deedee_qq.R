@@ -10,7 +10,6 @@
 #' @param color_by indicates which set of values the output should be colored by
 #'                 (possible values = "logFC1", "logFC2", "pval1" (default),
 #'                 "pval2")
-#' @param ggplot output as ggplot (default = FALSE)
 #'
 #' @return ggplot object (plottable with show()/print())
 #'
@@ -23,8 +22,7 @@ deedee_qq <- function(data,
                       pthresh = 0.05,
                       select1 = 1,
                       select2 = 2,
-                      color_by = "pval1",
-                      ggplot = FALSE) {
+                      color_by = "pval1") {
 
   # ----------------------------- argument check ------------------------------
   checkmate::assert_list(data, type = "data.frame", min.len = 2)
@@ -41,7 +39,7 @@ deedee_qq <- function(data,
   data_red <- list(data[[select1]], data[[select2]])
 
   for(i in 1:length(data_red)) {
-    data_red[i][[1]] <- subset(data_red[i][[1]], data_red[i][[1]]$pval < pthresh)
+    # data_red[i][[1]] <- subset(data_red[i][[1]], data_red[i][[1]]$pval < pthresh)
     colnames(data_red[i][[1]]) <- c(paste("logFC", i, sep=""),
                                     paste("pval", i, sep=""))
   }
@@ -52,71 +50,64 @@ deedee_qq <- function(data,
   if (color_by == "logFC1") {
     data_red$col <- pal[as.numeric(cut(data_red[[1]]$logFC1,
                                             breaks = 1000))]
+  } else if (color_by == "logFC2") {
+    data_red$col <- pal[as.numeric(cut(data_red[[2]]$logFC2,
+                                       breaks = 1000))]
+  } else if (color_by == "pval1") {
+    data_red$col <- pal[as.numeric(cut(data_red[[1]]$pval1,
+                                       breaks = 1000))]
+  } else if (color_by == "pval2") {
+    data_red$col <- pal[as.numeric(cut(data_red[[2]]$pval2,
+                                       breaks = 1000))]
   }
-    else if (color_by == "logFC2") {
-      data_red$col <- pal[as.numeric(cut(data_red[[2]]$logFC2,
-                                            breaks = 1000))]
-   }
-    else if (color_by == "pval1") {
-      data_red$col <- pal[as.numeric(cut(data_red[[1]]$pval1,
-                                            breaks = 1000))]
-   }
-    else if (color_by == "pval2") {
-       data_red$col <- pal[as.numeric(cut(data_red[[2]]$pval2,
-                                            breaks = 1000))]
-    }
 
   # ------------------- creation of the resulting qq plot ---------------------
-  if (ggplot == FALSE) {
-    res <- ggplotify::as.ggplot(function() (stats::qqplot(data_red[1][[1]]$logFC,
-                data_red[2][[1]]$logFC,
-                plot.it = TRUE,
-                xlab = names(data)[select1],
-                ylab = names(data)[select2],
-                pch = 20,
-                xlim = c(min(data_red[1][[1]]$logFC),
-                         max(data_red[1][[1]]$logFC)),
-                ylim = c(min(data_red[2][[1]]$logFC),
-                         max(data_red[2][[1]]$logFC)),
-                col = data_red$col)))
+  x <- data_red[1][[1]]$logFC
+  y <- data_red[2][[1]]$logFC
+  pval1 <- data_red[1][[1]]$pval
+  pval2 <- data_red[2][[1]]$pval
+  if (color_by == "pval1" || color_by == "logFC1") {
+    names(x) <- data_red$col
+  } else {
+    names(y) <- data_red$col
   }
 
+  sx_idx <- order(x)
+  sy_idx <- order(y)
+
+  sx <- x[sx_idx]
+  sy <- y[sy_idx]
+  pval1 <- pval1[sx_idx]
+  pval2 <- pval2[sy_idx]
+
+  lenx <- length(sx)
+  leny <- length(sy)
+
+  if (leny < lenx) {
+    sx <- approx(1L:lenx, sx, n = leny)$y
+    pval1 <- approx(1L:lenx, pval1, n = leny)$y
+  }
+  if (leny > lenx) {
+    sy <- approx(1L:leny, sy, n = lenx)$y
+    pval2 <- approx(1L:leny, pval2, n = lenx)$y
+  }
+  qq <- data.frame(x = sx, y = sy, pval1 = pval1, pval2 = pval2)
+
+  if (color_by == "pval1" || color_by == "logFC1") {
+    qq$col <- names(sx)
+  }
   else {
-    x <- data_red[1][[1]]$logFC
-    y <- data_red[2][[1]]$logFC
-    if (color_by == "pval1" || color_by == "logFC1") {
-      names(x) <- data_red$col
-    }
-    else {
-      names(y) <- data_red$col
-    }
-
-    sx <- sort(x)
-    sy <- sort(y)
-    lenx <- length(sx)
-    leny <- length(sy)
-
-    if (leny < lenx)
-      sx <- approx(1L:lenx, sx, n = leny)$y
-    if (leny > lenx)
-      sy <- approx(1L:leny, sy, n = lenx)$y
-
-    qq <- list(x = sx, y = sy)
-    qq <- as.data.frame(qq)
-
-    if (color_by == "pval1" || color_by == "logFC1") {
-      qq$col <- names(sx)
-    }
-    else {
-      qq$col <- names(sy)
-    }
-
-    res <- ggplot2::ggplot(qq, ggplot2::aes(x, y, color = col)) +
-      ggplot2::geom_point() +
-      ggplot2::xlab(names(data)[select1]) +
-      ggplot2::ylab(names(data)[select2])
+    qq$col <- names(sy)
   }
 
-  # --------------------------------- return ----------------------------------
+  qq_f <- qq[qq$pval1 <= pthresh | qq$pval2 <= pthresh, ]
+
+  res <- ggplot2::ggplot(qq_f, ggplot2::aes(x, y, col = -log10(get(color_by)))) +
+    ggplot2::geom_point() +
+    scale_color_viridis() +
+    ggplot2::xlab(names(data)[select1]) +
+    ggplot2::ylab(names(data)[select2])
+
+    # --------------------------------- return ----------------------------------
   return(res)
 }
