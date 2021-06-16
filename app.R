@@ -6,13 +6,17 @@ source("~/Development/DeeDee_wip/deedee_heatmap.R")
 source("~/Development/DeeDee_wip/deedee_qq.R")
 source("~/Development/DeeDee_wip/deedee_cat2.R")
 
-# Define UI for application that draws a histogram
+# ------------------------------------------------------------------------------
+# --------------------------------- U I ----------------------------------------
+# ------------------------------------------------------------------------------
+
 ui <- navbarPage("DeeDee",
 
     tabPanel("Input",
              fileInput("inp", "Upload DeeDee Input object (.RDS)",
                        multiple = TRUE,
-                       accept = c(".rds"))),
+                       accept = c(".rds", ".txt", ".xlsx")),
+             tableOutput("files")),
 
     tabPanel("Scatterplot",
              sidebarPanel(
@@ -82,9 +86,7 @@ ui <- navbarPage("DeeDee",
 
                  selectInput("qq_color_by", h3("Color by"),
                              choices = list("1st p-value" = "pval1",
-                                            "2nd p-value" = "pval2",
-                                            "1st logFC" = "logFC1",
-                                            "2nd logFC" = "logFC2"),
+                                            "2nd p-value" = "pval2"),
                              selected = "pval1")),
 
              mainPanel(plotOutput("qq"))),
@@ -98,24 +100,60 @@ ui <- navbarPage("DeeDee",
              mainPanel(plotOutput("cat")))
 )
 
-# Define server logic required to draw a histogram
+# ------------------------------------------------------------------------------
+# ----------------------------- S E R V E R ------------------------------------
+# ------------------------------------------------------------------------------
+
 server <- function(input, output) {
 
+    output$files <- renderTable(input$inp)
+
     mydata <- reactive({
-        file <- input$inp
-        ext <- tools::file_ext(file$datapath)
+        req(input$inp)
 
-        req(file)
-        validate(need(ext == "rds"|| ext == "RDS", "Please upload a .RDS file"))
-        mydata <- readRDS(file$datapath)
+        ext <- vector(mode = "numeric", length = length(input$inp[,1]))
+        res <- list()
 
-        return(mydata)})
+        for(i in 1:length(input$inp[,1])) {
+            ext[i] <- tools::file_ext(input$inp[i, "datapath"])
+            validate(need(ext[[i]] == "rds"||
+                              ext[[i]] == "RDS" ||
+                              ext[[i]] == "xlsx" ||
+                              ext[[i]] == "txt",
+                          "Please upload only .RDS, .xlsx or .txt files"))
+            if (ext[[i]] == "rds"|| ext[[i]] == "RDS") {
+                res[[i]] <- readRDS(input$inp[[i, "datapath"]])
+
+            } else if (ext[[i]] == "xlsx") {
+                sheets <- readxl::excel_sheets(input$inp[[i, "datapath"]])
+                res[[i]] <- lapply(sheets,
+                                    readxl::read_excel,
+                                    path=input$inp[[i, "datapath"]])
+                names(res[[i]]) <- sheets
+                for (j in 1:length(sheets)) {
+                    res[[i]][[sheets[j]]] <- as.data.frame(res[[i]][[sheets[j]]])
+                }
+
+            } else if (ext[[i]] == "txt") {
+                res[[i]] <- read.table(input$inp[[i, "datapath"]])
+                View(res[[i]])
+            }
+        }
+
+        dat <- list()
+        for(i in 1:length(res)) {
+            for(j in 1:length(res[[i]])) {
+                dat[[names(res[[i]])[[j]]]] <- res[[i]][[j]]
+            }
+        }
+
+        return(dat)})
 
     output$scatter <- renderPlot({
-        deedee_scatter(mydata(),
-                       select1 = input$scatter_select1,
-                       select2 = input$scatter_select2,
-                       color_by = input$scatter_color_by)
+                deedee_scatter(mydata(),
+                               select1 = input$scatter_select1,
+                               select2 = input$scatter_select2,
+                               color_by = input$scatter_color_by)
     })
 
     output$heatmap <- renderPlot({
@@ -145,9 +183,8 @@ server <- function(input, output) {
         deedee_cat2(mydata(),
                     maxrank = input$cat_maxrank)
     })
-
-
 }
+
 
 # Run the application
 shinyApp(ui = ui, server = server)
