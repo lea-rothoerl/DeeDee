@@ -109,8 +109,6 @@ deedee_upSet <- function(data,
     }
   }
 
-
-
   # ------------------ creation of the resulting UpSet plot -------------------
   col_up = viridis::viridis(n = 1, begin = 0.4, option="magma")
   col_down = viridis::viridis(n = 1, begin = 0.9, option="magma")
@@ -118,6 +116,7 @@ deedee_upSet <- function(data,
   if (mode == "both_colored") {
     res <- UpSetR::upset(comp,
                  order.by = "freq",
+                 nsets = length(comp),
                  queries = list(list(query = UpSetR::elements,
                                      params = c("same_dir", TRUE),
                                      color = col_up, active = TRUE),
@@ -126,7 +125,9 @@ deedee_upSet <- function(data,
                                      color = col_down, active = TRUE)))
   }
   else {
-    res <- UpSetR::upset(UpSetR::fromList(data), order.by = "freq")
+    res <- UpSetR::upset(UpSetR::fromList(data),
+                         order.by = "freq",
+                         nsets = length(data))
   }
 
   # --------------------------------- return ----------------------------------
