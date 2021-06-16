@@ -135,8 +135,26 @@ server <- function(input, output) {
                 }
 
             } else if (ext[[i]] == "txt") {
-                res[[i]] <- read.table(input$inp[[i, "datapath"]])
-                View(res[[i]])
+                temp <- read.table(input$inp[[i, "datapath"]])
+                temp2 <- list()
+                nm <- c()
+                for (j in 0:((length(temp)/2)-1)) {
+                    a <- 2*j+1
+                    b <- 2*j+2
+                    temp2[[j+1]] <- c(temp[a], temp[b])
+                    temp2[[j+1]] <- as.data.frame(temp2[[j+1]])
+                    nm[j+1] <- unlist(strsplit(names(temp)[2*j+1],
+                                               split=".",
+                                               fixed=TRUE))[1]
+                }
+                res[[i]] <- c(temp2[1:length(temp2)])
+                names(res[[i]]) <- nm
+                for (j in 1:((length(temp)/2))) {
+                }
+                for (j in 1:length(res[[i]])) {
+                    names(res[[i]][[j]]) <- c("logFC", "pval")
+                    row.names(res[[i]][[j]]) <- row.names(temp)
+                }
             }
         }
 
@@ -146,6 +164,8 @@ server <- function(input, output) {
                 dat[[names(res[[i]])[[j]]]] <- res[[i]][[j]]
             }
         }
+
+        View(dat)
 
         return(dat)})
 
