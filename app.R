@@ -42,7 +42,7 @@ ui <- navbarPage("DeeDee",
              sidebarPanel(
                  numericInput("heatmap_show_first",
                               h3("Show first"),
-                              value = 500,
+                              value = 25,
                               min = 1),
 
                  checkboxInput("heatmap_show_gene_names",
