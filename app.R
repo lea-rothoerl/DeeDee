@@ -132,6 +132,8 @@ server <- function(input, output) {
                 names(res[[i]]) <- sheets
                 for (j in 1:length(sheets)) {
                     res[[i]][[sheets[j]]] <- as.data.frame(res[[i]][[sheets[j]]])
+                    res[[i]][[sheets[j]]] <- tibble::column_to_rownames(
+                        res[[i]][[sheets[j]]], "rowname")
                 }
 
             } else if (ext[[i]] == "txt") {
@@ -164,8 +166,6 @@ server <- function(input, output) {
                 dat[[names(res[[i]])[[j]]]] <- res[[i]][[j]]
             }
         }
-
-        View(dat)
 
         return(dat)})
 
