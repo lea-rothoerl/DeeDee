@@ -28,7 +28,8 @@ deedee_heatmap <- function(data,
     checkmate::assert_data_frame(data[[i]], type = "numeric")
   }
   checkmate::assert_number(pthresh, lower = 0)
-  checkmate::assert_number(show_first, lower = 1, upper = max(length(data[[i]]$logFC)))
+  checkmate::assert_number(show_first, lower = 1,
+                           upper = max(length(data[[i]]$logFC)))
   checkmate::assert_logical(show_gene_names)
 
   # ---------------------------- data preparation -----------------------------
@@ -36,18 +37,21 @@ deedee_heatmap <- function(data,
     data[i][[1]] <- subset(data[i][[1]], data[i][[1]]$pval < pthresh)  # pthresh
     data[i][[1]] <- data[i][[1]]["logFC"]   # removing p-value column
     colnames(data[i][[1]]) <- names(data)[i]  # creating unique colnames
-    data[i][[1]] <- tibble::rownames_to_column(data[i][[1]])  # column with rownames
+    data[i][[1]] <- tibble::rownames_to_column(data[i][[1]])
   }
 
   # ----- creation of a comp matrix with the modified results from above ------
-  comp <- dplyr::inner_join(data[1][[1]], data[2][[1]], by = "rowname", copy = FALSE)
+  comp <- dplyr::inner_join(data[1][[1]],
+                            data[2][[1]],
+                            by = "rowname",
+                            copy = FALSE)
   for (i in 3:length(data)) {
     comp <- dplyr::inner_join(comp, data[i][[1]], by = "rowname", copy = FALSE)
   }
 
   row.names(comp) <- comp$rowname
   comp <- subset(comp, select = -c(rowname))  # removing column with rownames
-  comp <- comp[stats::complete.cases(comp[colnames(comp)]),]   # removing rows with NAs
+  comp <- comp[stats::complete.cases(comp[colnames(comp)]),]
   comp <- as.matrix(comp)
 
   # ------------------- creation of the resulting heatmap ---------------------
@@ -57,6 +61,9 @@ deedee_heatmap <- function(data,
 
   col <- viridis::viridis(n = 15, option = "magma")
 
+  validate(
+    need(!isEmpty(comp), "No common genes, heatmap not buildable.")
+  )
   res <- ggplotify::as.ggplot(function() gplots::heatmap.2(comp[1:min(show_first,
                                                  length(comp[,1])),],
                                       col = col,
@@ -68,6 +75,7 @@ deedee_heatmap <- function(data,
                                       key.ylab = NA,
                                       trace = "none",
                                       distfun = stats::dist))
+
   # --------------------------------- return ----------------------------------
   return(res)
 }
