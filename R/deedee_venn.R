@@ -21,7 +21,7 @@ deedee_venn <- function(data,
                         mode = "both") {
 
   # ----------------------------- argument check ------------------------------
-  checkmate::assert_list(data, type = "data.frame", min.len = 2, max.len = 4)
+  checkmate::assert_list(data, type = "data.frame", min.len = 2) #, max.len = 4)
   for (i in 1:length(data)) {
     checkmate::assert_data_frame(data[[i]], type = "numeric")
   }
