@@ -5,6 +5,7 @@ source("~/Development/DeeDee_wip/deedee_scatter.R")
 source("~/Development/DeeDee_wip/deedee_heatmap.R")
 source("~/Development/DeeDee_wip/deedee_qq.R")
 source("~/Development/DeeDee_wip/deedee_cat2.R")
+source("~/Development/DeeDee_wip/deedee_prepare.R")
 
 # ------------------------------------------------------------------------------
 # --------------------------------- U I ----------------------------------------
@@ -20,15 +21,9 @@ ui <- navbarPage("DeeDee",
 
     tabPanel("Scatterplot",
              sidebarPanel(
-                 numericInput("scatter_select1",
-                              h3("1st dataset"),
-                              value = 1,
-                              min = 1),
+                 uiOutput("scatter_slider1"),
 
-                 numericInput("scatter_select2",
-                              h3("2nd dataset"),
-                              value = 2,
-                              min = 1),
+                 uiOutput("scatter_slider2"),
 
                  selectInput("scatter_color_by", h3("Color by"),
                              choices = list("1st p-value" = "pval1",
@@ -66,23 +61,21 @@ ui <- navbarPage("DeeDee",
                  selectInput("upSet_mode", h3("Mode"),
                              choices = list("Up" = "up",
                                             "Down" = "down",
-                                            "Both" = "both",
-                                            "Both colored" = "both_colored"),
-                             selected = "both")),
+                                            "Both" = "both"),
+                             selected = "both"),
+                 conditionalPanel(
+                     condition = "input$upSet_mode == both",
+                     checkboxInput("upSet_colored",
+                                   "Coloring",
+                                   TRUE))),
 
              mainPanel(plotOutput("upSet"))),
 
     tabPanel("Quantile-Quantile Plot",
              sidebarPanel(
-                 numericInput("qq_select1",
-                              h3("1st dataset"),
-                              value = 1,
-                              min = 1),
+                 uiOutput("qq_slider1"),
 
-                 numericInput("qq_select2",
-                              h3("2nd dataset"),
-                              value = 2,
-                              min = 1),
+                 uiOutput("qq_slider2"),
 
                  selectInput("qq_color_by", h3("Color by"),
                              choices = list("1st p-value" = "pval1",
@@ -123,6 +116,25 @@ server <- function(input, output) {
                           "Please upload only .RDS, .xlsx or .txt files"))
             if (ext[[i]] == "rds"|| ext[[i]] == "RDS") {
                 res[[i]] <- readRDS(input$inp[[i, "datapath"]])
+                if (class(res[[i]]) == "DESeqResults") {
+                    res[[i]] <- deedee_prepare(res[[i]], "DESeq2")
+                    res[[i]] <- list(as.data.frame(c(res[[i]])))
+                    names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
+                                                       split=".",
+                                                       fixed=TRUE))[1]
+                } else if (class(res[[i]]) == "edgeR") {
+                    res[[i]] <- deedee_prepare(res[[i]], "edgeR")
+                    res[[i]] <- list(as.data.frame(c(res[[i]])))
+                    names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
+                                                       split=".",
+                                                       fixed=TRUE))[1]
+                } else if (class(res[[i]]) == "limma") {
+                    res[[i]] <- deedee_prepare(res[[i]], "limma")
+                    res[[i]] <- list(as.data.frame(c(res[[i]])))
+                    names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
+                                                       split=".",
+                                                       fixed=TRUE))[1]
+                }
 
             } else if (ext[[i]] == "xlsx") {
                 sheets <- readxl::excel_sheets(input$inp[[i, "datapath"]])
@@ -163,11 +175,29 @@ server <- function(input, output) {
         dat <- list()
         for(i in 1:length(res)) {
             for(j in 1:length(res[[i]])) {
+                assert_subset(names(res[[i]][[j]]), c("logFC", "pval"))
                 dat[[names(res[[i]])[[j]]]] <- res[[i]][[j]]
             }
         }
 
         return(dat)})
+
+    output$scatter_slider1 <- renderUI({
+        numericInput("scatter_select1",
+                     h3("1st dataset"),
+                     value = 1,
+                     min = 1,
+                     max = length(mydata()))
+    })
+
+    output$scatter_slider2 <- renderUI({
+        numericInput("scatter_select2",
+                     h3("2nd dataset"),
+                     value = 2,
+                     min = 1,
+                     max = length(mydata()))
+    })
+
 
     output$scatter <- renderPlot({
                 deedee_scatter(mydata(),
@@ -188,8 +218,29 @@ server <- function(input, output) {
     })
 
     output$upSet <- renderPlot({
+        if (input$upSet_mode == "both" && input$upSet_colored) {
+             mode = "both_colored"
+        } else {
+            mode = input$upSet_mode
+        }
         deedee_upSet(mydata(),
-                     mode = input$upSet_mode)
+                     mode = mode)
+    })
+
+    output$qq_slider1 <- renderUI ({
+        numericInput("qq_select1",
+                     h3("1st dataset"),
+                     value = 1,
+                     min = 1,
+                     max = length(mydata()))
+    })
+
+    output$qq_slider2 <- renderUI ({
+        numericInput("qq_select2",
+                     h3("2nd dataset"),
+                     value = 2,
+                     min = 1,
+                     max = length(mydata()))
     })
 
     output$qq <- renderPlot({
