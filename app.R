@@ -1,3 +1,4 @@
+# ---------------------------- --- source packages ------------------------------
 library(shiny)
 source("~/Development/DeeDee_wip/deedee_venn.R")
 source("~/Development/DeeDee_wip/deedee_upSet.R")
@@ -13,17 +14,21 @@ source("~/Development/DeeDee_wip/deedee_prepare.R")
 
 ui <- navbarPage("DeeDee",
 
+    # ----------------------------- data input ---------------------------------
     tabPanel("Input",
              fileInput("inp", "Upload DeeDee Input object (.RDS)",
                        multiple = TRUE,
                        accept = c(".rds", ".txt", ".xlsx")),
-             tableOutput("files")),
+             # tableOutput("datasets")),
+             uiOutput("datasets")),
 
+
+    # ------------------------------- scatter ----------------------------------
     tabPanel("Scatterplot",
              sidebarPanel(
-                 uiOutput("scatter_slider1"),
+                 uiOutput("scatter_choices1"),
 
-                 uiOutput("scatter_slider2"),
+                 uiOutput("scatter_choices2"),
 
                  selectInput("scatter_color_by", h3("Color by"),
                              choices = list("1st p-value" = "pval1",
@@ -33,6 +38,8 @@ ui <- navbarPage("DeeDee",
 
              mainPanel(plotOutput("scatter"))),
 
+
+    # ------------------------------- heatmap ----------------------------------
     tabPanel("Heatmap",
              sidebarPanel(
                  numericInput("heatmap_show_first",
@@ -46,6 +53,8 @@ ui <- navbarPage("DeeDee",
 
              mainPanel(plotOutput("heatmap"))),
 
+
+    # -------------------------------- venn ------------------------------------
     tabPanel("Venn Diagram",
              sidebarPanel(
                  selectInput("venn_mode", h3("Mode"),
@@ -56,6 +65,8 @@ ui <- navbarPage("DeeDee",
 
              mainPanel(plotOutput("venn"))),
 
+
+    # -------------------------------- upSet -----------------------------------
     tabPanel("UpSet Plot",
              sidebarPanel(
                  selectInput("upSet_mode", h3("Mode"),
@@ -71,11 +82,13 @@ ui <- navbarPage("DeeDee",
 
              mainPanel(plotOutput("upSet"))),
 
+
+    # --------------------------------- qq -------------------------------------
     tabPanel("Quantile-Quantile Plot",
              sidebarPanel(
-                 uiOutput("qq_slider1"),
+                 uiOutput("qq_choices1"),
 
-                 uiOutput("qq_slider2"),
+                 uiOutput("qq_choices2"),
 
                  selectInput("qq_color_by", h3("Color by"),
                              choices = list("1st p-value" = "pval1",
@@ -84,6 +97,8 @@ ui <- navbarPage("DeeDee",
 
              mainPanel(plotOutput("qq"))),
 
+
+    # --------------------------------- cat ------------------------------------
     tabPanel("Concordance At the Top Plot",
              sidebarPanel(
                 numericInput("cat_maxrank",
@@ -99,14 +114,14 @@ ui <- navbarPage("DeeDee",
 
 server <- function(input, output) {
 
-    output$files <- renderTable(input$inp)
-
+    # ----------------------------- data input ---------------------------------
     mydata <- reactive({
         req(input$inp)
 
         ext <- vector(mode = "numeric", length = length(input$inp[,1]))
         res <- list()
 
+        # reading out input files
         for(i in 1:length(input$inp[,1])) {
             ext[i] <- tools::file_ext(input$inp[i, "datapath"])
             validate(need(ext[[i]] == "rds"||
@@ -114,6 +129,8 @@ server <- function(input, output) {
                               ext[[i]] == "xlsx" ||
                               ext[[i]] == "txt",
                           "Please upload only .RDS, .xlsx or .txt files"))
+
+            # .RDS input
             if (ext[[i]] == "rds"|| ext[[i]] == "RDS") {
                 res[[i]] <- readRDS(input$inp[[i, "datapath"]])
                 if (class(res[[i]]) == "DESeqResults") {
@@ -136,6 +153,7 @@ server <- function(input, output) {
                                                        fixed=TRUE))[1]
                 }
 
+            # .xlsx input
             } else if (ext[[i]] == "xlsx") {
                 sheets <- readxl::excel_sheets(input$inp[[i, "datapath"]])
                 res[[i]] <- lapply(sheets,
@@ -148,6 +166,7 @@ server <- function(input, output) {
                         res[[i]][[sheets[j]]], "rowname")
                 }
 
+            # .txt input
             } else if (ext[[i]] == "txt") {
                 temp <- read.table(input$inp[[i, "datapath"]])
                 temp2 <- list()
@@ -172,6 +191,7 @@ server <- function(input, output) {
             }
         }
 
+        # merging input data structures
         dat <- list()
         for(i in 1:length(res)) {
             for(j in 1:length(res[[i]])) {
@@ -180,82 +200,106 @@ server <- function(input, output) {
             }
         }
 
-        return(dat)})
+        return(dat)
+    })
 
-    output$scatter_slider1 <- renderUI({
-        numericInput("scatter_select1",
+    output$datasets <- renderUI({
+        checkboxGroupInput("select_datasets",
+                           "Select datasets to be used",
+                           choices = names(mydata()),
+                           selected = names(mydata()))
+    })
+
+    mydata_use <- reactive({
+        use <- input$select_datasets
+        dat2 <- list()
+        for (i in use) {
+            dat2[i] <- mydata()[i]
+        }
+        return(dat2)
+    })
+
+
+    # ------------------------------- scatter ----------------------------------
+    output$scatter_choices1 <- renderUI({
+        selectInput("scatter_select1",
                      h3("1st dataset"),
-                     value = 1,
-                     min = 1,
-                     max = length(mydata()))
+                     choices = names(mydata_use()))
     })
 
-    output$scatter_slider2 <- renderUI({
-        numericInput("scatter_select2",
+    output$scatter_choices2 <- renderUI({
+        selectInput("scatter_select2",
                      h3("2nd dataset"),
-                     value = 2,
-                     min = 1,
-                     max = length(mydata()))
+                     choices = names(mydata_use()))
     })
-
 
     output$scatter <- renderPlot({
-                deedee_scatter(mydata(),
-                               select1 = input$scatter_select1,
-                               select2 = input$scatter_select2,
-                               color_by = input$scatter_color_by)
+        sel1 <- match(input$scatter_select1, names(mydata_use()))
+        sel2 <- match(input$scatter_select2, names(mydata_use()))
+        deedee_scatter(mydata_use(),
+                       select1 = sel1,
+                       select2 = sel2,
+                       color_by = input$scatter_color_by)
     })
 
+
+    # ------------------------------- heatmap ----------------------------------
     output$heatmap <- renderPlot({
-        deedee_heatmap(mydata(),
+        deedee_heatmap(mydata_use(),
                        show_first = input$heatmap_show_first,
                        show_gene_names = input$heatmap_show_gene_names)
     })
 
+
+    # -------------------------------- venn ------------------------------------
     output$venn <- renderPlot({
-        deedee_venn(mydata(),
+        deedee_venn(mydata_use(),
                     mode = input$venn_mode)
     })
 
+
+    # -------------------------------- upSet -----------------------------------
     output$upSet <- renderPlot({
         if (input$upSet_mode == "both" && input$upSet_colored) {
              mode = "both_colored"
         } else {
             mode = input$upSet_mode
         }
-        deedee_upSet(mydata(),
+        deedee_upSet(mydata_use(),
                      mode = mode)
     })
 
-    output$qq_slider1 <- renderUI ({
-        numericInput("qq_select1",
+
+    # --------------------------------- qq -------------------------------------
+    output$qq_choices1 <- renderUI ({
+        selectInput("qq_select1",
                      h3("1st dataset"),
-                     value = 1,
-                     min = 1,
-                     max = length(mydata()))
+                     choices = names(mydata_use()))
     })
 
-    output$qq_slider2 <- renderUI ({
-        numericInput("qq_select2",
+    output$qq_choices2 <- renderUI ({
+        selectInput("qq_select2",
                      h3("2nd dataset"),
-                     value = 2,
-                     min = 1,
-                     max = length(mydata()))
+                     choices = names(mydata_use()))
     })
 
     output$qq <- renderPlot({
-        deedee_qq(mydata(),
-                  select1 = input$qq_select1,
-                  select2 = input$qq_select2,
+        sel1 <- match(input$qq_select1, names(mydata_use()))
+        sel2 <- match(input$qq_select2, names(mydata_use()))
+        deedee_qq(mydata_use(),
+                  select1 = sel1,
+                  select2 = sel2,
                   color_by = input$qq_color_by)
     })
 
+
+    # --------------------------------- cat ------------------------------------
     output$cat <- renderPlot({
-        deedee_cat2(mydata(),
+        deedee_cat2(mydata_use(),
                     maxrank = input$cat_maxrank)
     })
 }
 
 
-# Run the application
+# ------------------------------ run application -------------------------------
 shinyApp(ui = ui, server = server)
