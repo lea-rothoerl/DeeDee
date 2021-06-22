@@ -16,11 +16,11 @@ ui <- navbarPage("DeeDee",
 
     # ----------------------------- data input ---------------------------------
     tabPanel("Input",
-             fileInput("inp", "Upload DeeDee Input object (.RDS)",
+             fileInput("inp", "Upload",
                        multiple = TRUE,
                        accept = c(".rds", ".txt", ".xlsx")),
-             # tableOutput("datasets")),
-             uiOutput("datasets")),
+             uiOutput("datasets"),
+             downloadButton("inp_download", "Download DeeDee object (.RDS)")),
 
 
     # ------------------------------- scatter ----------------------------------
@@ -36,7 +36,8 @@ ui <- navbarPage("DeeDee",
                                             "mean of p-values" = "pval_mean"),
                                             selected = "pval1")),
 
-             mainPanel(plotOutput("scatter"))),
+             mainPanel(plotOutput("scatter"),
+                       click = "scatter_click")),
 
 
     # ------------------------------- heatmap ----------------------------------
@@ -204,6 +205,7 @@ server <- function(input, output) {
     })
 
     output$datasets <- renderUI({
+        req(input$inp)
         checkboxGroupInput("select_datasets",
                            "Select datasets to be used",
                            choices = names(mydata()),
@@ -211,6 +213,7 @@ server <- function(input, output) {
     })
 
     mydata_use <- reactive({
+        req(input$inp)
         use <- input$select_datasets
         dat2 <- list()
         for (i in use) {
@@ -219,23 +222,36 @@ server <- function(input, output) {
         return(dat2)
     })
 
+    output$inp_download <- downloadHandler(
+        filename = "DeeDee_object.RDS",
+        content = function(file) {
+            req(input$inp)
+            saveRDS(mydata_use(), file)
+        })
+
 
     # ------------------------------- scatter ----------------------------------
     output$scatter_choices1 <- renderUI({
+        req(input$inp)
         selectInput("scatter_select1",
-                     h3("1st dataset"),
-                     choices = names(mydata_use()))
+                    h3("1st dataset"),
+                    choices = names(mydata_use()))
     })
 
     output$scatter_choices2 <- renderUI({
+        req(input$inp)
         selectInput("scatter_select2",
-                     h3("2nd dataset"),
-                     choices = names(mydata_use()))
+                    h3("2nd dataset"),
+                    selected = names(mydata_use())[2],
+                    choices = names(mydata_use()))
     })
 
     output$scatter <- renderPlot({
+        req(input$inp)
         sel1 <- match(input$scatter_select1, names(mydata_use()))
         sel2 <- match(input$scatter_select2, names(mydata_use()))
+        req(sel1)
+        req(sel2)
         deedee_scatter(mydata_use(),
                        select1 = sel1,
                        select2 = sel2,
@@ -245,6 +261,7 @@ server <- function(input, output) {
 
     # ------------------------------- heatmap ----------------------------------
     output$heatmap <- renderPlot({
+        req(input$inp)
         deedee_heatmap(mydata_use(),
                        show_first = input$heatmap_show_first,
                        show_gene_names = input$heatmap_show_gene_names)
@@ -253,6 +270,7 @@ server <- function(input, output) {
 
     # -------------------------------- venn ------------------------------------
     output$venn <- renderPlot({
+        req(input$inp)
         deedee_venn(mydata_use(),
                     mode = input$venn_mode)
     })
@@ -260,6 +278,7 @@ server <- function(input, output) {
 
     # -------------------------------- upSet -----------------------------------
     output$upSet <- renderPlot({
+        req(input$inp)
         if (input$upSet_mode == "both" && input$upSet_colored) {
              mode = "both_colored"
         } else {
@@ -272,20 +291,26 @@ server <- function(input, output) {
 
     # --------------------------------- qq -------------------------------------
     output$qq_choices1 <- renderUI ({
+        req(input$inp)
         selectInput("qq_select1",
-                     h3("1st dataset"),
-                     choices = names(mydata_use()))
+                    h3("1st dataset"),
+                    choices = names(mydata_use()))
     })
 
     output$qq_choices2 <- renderUI ({
+        req(input$inp)
         selectInput("qq_select2",
-                     h3("2nd dataset"),
-                     choices = names(mydata_use()))
+                    h3("2nd dataset"),
+                    selected = names(mydata_use())[2],
+                    choices = names(mydata_use()))
     })
 
     output$qq <- renderPlot({
+        req(input$inp)
         sel1 <- match(input$qq_select1, names(mydata_use()))
         sel2 <- match(input$qq_select2, names(mydata_use()))
+        req(sel1)
+        req(sel2)
         deedee_qq(mydata_use(),
                   select1 = sel1,
                   select2 = sel2,
@@ -295,6 +320,7 @@ server <- function(input, output) {
 
     # --------------------------------- cat ------------------------------------
     output$cat <- renderPlot({
+        req(input$inp)
         deedee_cat2(mydata_use(),
                     maxrank = input$cat_maxrank)
     })
