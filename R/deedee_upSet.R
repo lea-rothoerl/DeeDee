@@ -116,7 +116,7 @@ deedee_upSet <- function(data,
   if (mode == "both_colored") {
     res <- UpSetR::upset(comp,
                  order.by = "freq",
-                 nsets = length(comp),
+                 nsets = length(data),
                  queries = list(list(query = UpSetR::elements,
                                      params = c("same_dir", TRUE),
                                      color = col_up, active = TRUE),
