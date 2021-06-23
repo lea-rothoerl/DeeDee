@@ -36,8 +36,9 @@ ui <- navbarPage("DeeDee",
                                             "mean of p-values" = "pval_mean"),
                                             selected = "pval1")),
 
-             mainPanel(plotOutput("scatter"),
+             mainPanel(plotOutput("scatter",
                        click = "scatter_click")),
+                 verbatimTextOutput("scatter_click_info")),
 
 
     # ------------------------------- heatmap ----------------------------------
@@ -256,6 +257,21 @@ server <- function(input, output) {
                        select1 = sel1,
                        select2 = sel2,
                        color_by = input$scatter_color_by)
+    })
+
+    output$scatter_click_info <- renderPrint({
+        req(input$scatter_click)
+        df <- data.frame(x = mydata_use()[[input$scatter_select1]],
+                         y = mydata_use()[[input$scatter_select2]])
+        names(df) <- c(paste(input$scatter_select1, ".logFC", sep = ""),
+                       paste(input$scatter_select1, ".pval", sep = ""),
+                       paste(input$scatter_select2, ".logFC", sep = ""),
+                       paste(input$scatter_select2, ".pval", sep = ""))
+        nearPoints(df,
+                   input$scatter_click,
+                   xvar = paste(input$scatter_select1, ".logFC", sep = ""),
+                   yvar = paste(input$scatter_select2, ".logFC", sep = ""),
+                   addDist = FALSE)
     })
 
 
