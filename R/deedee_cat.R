@@ -42,14 +42,16 @@ deedee_cat <- function(data,
   }
 
   # ----------------------- calculation of concordance ------------------------
-  output <- data.frame(rank=1:maxrank,
+  output <- data.frame(rank=1:min(maxrank, min(length(data[i][[1]]))),
                        concordance=NA)
 
   for (i in 1:nrow(output)){
     intsec <- intersect(data[1][[1]][1:i], data[2][[1]][1:i])
+    dat_new <- rlist::list.append(data[1][[1]][1:i], data[2][[1]][1:i])
     if (length(data) > 2) {
       for (j in 3:length(data)) {
-        intsec <- intersect(intsec, data[j][[1]][1:i])
+        intsec <- rlist::list.append(intersect(dat_new, data[j][[1]][1:i]))
+        dat_new <- rlist::list.append(dat_new, data[j][[1]][1:i])
       }
     }
     output[i,"concordance"] <- length(intsec)/i
@@ -57,12 +59,16 @@ deedee_cat <- function(data,
 
   # ------------------------- calculation of the AUC --------------------------
   auc <- DescTools::AUC(output$rank, output$concordance)
-  auc <- auc/maxrank
+  auc <- auc/(min(maxrank, min(length(data[i][[1]]))))
   # auc <- mean(output$concordance)
 
   # ------------------- creation of the resulting CAT plot --------------------
   res <- ggplot2::ggplot(data = output, ggplot2::aes(rank, concordance)) +
       ggplot2::geom_line()
+  res <- res + ggplot2::annotate("text",
+                        x = (7/8*length(output$rank)),
+                        y = 0.9,
+                        label = paste("AUC =", round(auc, 2), sep = " "))
 
   # --------------------------------- return ----------------------------------
   # print(paste("Area under curve: ", round(auc, 2), sep=""))
