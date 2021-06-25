@@ -103,7 +103,7 @@ deedee_qq <- function(data,
 
   res <- ggplot2::ggplot(qq_f, ggplot2::aes(x, y, col = -log10(get(color_by)))) +
     ggplot2::geom_point() +
-    scale_color_viridis() +
+    viridis::scale_color_viridis() +
     ggplot2::xlab(names(data)[select1]) +
     ggplot2::ylab(names(data)[select2])
 
