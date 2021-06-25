@@ -1,12 +1,12 @@
-# ---------------------------- --- source packages ------------------------------
+# ------------------------------- source packages ------------------------------
 library(shiny)
-source("~/Development/DeeDee_wip/deedee_venn.R")
-source("~/Development/DeeDee_wip/deedee_upSet.R")
-source("~/Development/DeeDee_wip/deedee_scatter.R")
-source("~/Development/DeeDee_wip/deedee_heatmap.R")
-source("~/Development/DeeDee_wip/deedee_qq.R")
-source("~/Development/DeeDee_wip/deedee_cat2.R")
-source("~/Development/DeeDee_wip/deedee_prepare.R")
+source("~/Development/DeeDee/R/deedee_venn.R")
+source("~/Development/DeeDee/R/deedee_upSet.R")
+source("~/Development/DeeDee/R/deedee_scatter.R")
+source("~/Development/DeeDee/R/deedee_heatmap.R")
+source("~/Development/DeeDee/R/deedee_qq.R")
+source("~/Development/DeeDee/R/deedee_cat.R")
+source("~/Development/DeeDee/R/deedee_prepare.R")
 
 # ------------------------------------------------------------------------------
 # --------------------------------- U I ----------------------------------------
@@ -37,8 +37,12 @@ ui <- navbarPage("DeeDee",
                                             selected = "pval1")),
 
              mainPanel(plotOutput("scatter",
-                       click = "scatter_click")),
-                 verbatimTextOutput("scatter_click_info")),
+                       brush = "scatter_brush"),
+                      # click = "scatter_click"),
+                      # tableOutput("scatter_click_info"),
+                       tableOutput("scatter_brush_info"),
+                       downloadButton("scatter_brush_download",
+                                      "Download brushed genes (.txt)"))),
 
 
     # ------------------------------- heatmap ----------------------------------
@@ -197,7 +201,7 @@ server <- function(input, output) {
         dat <- list()
         for(i in 1:length(res)) {
             for(j in 1:length(res[[i]])) {
-                assert_subset(names(res[[i]][[j]]), c("logFC", "pval"))
+                checkmate::assert_subset(names(res[[i]][[j]]), c("logFC", "pval"))
                 dat[[names(res[[i]])[[j]]]] <- res[[i]][[j]]
             }
         }
@@ -259,19 +263,44 @@ server <- function(input, output) {
                        color_by = input$scatter_color_by)
     })
 
-    output$scatter_click_info <- renderPrint({
-        req(input$scatter_click)
+    # output$scatter_click_info <- renderTable({
+    #     req(input$scatter_click)
+    #     df <- data.frame(x = mydata_use()[[input$scatter_select1]],
+    #                      y = mydata_use()[[input$scatter_select2]])
+    #     names(df) <- c(paste(input$scatter_select1, ".logFC", sep = ""),
+    #                    paste(input$scatter_select1, ".pval", sep = ""),
+    #                    paste(input$scatter_select2, ".logFC", sep = ""),
+    #                    paste(input$scatter_select2, ".pval", sep = ""))
+    #     nearPoints(df,
+    #                input$scatter_click,
+    #                xvar = paste(input$scatter_select1, ".logFC", sep = ""),
+    #                yvar = paste(input$scatter_select2, ".logFC", sep = ""),
+    #                addDist = FALSE)
+    # }, rownames = TRUE)
+
+    scatter_brushed <- reactive ({
+        req(input$scatter_brush)
         df <- data.frame(x = mydata_use()[[input$scatter_select1]],
                          y = mydata_use()[[input$scatter_select2]])
         names(df) <- c(paste(input$scatter_select1, ".logFC", sep = ""),
                        paste(input$scatter_select1, ".pval", sep = ""),
                        paste(input$scatter_select2, ".logFC", sep = ""),
                        paste(input$scatter_select2, ".pval", sep = ""))
-        nearPoints(df,
-                   input$scatter_click,
-                   xvar = paste(input$scatter_select1, ".logFC", sep = ""),
-                   yvar = paste(input$scatter_select2, ".logFC", sep = ""),
-                   addDist = FALSE)
+        brushedPoints(df,
+                      input$scatter_brush,
+                      xvar = paste(input$scatter_select1, ".logFC", sep = ""),
+                      yvar = paste(input$scatter_select2, ".logFC", sep = ""))
+    })
+
+    output$scatter_brush_info <- renderTable({
+        req(scatter_brushed())
+        scatter_brushed()}, rownames = TRUE)
+
+    output$scatter_brush_download <- downloadHandler(
+        filename = "scatter_brushed_genes.txt",
+        content = function(file) {
+            req(input$scatter_brush)
+            write.table(scatter_brushed(), file)
     })
 
 
@@ -337,7 +366,7 @@ server <- function(input, output) {
     # --------------------------------- cat ------------------------------------
     output$cat <- renderPlot({
         req(input$inp)
-        deedee_cat2(mydata_use(),
+        deedee_cat(mydata_use(),
                     maxrank = input$cat_maxrank)
     })
 }
