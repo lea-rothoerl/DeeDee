@@ -61,9 +61,6 @@ deedee_heatmap <- function(data,
 
   col <- viridis::viridis(n = 15, option = "magma")
 
-  validate(
-    need(!isEmpty(comp), "No common genes, heatmap not buildable.")
-  )
   res <- ggplotify::as.ggplot(function() gplots::heatmap.2(comp[1:min(show_first,
                                                  length(comp[,1])),],
                                       col = col,
