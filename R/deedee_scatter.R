@@ -68,7 +68,6 @@ deedee_scatter <- function(data,
     # }
 
   comp <- subset(comp, select = -c(comp$pval.y, comp$pval.x)) # removing single p-values
-  # comp <- tibble::column_to_rownames(comp, "rowname")
 
   # -------------------------------- coloring ---------------------------------
   comp$col <- viridis::viridis(1000, option = "magma")[as.numeric(cut(comp$col,
