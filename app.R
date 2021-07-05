@@ -32,17 +32,16 @@ ui <- navbarPage("DeeDee",
 
                  selectInput("scatter_color_by", h3("Color by"),
                              choices = list("1st p-value" = "pval1",
-                                            "2nd p-value" = "pval2",
-                                            "mean of p-values" = "pval_mean"),
+                                            "2nd p-value" = "pval2"),
                                             selected = "pval1")),
 
              mainPanel(plotOutput("scatter",
                        brush = "scatter_brush"),
                       # click = "scatter_click"),
                       # tableOutput("scatter_click_info"),
-                       tableOutput("scatter_brush_info"),
                        downloadButton("scatter_brush_download",
-                                      "Download brushed genes (.txt)"))),
+                                      "Download brushed genes (.txt)"),
+                       tableOutput("scatter_brush_info"))),
 
 
     # ------------------------------- heatmap ----------------------------------
@@ -81,7 +80,7 @@ ui <- navbarPage("DeeDee",
                                             "Both" = "both"),
                              selected = "both"),
                  conditionalPanel(
-                     condition = "input$upSet_mode == both",
+                     condition = "input.upSet_mode == 'both'",
                      checkboxInput("upSet_colored",
                                    "Coloring",
                                    TRUE))),
@@ -284,6 +283,9 @@ server <- function(input, output) {
         req(input$scatter_brush)
         df <- data.frame(x = mydata_use()[[input$scatter_select1]],
                          y = mydata_use()[[input$scatter_select2]])
+
+        df <- subset(df, x.pval < 0.05 | y.pval < 0.05)
+
         names(df) <- c(paste(input$scatter_select1, ".logFC", sep = ""),
                        paste(input$scatter_select1, ".pval", sep = ""),
                        paste(input$scatter_select2, ".logFC", sep = ""),
@@ -309,6 +311,7 @@ server <- function(input, output) {
     # ------------------------------- heatmap ----------------------------------
     output$heatmap <- renderPlot({
         req(input$inp)
+        req(input$heatmap_show_first)
         # InteractiveComplexHeatmap::htShiny(
         deedee_heatmap(mydata_use(),
                        show_first = input$heatmap_show_first,
@@ -428,6 +431,7 @@ server <- function(input, output) {
     # --------------------------------- cat ------------------------------------
     output$cat <- renderPlot({
         req(input$inp)
+        req(input$cat_maxrank)
         deedee_cat(mydata_use(),
                     maxrank = input$cat_maxrank)
     })
