@@ -63,9 +63,10 @@ deedee_heatmap <- function(data,
 
   res <- ComplexHeatmap::Heatmap(comp[1:min(show_first,
                                                 length(comp[,1])),],
+                                 name = "logFC",
                                  col = col)
 
-  res <- ComplexHeatmap::draw(res)
+  ComplexHeatmap::draw(res)
 
   # res <- ggplotify::as.ggplot(function() gplots::heatmap.2(comp[1:min(show_first,
   #                                                length(comp[,1])),],
