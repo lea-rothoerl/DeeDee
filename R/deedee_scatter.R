@@ -8,8 +8,8 @@
 #' @param select1 index of first data-list element to be used (default = 1)
 #' @param select2 index of second data-list element to be used (default = 2)
 #' @param color_by indicates which set of values the output should be colored by
-#'                 (possible values = "pval1" (default), "pval2", "pval_mean",
-#'                 "idr") (blue -> lower values, red -> higher values)
+#'                 (possible values = "pval1" (default), "pval2", "idr") (blue
+#'                 -> lower values, red -> higher values)
 #'
 #' @return ggplot object (plottable with show()/print())
 #'
@@ -32,7 +32,7 @@ deedee_scatter <- function(data,
   checkmate::assert_number(pthresh, lower = 0)
   checkmate::assert_number(select1, lower = 1, upper = length(data))
   checkmate::assert_number(select2, lower = 1, upper = length(data))
-  choices <- c("pval1", "pval2", "pval_mean", "idr")
+  choices <- c("pval1", "pval2", "idr")
   checkmate::assert_choice(color_by, choices)
 
   # ---------------------------- data preparation -----------------------------
@@ -47,37 +47,18 @@ deedee_scatter <- function(data,
                      data_red[2][[1]],
                      by = "rowname",
                      copy = FALSE)
-  comp <- comp[stats::complete.cases(comp[colnames(comp)]), ]  # remove rows with NAs
+  comp <- comp[stats::complete.cases(comp[colnames(comp)]), ]
 
-  if (color_by == "pval_mean") {
-    comp$col <- (comp$pval.x + comp$pval.y)/2  # mean of p-values
-  }
-    else if (color_by == "pval1") {
-      comp$col <- comp$pval.x
-    }
-    else if (color_by == "pval2") {
-      comp$col <- comp$pval.y
-    }
-    # else if (color_by == "idr") {
-      # source("~/Development/DeeDee_wip/deedee_idr.R")
-      # idr <- deedee_idr(data = data, pthresh = pthresh)
-      # idr <- rownames_to_column(idr)
-      # colnames(idr) <- c("rowname", "idr")
-      # comp <- full_join(comp, idr, by = "rowname", copy = TRUE)
-      # names(comp)[names(comp) == 'idr'] <- 'col'
-    # }
-
-  comp <- subset(comp, select = -c(comp$pval.y, comp$pval.x)) # removing single p-values
-
-  # -------------------------------- coloring ---------------------------------
-  comp$col <- viridis::viridis(1000, option = "magma")[as.numeric(cut(comp$col,
-                                                             breaks = 1000))]
+  names(comp) <- c("rowname", "logFC1", "pval1", "logFC2", "pval2")
 
   # ----------------- creation of the resulting scatter plot ------------------
-  res <- ggplot2::ggplot(data = comp, ggplot2::aes(logFC.x, logFC.y)) +
-      ggplot2::geom_point(colour = comp$col)+
+  res <- ggplot2::ggplot(data = comp, ggplot2::aes(logFC1, logFC2,
+                                                   col = get(color_by))) +
+      ggplot2::geom_point() +
+      viridis::scale_color_viridis(option = "magma") +
       ggplot2::xlab(names(data)[select1]) +
-      ggplot2::ylab(names(data)[select2])
+      ggplot2::ylab(names(data)[select2]) +
+      ggplot2::labs(color=color_by)
 
   # --------------------------------- return ----------------------------------
   return(res)
