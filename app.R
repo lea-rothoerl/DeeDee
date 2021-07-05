@@ -101,7 +101,9 @@ ui <- navbarPage("DeeDee",
                                             "2nd p-value" = "pval2"),
                              selected = "pval1")),
 
-             mainPanel(plotOutput("qq"))),
+             mainPanel(plotOutput("qq",
+                                  brush = "qq_brush"),
+                       tableOutput("qq_brush_info"))),
 
 
     # --------------------------------- cat ------------------------------------
@@ -307,6 +309,7 @@ server <- function(input, output) {
     # ------------------------------- heatmap ----------------------------------
     output$heatmap <- renderPlot({
         req(input$inp)
+        # InteractiveComplexHeatmap::htShiny(
         deedee_heatmap(mydata_use(),
                        show_first = input$heatmap_show_first,
                        show_gene_names = input$heatmap_show_gene_names)
@@ -361,6 +364,65 @@ server <- function(input, output) {
                   select2 = sel2,
                   color_by = input$qq_color_by)
     })
+
+    qq_brushed <- reactive ({
+        req(input$qq_brush)
+        x <- mydata()[[input$qq_select1]]$logFC
+        y <- mydata()[[input$qq_select2]]$logFC
+        pval1 <- mydata()[[input$qq_select2]]$pval
+        pval2 <- mydata()[[input$qq_select2]]$pval
+        names(x) <- row.names(mydata()[[input$qq_select2]])
+        names(y) <- row.names(mydata()[[input$qq_select2]])
+
+        sx_idx <- order(x)
+        sy_idx <- order(y)
+
+        sx <- x[sx_idx]
+        sy <- y[sy_idx]
+        pval1 <- pval1[sx_idx]
+        pval2 <- pval2[sy_idx]
+
+        lenx <- length(sx)
+        leny <- length(sy)
+
+        if (leny < lenx) {
+            sx <- approx(1L:lenx, sx, n = leny)$y
+            pval1 <- approx(1L:lenx, pval1, n = leny)$y
+        }
+        if (leny > lenx) {
+            sy <- approx(1L:leny, sy, n = lenx)$y
+            pval2 <- approx(1L:leny, pval2, n = lenx)$y
+        }
+
+        sx <- tibble::rownames_to_column(as.data.frame(sx))
+        sx[3] <- pval1
+        sy <- tibble::rownames_to_column(as.data.frame(sy))
+        sy[3] <- pval2
+
+        qq <- data.frame(
+            x = sx,
+            y = sy)
+
+        names(qq) <- c(
+            paste(input$qq_select1, "gene", sep = "."),
+            paste(input$qq_select1, "logFC", sep = "."),
+            paste(input$qq_select1, "pval", sep = "."),
+            paste(input$qq_select2, "gene", sep = "."),
+            paste(input$qq_select2, "logFC", sep = "."),
+            paste(input$qq_select2, "pval", sep = "."))
+
+        temp1 <- paste(input$qq_select1, "logFC", sep = ".")
+        temp2 <- paste(input$qq_select2, "logFC", sep = ".")
+
+        brushedPoints(qq,
+                      input$qq_brush,
+                      xvar = temp1,
+                      yvar = temp2)
+    })
+
+    output$qq_brush_info <- renderTable({
+        req(qq_brushed())
+        qq_brushed()}, rownames = FALSE)
 
 
     # --------------------------------- cat ------------------------------------
