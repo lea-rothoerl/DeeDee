@@ -43,33 +43,13 @@ deedee_qq <- function(data,
                                     paste("pval", i, sep=""))
   }
 
-  # -------------------------------- coloring ---------------------------------
-  pal <- viridis::viridis(1000, option = "magma")
-
-  if (color_by == "logFC1") {
-    data_red$col <- pal[as.numeric(cut(data_red[[1]]$logFC1,
-                                            breaks = 1000))]
-  } else if (color_by == "logFC2") {
-    data_red$col <- pal[as.numeric(cut(data_red[[2]]$logFC2,
-                                       breaks = 1000))]
-  } else if (color_by == "pval1") {
-    data_red$col <- pal[as.numeric(cut(data_red[[1]]$pval1,
-                                       breaks = 1000))]
-  } else if (color_by == "pval2") {
-    data_red$col <- pal[as.numeric(cut(data_red[[2]]$pval2,
-                                       breaks = 1000))]
-  }
-
   # ------------------- creation of the resulting qq plot ---------------------
   x <- data_red[1][[1]]$logFC
   y <- data_red[2][[1]]$logFC
   pval1 <- data_red[1][[1]]$pval
   pval2 <- data_red[2][[1]]$pval
-  if (color_by == "pval1" || color_by == "logFC1") {
-    names(x) <- data_red$col
-  } else {
-    names(y) <- data_red$col
-  }
+  names(x) <- row.names(data_red[1][[1]])
+  names(y) <- row.names(data_red[2][[1]])
 
   sx_idx <- order(x)
   sy_idx <- order(y)
@@ -90,14 +70,8 @@ deedee_qq <- function(data,
     sy <- approx(1L:leny, sy, n = lenx)$y
     pval2 <- approx(1L:leny, pval2, n = lenx)$y
   }
-  qq <- data.frame(x = sx, y = sy, pval1 = pval1, pval2 = pval2)
 
-  if (color_by == "pval1" || color_by == "logFC1") {
-    qq$col <- names(sx)
-  }
-  else {
-    qq$col <- names(sy)
-  }
+  qq <- data.frame(x = sx, y = sy, pval1 = pval1, pval2 = pval2)
 
   qq_f <- qq[qq$pval1 <= pthresh | qq$pval2 <= pthresh, ]
 
