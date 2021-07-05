@@ -61,17 +61,23 @@ deedee_heatmap <- function(data,
 
   col <- viridis::viridis(n = 15, option = "magma")
 
-  res <- ggplotify::as.ggplot(function() gplots::heatmap.2(comp[1:min(show_first,
-                                                 length(comp[,1])),],
-                                      col = col,
-                                      margins=c(9,8),
-                                      key = TRUE,
-                                      density.info = "density",
-                                      key.title = NA,
-                                      key.xlab = NA,
-                                      key.ylab = NA,
-                                      trace = "none",
-                                      distfun = stats::dist))
+  res <- ComplexHeatmap::Heatmap(comp[1:min(show_first,
+                                                length(comp[,1])),],
+                                 col = col)
+
+  res <- ComplexHeatmap::draw(res)
+
+  # res <- ggplotify::as.ggplot(function() gplots::heatmap.2(comp[1:min(show_first,
+  #                                                length(comp[,1])),],
+  #                                     col = col,
+  #                                     margins=c(9,8),
+  #                                     key = TRUE,
+  #                                     density.info = "density",
+  #                                     key.title = NA,
+  #                                     key.xlab = NA,
+  #                                     key.ylab = NA,
+  #                                     trace = "none",
+  #                                     distfun = stats::dist))
 
   # --------------------------------- return ----------------------------------
   return(res)
