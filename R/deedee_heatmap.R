@@ -20,7 +20,9 @@
 deedee_heatmap <- function(data,
                            pthresh = 0.05,
                            show_first = 25,
-                           show_gene_names = FALSE) {
+                           show_gene_names = FALSE,
+                           dist = "euclidean",
+                           clust = "average") {
 
   # ----------------------------- argument check ------------------------------
   checkmate::assert_list(data, type = "data.frame", min.len = 2)
@@ -31,6 +33,10 @@ deedee_heatmap <- function(data,
   checkmate::assert_number(show_first, lower = 1,
                            upper = max(length(data[[i]]$logFC)))
   checkmate::assert_logical(show_gene_names)
+  choices1 <- c("euclidean", "manhattan", "pearson", "spearman")
+  checkmate::assert_choice(dist, choices1)
+  choices2 <- c("single", "complete", "average", "centroid")
+  checkmate::assert_choice(clust, choices2)
 
   # ---------------------------- data preparation -----------------------------
   for(i in 1:length(data)){
@@ -64,7 +70,9 @@ deedee_heatmap <- function(data,
   res <- ComplexHeatmap::Heatmap(comp[1:min(show_first,
                                                 length(comp[,1])),],
                                  name = "logFC",
-                                 col = col)
+                                 col = col,
+                                 clustering_distance_rows = dist,
+                                 clustering_method_rows = clust)
 
   ComplexHeatmap::draw(res)
 
