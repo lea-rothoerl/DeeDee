@@ -20,7 +20,8 @@ ui <- navbarPage("DeeDee",
                        multiple = TRUE,
                        accept = c(".rds", ".txt", ".xlsx")),
              uiOutput("datasets"),
-             downloadButton("inp_download", "Download DeeDee object (.RDS)")),
+             downloadButton("inp_download", "Download DeeDee object (.RDS)"),
+             tableOutput("inp_infobox")),
 
 
     # ------------------------------- scatter ----------------------------------
@@ -33,7 +34,10 @@ ui <- navbarPage("DeeDee",
                  selectInput("scatter_color_by", h3("Color by"),
                              choices = list("1st p-value" = "pval1",
                                             "2nd p-value" = "pval2"),
-                                            selected = "pval1")),
+                                            selected = "pval1"),
+
+                 numericInput("scatter_pthresh" , h3("P-value threshold"),
+                              value = 0.05, min = 0.01, max = 1, step = 0.01)),
 
              mainPanel(plotOutput("scatter",
                        brush = "scatter_brush"),
@@ -54,7 +58,24 @@ ui <- navbarPage("DeeDee",
 
                  checkboxInput("heatmap_show_gene_names",
                                "Show gene names",
-                               value = FALSE)),
+                               value = FALSE),
+
+                 selectInput("heatmap_dist", h3("Distance measure"),
+                             choices = list("Euclidean" = "euclidean",
+                                            "Manhattan" = "manhattan",
+                                            "Pearson" = "pearson",
+                                            "Spearman" = "spearman"),
+                             selected = "euclidean"),
+
+                 selectInput("heatmap_clust", h3("Clustering method"),
+                             choices = list("Single" = "single",
+                                            "Complete" = "complete",
+                                            "Average" = "average",
+                                            "Centroid" = "centroid"),
+                             selected = "average")
+                 ,
+                 numericInput("heatmap_pthresh" , h3("P-value threshold"),
+                              value = 0.05, min = 0.01, max = 1, step = 0.01)),
 
              mainPanel(plotOutput("heatmap"))),
 
@@ -66,7 +87,10 @@ ui <- navbarPage("DeeDee",
                              choices = list("Up" = "up",
                                             "Down" = "down",
                                             "Both" = "both"),
-                             selected = "both")),
+                             selected = "both"),
+
+                 numericInput("venn_pthresh" , h3("P-value threshold"),
+                              value = 0.05, min = 0.01, max = 1, step = 0.01)),
 
              mainPanel(plotOutput("venn"))),
 
@@ -79,11 +103,15 @@ ui <- navbarPage("DeeDee",
                                             "Down" = "down",
                                             "Both" = "both"),
                              selected = "both"),
+
                  conditionalPanel(
                      condition = "input.upSet_mode == 'both'",
                      checkboxInput("upSet_colored",
                                    "Coloring",
-                                   TRUE))),
+                                   TRUE)),
+
+                 numericInput("upSet_pthresh" , h3("P-value threshold"),
+                              value = 0.05, min = 0.01, max = 1, step = 0.01)),
 
              mainPanel(plotOutput("upSet"))),
 
@@ -98,7 +126,10 @@ ui <- navbarPage("DeeDee",
                  selectInput("qq_color_by", h3("Color by"),
                              choices = list("1st p-value" = "pval1",
                                             "2nd p-value" = "pval2"),
-                             selected = "pval1")),
+                             selected = "pval1"),
+
+                 numericInput("qq_pthresh" , h3("P-value threshold"),
+                              value = 0.05, min = 0.01, max = 1, step = 0.01)),
 
              mainPanel(plotOutput("qq",
                                   brush = "qq_brush"),
@@ -111,7 +142,11 @@ ui <- navbarPage("DeeDee",
                 numericInput("cat_maxrank",
                             h3("Max rank"),
                             value = 1000,
-                            min = 1)),
+                            min = 1),
+
+                numericInput("cat_pthresh" , h3("P-value threshold"),
+                             value = 0.05, min = 0.01, max = 1, step = 0.01)),
+
              mainPanel(plotOutput("cat")))
 )
 
@@ -235,6 +270,85 @@ server <- function(input, output) {
             saveRDS(mydata_use(), file)
         })
 
+    output$inp_infobox <- renderTable({
+        req(input$inp)
+
+        ext <- c()
+        filename <- c()
+        res <- list()
+        type <- c()
+        contrast <- c()
+        genes <- c()
+        count <- 0
+
+        for(i in 1:length(input$inp[,1])) {
+            ext[i] <- tools::file_ext(input$inp[i, "datapath"])
+
+            if (ext[[i]] == "rds"|| ext[[i]] == "RDS") {
+                res[[i]] <- readRDS(input$inp[[i, "datapath"]])
+
+            } else if (ext[[i]] == "xlsx") {
+                sheets <- readxl::excel_sheets(input$inp[[i, "datapath"]])
+                res[[i]] <- lapply(sheets,
+                                   readxl::read_excel,
+                                   path=input$inp[[i, "datapath"]])
+                names(res[[i]]) <- sheets
+                for (j in 1:length(sheets)) {
+                    res[[i]][[sheets[j]]] <- as.data.frame(res[[i]][[sheets[j]]])
+                    res[[i]][[sheets[j]]] <- tibble::column_to_rownames(
+                        res[[i]][[sheets[j]]], "rowname")
+                }
+
+            } else if (ext[[i]] == "txt") {
+                temp <- read.table(input$inp[[i, "datapath"]])
+                temp2 <- list()
+                nm <- c()
+                for (j in 0:((length(temp)/2)-1)) {
+                    a <- 2*j+1
+                    b <- 2*j+2
+                    temp2[[j+1]] <- c(temp[a], temp[b])
+                    temp2[[j+1]] <- as.data.frame(temp2[[j+1]])
+                    nm[j+1] <- unlist(strsplit(names(temp)[2*j+1],
+                                               split=".",
+                                               fixed=TRUE))[1]
+                }
+                res[[i]] <- c(temp2[1:length(temp2)])
+                names(res[[i]]) <- nm
+                for (j in 1:((length(temp)/2))) {
+                }
+                for (j in 1:length(res[[i]])) {
+                    names(res[[i]][[j]]) <- c("logFC", "pval")
+                    row.names(res[[i]][[j]]) <- row.names(temp)
+                }
+            }
+            if (class(res[[i]]) == "DESeqResults" ||
+                class(res[[i]]) == "edgeR" ||
+                class(res[[i]]) == "limma") {
+                count <- count + 1
+                type[count] <- class(res[[i]])
+                filename[count] <- input$inp[i,"name"]
+                contrast[count] <- unlist(strsplit(filename[count],
+                                                   split=".",
+                                                   fixed=TRUE))[1]
+                genes[count] <- length(mydata()
+                                       [[contrast[count]]][["logFC"]])
+
+            } else {
+                for (j in 1:length(res[[i]])) {
+                    count <- count + 1
+                    type[count] <- "DeeDee object"
+                    filename[count] <- input$inp[i, "name"]
+                    contrast[count] <- names(res[[i]])[j]
+                    genes[count] <- length(res[[i]][j]
+                                           [[contrast[count]]][["logFC"]])
+                }
+            }
+        }
+
+        df <- data.frame(filename, type, contrast, genes)
+        return(df)
+    })
+
 
     # ------------------------------- scatter ----------------------------------
     output$scatter_choices1 <- renderUI({
@@ -261,7 +375,8 @@ server <- function(input, output) {
         deedee_scatter(mydata_use(),
                        select1 = sel1,
                        select2 = sel2,
-                       color_by = input$scatter_color_by)
+                       color_by = input$scatter_color_by,
+                       pthresh = input$scatter_pthresh)
     })
 
     # output$scatter_click_info <- renderTable({
@@ -312,10 +427,12 @@ server <- function(input, output) {
     output$heatmap <- renderPlot({
         req(input$inp)
         req(input$heatmap_show_first)
-        # InteractiveComplexHeatmap::htShiny(
         deedee_heatmap(mydata_use(),
                        show_first = input$heatmap_show_first,
-                       show_gene_names = input$heatmap_show_gene_names)
+                       show_gene_names = input$heatmap_show_gene_names,
+                       dist = input$heatmap_dist,
+                       clust = input$heatmap_clust,
+                       pthresh = input$heatmap_pthresh)
     })
 
 
@@ -323,7 +440,8 @@ server <- function(input, output) {
     output$venn <- renderPlot({
         req(input$inp)
         deedee_venn(mydata_use(),
-                    mode = input$venn_mode)
+                    mode = input$venn_mode,
+                    pthresh = input$venn_pthresh)
     })
 
 
@@ -336,7 +454,8 @@ server <- function(input, output) {
             mode = input$upSet_mode
         }
         deedee_upSet(mydata_use(),
-                     mode = mode)
+                     mode = mode,
+                     pthresh = input$upSet_pthresh)
     })
 
 
@@ -365,7 +484,8 @@ server <- function(input, output) {
         deedee_qq(mydata_use(),
                   select1 = sel1,
                   select2 = sel2,
-                  color_by = input$qq_color_by)
+                  color_by = input$qq_color_by,
+                  pthresh = input$qq_pthresh)
     })
 
     qq_brushed <- reactive ({
@@ -433,7 +553,8 @@ server <- function(input, output) {
         req(input$inp)
         req(input$cat_maxrank)
         deedee_cat(mydata_use(),
-                    maxrank = input$cat_maxrank)
+                   maxrank = input$cat_maxrank,
+                   pthresh = input$cat_pthresh)
     })
 }
 
