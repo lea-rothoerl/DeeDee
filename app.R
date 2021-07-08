@@ -41,8 +41,6 @@ ui <- navbarPage("DeeDee",
 
              mainPanel(plotOutput("scatter",
                        brush = "scatter_brush"),
-                      # click = "scatter_click"),
-                      # tableOutput("scatter_click_info"),
                        downloadButton("scatter_brush_download",
                                       "Download brushed genes (.txt)"),
                        tableOutput("scatter_brush_info"))),
@@ -72,8 +70,8 @@ ui <- navbarPage("DeeDee",
                                             "Complete" = "complete",
                                             "Average" = "average",
                                             "Centroid" = "centroid"),
-                             selected = "average")
-                 ,
+                             selected = "average"),
+
                  numericInput("heatmap_pthresh" , h3("P-value threshold"),
                               value = 0.05, min = 0.01, max = 1, step = 0.01)),
 
@@ -133,6 +131,8 @@ ui <- navbarPage("DeeDee",
 
              mainPanel(plotOutput("qq",
                                   brush = "qq_brush"),
+                       downloadButton("qq_brush_download",
+                                      "Download brushed genes (.txt)"),
                        tableOutput("qq_brush_info"))),
 
 
@@ -177,19 +177,19 @@ server <- function(input, output) {
                 res[[i]] <- readRDS(input$inp[[i, "datapath"]])
                 if (class(res[[i]]) == "DESeqResults") {
                     res[[i]] <- deedee_prepare(res[[i]], "DESeq2")
-                    res[[i]] <- list(as.data.frame(c(res[[i]])))
+                    res[[i]] <- list(res[[i]])
                     names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
                                                        split=".",
                                                        fixed=TRUE))[1]
-                } else if (class(res[[i]]) == "edgeR") {
+                } else if (class(res[[i]]) == "DGEExact") {
                     res[[i]] <- deedee_prepare(res[[i]], "edgeR")
-                    res[[i]] <- list(as.data.frame(c(res[[i]])))
+                    res[[i]] <- list(res[[i]])
                     names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
                                                        split=".",
                                                        fixed=TRUE))[1]
-                } else if (class(res[[i]]) == "limma") {
+                } else if (length(names(res[[i]])) == 6) {
                     res[[i]] <- deedee_prepare(res[[i]], "limma")
-                    res[[i]] <- list(as.data.frame(c(res[[i]])))
+                    res[[i]] <- list(res[[i]])
                     names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
                                                        split=".",
                                                        fixed=TRUE))[1]
@@ -322,8 +322,9 @@ server <- function(input, output) {
                 }
             }
             if (class(res[[i]]) == "DESeqResults" ||
-                class(res[[i]]) == "edgeR" ||
-                class(res[[i]]) == "limma") {
+                class(res[[i]]) == "DGEExact" ||
+                length(names(res[[i]])) == 6) {
+
                 count <- count + 1
                 type[count] <- class(res[[i]])
                 filename[count] <- input$inp[i,"name"]
@@ -372,27 +373,16 @@ server <- function(input, output) {
         sel2 <- match(input$scatter_select2, names(mydata_use()))
         req(sel1)
         req(sel2)
-        deedee_scatter(mydata_use(),
+        res <- deedee_scatter(mydata_use(),
                        select1 = sel1,
                        select2 = sel2,
                        color_by = input$scatter_color_by,
                        pthresh = input$scatter_pthresh)
+        validate(
+            need(!is.null(res), "No common genes in input datasets.")
+        )
+        res
     })
-
-    # output$scatter_click_info <- renderTable({
-    #     req(input$scatter_click)
-    #     df <- data.frame(x = mydata_use()[[input$scatter_select1]],
-    #                      y = mydata_use()[[input$scatter_select2]])
-    #     names(df) <- c(paste(input$scatter_select1, ".logFC", sep = ""),
-    #                    paste(input$scatter_select1, ".pval", sep = ""),
-    #                    paste(input$scatter_select2, ".logFC", sep = ""),
-    #                    paste(input$scatter_select2, ".pval", sep = ""))
-    #     nearPoints(df,
-    #                input$scatter_click,
-    #                xvar = paste(input$scatter_select1, ".logFC", sep = ""),
-    #                yvar = paste(input$scatter_select2, ".logFC", sep = ""),
-    #                addDist = FALSE)
-    # }, rownames = TRUE)
 
     scatter_brushed <- reactive ({
         req(input$scatter_brush)
@@ -427,12 +417,16 @@ server <- function(input, output) {
     output$heatmap <- renderPlot({
         req(input$inp)
         req(input$heatmap_show_first)
-        deedee_heatmap(mydata_use(),
+        res <- deedee_heatmap(mydata_use(),
                        show_first = input$heatmap_show_first,
                        show_gene_names = input$heatmap_show_gene_names,
                        dist = input$heatmap_dist,
                        clust = input$heatmap_clust,
                        pthresh = input$heatmap_pthresh)
+        validate(
+            need(!is.null(res), "No common genes in input datasets.")
+        )
+        res
     })
 
 
@@ -546,6 +540,13 @@ server <- function(input, output) {
     output$qq_brush_info <- renderTable({
         req(qq_brushed())
         qq_brushed()}, rownames = FALSE)
+
+    output$qq_brush_download <- downloadHandler(
+        filename = "scatter_brushed_genes.txt",
+        content = function(file) {
+            req(input$qq_brush)
+            write.table(qq_brushed(), file)
+        })
 
 
     # --------------------------------- cat ------------------------------------
