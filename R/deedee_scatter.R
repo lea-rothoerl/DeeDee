@@ -51,6 +51,10 @@ deedee_scatter <- function(data,
 
   names(comp) <- c("rowname", "logFC1", "pval1", "logFC2", "pval2")
 
+  if (length(comp[,1]) == 0) {
+    return(NULL)
+  }
+
   # ----------------- creation of the resulting scatter plot ------------------
   res <- ggplot2::ggplot(data = comp, ggplot2::aes(logFC1, logFC2,
                                                    col = get(color_by))) +

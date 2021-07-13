@@ -51,14 +51,20 @@ deedee_heatmap <- function(data,
                             data[2][[1]],
                             by = "rowname",
                             copy = FALSE)
-  for (i in 3:length(data)) {
-    comp <- dplyr::inner_join(comp, data[i][[1]], by = "rowname", copy = FALSE)
+  if (length(data) > 2) {
+    for (i in 3:length(data)) {
+      comp <- dplyr::inner_join(comp, data[i][[1]], by = "rowname", copy = FALSE)
+    }
   }
 
   row.names(comp) <- comp$rowname
   comp <- subset(comp, select = -c(rowname))  # removing column with rownames
   comp <- comp[stats::complete.cases(comp[colnames(comp)]),]
   comp <- as.matrix(comp)
+
+  if (length(comp[,1]) == 0) {
+    return(NULL)
+  }
 
   # ------------------- creation of the resulting heatmap ---------------------
   if (show_gene_names == FALSE) {
