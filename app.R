@@ -37,7 +37,9 @@ ui <- navbarPage("DeeDee",
                                             selected = "pval1"),
 
                  numericInput("scatter_pthresh" , h3("P-value threshold"),
-                              value = 0.05, min = 0.01, max = 1, step = 0.01)),
+                              value = 0.05, min = 0.01, max = 1, step = 0.01),
+
+                 includeMarkdown("scatter.md")),
 
              mainPanel(plotOutput("scatter",
                        brush = "scatter_brush"),
@@ -73,7 +75,9 @@ ui <- navbarPage("DeeDee",
                              selected = "average"),
 
                  numericInput("heatmap_pthresh" , h3("P-value threshold"),
-                              value = 0.05, min = 0.01, max = 1, step = 0.01)),
+                              value = 0.05, min = 0.01, max = 1, step = 0.01),
+
+                 includeMarkdown("heatmap.md")),
 
              mainPanel(plotOutput("heatmap"))),
 
@@ -88,7 +92,9 @@ ui <- navbarPage("DeeDee",
                              selected = "both"),
 
                  numericInput("venn_pthresh" , h3("P-value threshold"),
-                              value = 0.05, min = 0.01, max = 1, step = 0.01)),
+                              value = 0.05, min = 0.01, max = 1, step = 0.01),
+
+                 includeMarkdown("venn.md")),
 
              mainPanel(plotOutput("venn"))),
 
@@ -109,7 +115,9 @@ ui <- navbarPage("DeeDee",
                                    TRUE)),
 
                  numericInput("upSet_pthresh" , h3("P-value threshold"),
-                              value = 0.05, min = 0.01, max = 1, step = 0.01)),
+                              value = 0.05, min = 0.01, max = 1, step = 0.01),
+
+                 includeMarkdown("upSet.md")),
 
              mainPanel(plotOutput("upSet"))),
 
@@ -127,7 +135,9 @@ ui <- navbarPage("DeeDee",
                              selected = "pval1"),
 
                  numericInput("qq_pthresh" , h3("P-value threshold"),
-                              value = 0.05, min = 0.01, max = 1, step = 0.01)),
+                              value = 0.05, min = 0.01, max = 1, step = 0.01),
+
+                 includeMarkdown("qq.md")),
 
              mainPanel(plotOutput("qq",
                                   brush = "qq_brush"),
@@ -145,7 +155,9 @@ ui <- navbarPage("DeeDee",
                             min = 1),
 
                 numericInput("cat_pthresh" , h3("P-value threshold"),
-                             value = 0.05, min = 0.01, max = 1, step = 0.01)),
+                             value = 0.05, min = 0.01, max = 1, step = 0.01),
+
+                includeMarkdown("cat.md")),
 
              mainPanel(plotOutput("cat")))
 )
