@@ -39,10 +39,15 @@ ui <- navbarPage("DeeDee",
                  numericInput("scatter_pthresh" , h3("P-value threshold"),
                               value = 0.05, min = 0.01, max = 1, step = 0.01),
 
-                 includeMarkdown("scatter.md")),
+                 bsCollapse(
+                     bsCollapsePanel("INFO",
+                        includeMarkdown("scatter.md")))),
 
-             mainPanel(plotOutput("scatter",
-                       brush = "scatter_brush"),
+             mainPanel(shinycssloaders::withSpinner(
+                 plotOutput("scatter",
+                       dblclick = "scatter_dblclick",
+                       brush = brushOpts(id = "scatter_brush",
+                                         resetOnNew = FALSE))),
                        downloadButton("scatter_brush_download",
                                       "Download brushed genes (.txt)"),
                        tableOutput("scatter_brush_info"))),
@@ -58,6 +63,10 @@ ui <- navbarPage("DeeDee",
 
                  checkboxInput("heatmap_show_gene_names",
                                "Show gene names",
+                               value = FALSE),
+
+                 checkboxInput("heatmap_showNA",
+                               "Show NA",
                                value = FALSE),
 
                  selectInput("heatmap_dist", h3("Distance measure"),
@@ -77,9 +86,15 @@ ui <- navbarPage("DeeDee",
                  numericInput("heatmap_pthresh" , h3("P-value threshold"),
                               value = 0.05, min = 0.01, max = 1, step = 0.01),
 
-                 includeMarkdown("heatmap.md")),
+                 bsCollapse(
+                     bsCollapsePanel("INFO",
+                            includeMarkdown("heatmap.md")))),
 
-             mainPanel(plotOutput("heatmap"))),
+             mainPanel(textOutput("heatmap_errors"),
+                       conditionalPanel("output.heatmap_errors == ''",
+                                        shinycssloaders::withSpinner(
+                                            InteractiveComplexHeatmap::
+                                                InteractiveComplexHeatmapOutput())))),
 
 
     # -------------------------------- venn ------------------------------------
@@ -94,9 +109,13 @@ ui <- navbarPage("DeeDee",
                  numericInput("venn_pthresh" , h3("P-value threshold"),
                               value = 0.05, min = 0.01, max = 1, step = 0.01),
 
-                 includeMarkdown("venn.md")),
+                 bsCollapse(
+                     bsCollapsePanel("INFO",
+                        includeMarkdown("venn.md")))),
 
-             mainPanel(plotOutput("venn"))),
+             mainPanel(
+                 shinycssloaders::withSpinner(
+                    plotOutput("venn")))),
 
 
     # -------------------------------- upSet -----------------------------------
@@ -117,9 +136,13 @@ ui <- navbarPage("DeeDee",
                  numericInput("upSet_pthresh" , h3("P-value threshold"),
                               value = 0.05, min = 0.01, max = 1, step = 0.01),
 
-                 includeMarkdown("upSet.md")),
+                 bsCollapse(
+                     bsCollapsePanel("INFO",
+                        includeMarkdown("upSet.md")))),
 
-             mainPanel(plotOutput("upSet"))),
+             mainPanel(
+                 shinycssloaders::withSpinner(
+                     plotOutput("upSet")))),
 
 
     # --------------------------------- qq -------------------------------------
@@ -137,10 +160,14 @@ ui <- navbarPage("DeeDee",
                  numericInput("qq_pthresh" , h3("P-value threshold"),
                               value = 0.05, min = 0.01, max = 1, step = 0.01),
 
-                 includeMarkdown("qq.md")),
+                 bsCollapse(
+                     bsCollapsePanel("INFO",
+                        includeMarkdown("qq.md")))),
 
-             mainPanel(plotOutput("qq",
-                                  brush = "qq_brush"),
+             mainPanel(
+                 shinycssloaders::withSpinner(
+                     plotOutput("qq",
+                                  brush = "qq_brush")),
                        downloadButton("qq_brush_download",
                                       "Download brushed genes (.txt)"),
                        tableOutput("qq_brush_info"))),
@@ -157,16 +184,20 @@ ui <- navbarPage("DeeDee",
                 numericInput("cat_pthresh" , h3("P-value threshold"),
                              value = 0.05, min = 0.01, max = 1, step = 0.01),
 
-                includeMarkdown("cat.md")),
+                bsCollapse(
+                    bsCollapsePanel("INFO",
+                        includeMarkdown("cat.md")))),
 
-             mainPanel(plotOutput("cat")))
+             mainPanel(
+                 shinycssloaders::withSpinner(
+                     plotOutput("cat"))))
 )
 
 # ------------------------------------------------------------------------------
 # ----------------------------- S E R V E R ------------------------------------
 # ------------------------------------------------------------------------------
 
-server <- function(input, output) {
+server <- function(input, output, session) {
 
     # ----------------------------- data input ---------------------------------
     mydata <- reactive({
@@ -379,8 +410,22 @@ server <- function(input, output) {
                     choices = names(mydata_use()))
     })
 
+    ranges <- reactiveValues(x = NULL, y = NULL)
+
     output$scatter <- renderPlot({
-        req(input$inp)
+        validate(
+            need(input$inp,
+                 'Please input at least two contrasts.')
+        )
+        validate(
+            need(length(mydata()) >= 2,
+                 'Please upload at least two contrasts.')
+        )
+        validate(
+            need(length(mydata_use()) >= 2,
+                 'Please select at least two contrasts.')
+        )
+
         sel1 <- match(input$scatter_select1, names(mydata_use()))
         sel2 <- match(input$scatter_select2, names(mydata_use()))
         req(sel1)
@@ -393,7 +438,10 @@ server <- function(input, output) {
         validate(
             need(!is.null(res), "No common genes in input datasets.")
         )
-        res
+         res +
+             ggplot2::coord_cartesian(xlim = ranges$x,
+                                      ylim = ranges$y,
+                                      expand = FALSE)
     })
 
     scatter_brushed <- reactive ({
@@ -401,7 +449,7 @@ server <- function(input, output) {
         df <- data.frame(x = mydata_use()[[input$scatter_select1]],
                          y = mydata_use()[[input$scatter_select2]])
 
-        df <- subset(df, x.pval < 0.05 | y.pval < 0.05)
+        df <- subset(df, x.pval < 0.05 & y.pval < 0.05)
 
         names(df) <- c(paste(input$scatter_select1, ".logFC", sep = ""),
                        paste(input$scatter_select1, ".pval", sep = ""),
@@ -424,44 +472,140 @@ server <- function(input, output) {
             write.table(scatter_brushed(), file)
     })
 
+    observeEvent(input$scatter_dblclick, {
+        brush <- input$scatter_brush
+        if (!is.null(brush)) {
+            ranges$x <- c(brush$xmin, brush$xmax)
+            ranges$y <- c(brush$ymin, brush$ymax)
+
+        } else {
+            ranges$x <- NULL
+            ranges$y <- NULL
+        }
+    })
+
+
 
     # ------------------------------- heatmap ----------------------------------
-    output$heatmap <- renderPlot({
+    output$heatmap_errors <- renderText({
+        validate(
+            need(input$inp,
+                 'Please input at least two contrasts.')
+        )
+        validate(
+            need(length(mydata()) >= 2,
+                 'Please upload at least two contrasts.')
+        )
+        validate(
+            need(length(mydata_use()) >= 2,
+                 'Please select at least two contrasts.')
+        )
+        validate(
+            need(!is.null(heatmap_output()),
+                 "No common genes in input datasets.")
+        )
+        ''
+    })
+
+    heatmap_output <- reactive({
         req(input$inp)
         req(input$heatmap_show_first)
+        req(mydata_use())
         res <- deedee_heatmap(mydata_use(),
-                       show_first = input$heatmap_show_first,
-                       show_gene_names = input$heatmap_show_gene_names,
-                       dist = input$heatmap_dist,
-                       clust = input$heatmap_clust,
-                       pthresh = input$heatmap_pthresh)
+                              show_first = input$heatmap_show_first,
+                              show_gene_names = input$heatmap_show_gene_names,
+                              dist = input$heatmap_dist,
+                              clust = input$heatmap_clust,
+                              pthresh = input$heatmap_pthresh,
+                              show_na = input$heatmap_showNA)
         validate(
             need(!is.null(res), "No common genes in input datasets.")
         )
-        res
+
+        res <- ComplexHeatmap::draw(res)
+
+        return(res)
     })
+
+    listen <- reactive({
+        list(input$heatmap_show_first,
+          input$heatmap_show_gene_names,
+          input$heatmap_dist,
+          input$heatmap_clust,
+          input$heatmap_pthresh,
+          input$heatmap_showNA,
+          mydata_use())
+    })
+
+    observeEvent(listen(), {
+        req(length(mydata_use()) >= 2)
+        InteractiveComplexHeatmap::makeInteractiveComplexHeatmap(
+             input,
+             output,
+             session,
+             heatmap_output())})
 
 
     # -------------------------------- venn ------------------------------------
     output$venn <- renderPlot({
+        validate(
+            need(input$inp,
+                 'Please input at least two contrasts.')
+        )
+        validate(
+            need(length(mydata()) >= 2,
+                 'Please upload at least two contrasts.')
+        )
+        validate(
+            need(length(mydata_use()) >= 2,
+                 'Please select at least two contrasts.')
+        )
+
         req(input$inp)
-        deedee_venn(mydata_use(),
+        res <- deedee_venn(mydata_use(),
                     mode = input$venn_mode,
                     pthresh = input$venn_pthresh)
+
+        validate(
+            need(!is.null(res),
+                 "No genes in your datasets. Maybe your specified p-value threshold is too low?")
+        )
+
+        res
     })
 
 
     # -------------------------------- upSet -----------------------------------
     output$upSet <- renderPlot({
+        validate(
+            need(input$inp,
+                 'Please input at least two contrasts.')
+        )
+        validate(
+            need(length(mydata()) >= 2,
+                 'Please upload at least two contrasts.')
+        )
+        validate(
+            need(length(mydata_use()) >= 2,
+                 'Please select at least two contrasts.')
+        )
+
         req(input$inp)
         if (input$upSet_mode == "both" && input$upSet_colored) {
              mode = "both_colored"
         } else {
             mode = input$upSet_mode
         }
-        deedee_upSet(mydata_use(),
+        res <- deedee_upSet(mydata_use(),
                      mode = mode,
                      pthresh = input$upSet_pthresh)
+
+        validate(
+            need(!is.null(res),
+                 "No genes in your datasets. Maybe your specified p-value threshold is too low?")
+        )
+
+        res
     })
 
 
@@ -482,16 +626,36 @@ server <- function(input, output) {
     })
 
     output$qq <- renderPlot({
+        validate(
+            need(input$inp,
+                 'Please input at least two contrasts.')
+        )
+        validate(
+            need(length(mydata()) >= 2,
+                 'Please upload at least two contrasts.')
+        )
+        validate(
+            need(length(mydata_use()) >= 2,
+                 'Please select at least two contrasts.')
+        )
+
         req(input$inp)
         sel1 <- match(input$qq_select1, names(mydata_use()))
         sel2 <- match(input$qq_select2, names(mydata_use()))
         req(sel1)
         req(sel2)
-        deedee_qq(mydata_use(),
+        res <- deedee_qq(mydata_use(),
                   select1 = sel1,
                   select2 = sel2,
                   color_by = input$qq_color_by,
                   pthresh = input$qq_pthresh)
+
+        validate(
+            need(!is.null(res),
+                 "No genes in your datasets. Maybe your specified p-value threshold is too low?")
+        )
+
+        res
     })
 
     qq_brushed <- reactive ({
@@ -563,11 +727,31 @@ server <- function(input, output) {
 
     # --------------------------------- cat ------------------------------------
     output$cat <- renderPlot({
+        validate(
+            need(input$inp,
+                 'Please input at least two contrasts.')
+        )
+        validate(
+            need(length(mydata()) >= 2,
+                 'Please upload at least two contrasts.')
+        )
+        validate(
+            need(length(mydata_use()) >= 2,
+                 'Please select at least two contrasts.')
+        )
+
         req(input$inp)
         req(input$cat_maxrank)
-        deedee_cat(mydata_use(),
+        res <- deedee_cat(mydata_use(),
                    maxrank = input$cat_maxrank,
                    pthresh = input$cat_pthresh)
+
+        validate(
+            need(!is.null(res),
+                 "No genes in your datasets. Maybe your specified p-value threshold is too low?")
+        )
+
+        res
     })
 }
 
