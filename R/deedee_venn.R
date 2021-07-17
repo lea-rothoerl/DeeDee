@@ -33,6 +33,11 @@ deedee_venn <- function(data,
   for(i in 1:length(data)) {
     data[i][[1]] <- subset(data[i][[1]],
                            data[i][[1]]$pval < pthresh)
+
+    if (length(data[i][[1]][[1]]) == 0) {
+      return(NULL)
+    }
+
     if (mode == "up") {
       data[i][[1]] <- subset(data[i][[1]],
                              data[i][[1]]$logFC > 0)

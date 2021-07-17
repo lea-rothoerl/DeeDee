@@ -31,6 +31,11 @@ deedee_cat <- function(data,
   for(i in 1:length(data)) {
     data[i][[1]] <- subset(data[i][[1]],
                                data[i][[1]]$pval < pthresh)
+
+    if (length(data[i][[1]][[1]]) == 0) {
+      return(NULL)
+    }
+
     data[i][[1]] <- data[i][[1]]["logFC"]   # removing p-value column
     colnames(data[i][[1]]) <- c(paste("logFC", i, sep=""))
     data[i][[1]] <- as.matrix(data[i][[1]]) # conversion to matrix
@@ -68,7 +73,8 @@ deedee_cat <- function(data,
   res <- res + ggplot2::annotate("text",
                         x = (7/8*length(output$rank)),
                         y = 0.9,
-                        label = paste("AUC =", round(auc, 2), sep = " "))
+                        label = paste("AUC =", round(auc, 2), sep = " ")) +
+    ggplot2::theme_light()
 
   # --------------------------------- return ----------------------------------
   # print(paste("Area under curve: ", round(auc, 2), sep=""))

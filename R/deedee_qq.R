@@ -75,12 +75,17 @@ deedee_qq <- function(data,
 
   qq_f <- qq[qq$pval1 <= pthresh | qq$pval2 <= pthresh, ]
 
+  if (length(qq_f[[1]]) == 0 || length(qq_f[[2]]) == 0) {
+    return(NULL)
+  }
+
   res <- ggplot2::ggplot(qq_f, ggplot2::aes(x, y, col = -log10(get(color_by)))) +
     ggplot2::geom_point() +
     viridis::scale_color_viridis(option = "magma") +
     ggplot2::xlab(names(data)[select1]) +
     ggplot2::ylab(names(data)[select2]) +
-    ggplot2::labs(color= paste("-log10(", color_by, ")", sep=""))
+    ggplot2::labs(color= paste("-log10(", color_by, ")", sep="")) +
+    ggplot2::theme_light()
 
     # --------------------------------- return ----------------------------------
   return(res)
