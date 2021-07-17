@@ -22,7 +22,8 @@ deedee_heatmap <- function(data,
                            show_first = 25,
                            show_gene_names = FALSE,
                            dist = "euclidean",
-                           clust = "average") {
+                           clust = "average",
+                           show_na = FALSE) {
 
   # ----------------------------- argument check ------------------------------
   checkmate::assert_list(data, type = "data.frame", min.len = 2)
@@ -47,19 +48,21 @@ deedee_heatmap <- function(data,
   }
 
   # ----- creation of a comp matrix with the modified results from above ------
-  comp <- dplyr::inner_join(data[1][[1]],
+  comp <- dplyr::full_join(data[1][[1]],
                             data[2][[1]],
                             by = "rowname",
                             copy = FALSE)
   if (length(data) > 2) {
     for (i in 3:length(data)) {
-      comp <- dplyr::inner_join(comp, data[i][[1]], by = "rowname", copy = FALSE)
+      comp <- dplyr::full_join(comp, data[i][[1]], by = "rowname", copy = FALSE)
     }
   }
 
   row.names(comp) <- comp$rowname
   comp <- subset(comp, select = -c(rowname))  # removing column with rownames
-  comp <- comp[stats::complete.cases(comp[colnames(comp)]),]
+  if (show_na == FALSE) {
+    comp <- comp[stats::complete.cases(comp[colnames(comp)]),]
+  }
   comp <- as.matrix(comp)
 
   if (length(comp[,1]) == 0) {
@@ -81,18 +84,6 @@ deedee_heatmap <- function(data,
                                  clustering_method_rows = clust)
 
   ComplexHeatmap::draw(res)
-
-  # res <- ggplotify::as.ggplot(function() gplots::heatmap.2(comp[1:min(show_first,
-  #                                                length(comp[,1])),],
-  #                                     col = col,
-  #                                     margins=c(9,8),
-  #                                     key = TRUE,
-  #                                     density.info = "density",
-  #                                     key.title = NA,
-  #                                     key.xlab = NA,
-  #                                     key.ylab = NA,
-  #                                     trace = "none",
-  #                                     distfun = stats::dist))
 
   # --------------------------------- return ----------------------------------
   return(res)
