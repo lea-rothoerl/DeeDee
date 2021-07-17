@@ -34,6 +34,11 @@ deedee_upSet <- function(data,
   # ---------------------------- data preparation -----------------------------
   for(i in 1:length(data)){
     data[i][[1]] <- subset(data[i][[1]], data[i][[1]]$pval < pthresh) # pthresh
+
+    if (length(data[i][[1]][[1]]) == 0) {
+      return(NULL)
+    }
+
     data[i][[1]] <- data[i][[1]]["logFC"]   # removing p-value column
     data[i][[1]]$logFC[data[i][[1]]$logFC < 0] <- -1  # 1/0/-1 distinction
     data[i][[1]]$logFC[data[i][[1]]$logFC > 0] <- 1
@@ -56,7 +61,6 @@ deedee_upSet <- function(data,
       data[i] <- data[i][[1]]
     }
   }
-
   # -------------------------------- coloring ---------------------------------
   if (mode == "both_colored") {
     comp <- dplyr::full_join(data[1][[1]], data[2][[1]], by = "rowname",
@@ -121,10 +125,14 @@ deedee_upSet <- function(data,
                  nsets = length(data),
                  queries = list(list(query = UpSetR::elements,
                                      params = c("same_dir", TRUE),
-                                     color = col_up, active = TRUE),
+                                     color = col_up, active = TRUE,
+                                     query.name = "only positive logFCs"),
                                 list(query = UpSetR::elements,
                                      params = list("all_down", TRUE),
-                                     color = col_down, active = TRUE)))
+                                     color = col_down, active = TRUE,
+                                     query.name = "only negative logFCs")),
+                 query.legend = "top")
+
   }
   else {
     res <- UpSetR::upset(UpSetR::fromList(data),
