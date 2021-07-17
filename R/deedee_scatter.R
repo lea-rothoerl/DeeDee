@@ -62,7 +62,8 @@ deedee_scatter <- function(data,
       viridis::scale_color_viridis(option = "magma") +
       ggplot2::xlab(names(data)[select1]) +
       ggplot2::ylab(names(data)[select2]) +
-      ggplot2::labs(color=color_by)
+      ggplot2::labs(color=color_by) +
+      ggplot2::theme_light()
 
   # --------------------------------- return ----------------------------------
   return(res)
