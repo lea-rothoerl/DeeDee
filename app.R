@@ -184,6 +184,8 @@ ui <- navbarPage("DeeDee",
                 numericInput("cat_pthresh" , h3("P-value threshold"),
                              value = 0.05, min = 0.01, max = 1, step = 0.01),
 
+                uiOutput("cat_choice"),
+
                 shinyBS::bsCollapse(
                     shinyBS::bsCollapsePanel("INFO",
                         includeMarkdown("cat.md")))),
@@ -726,6 +728,14 @@ server <- function(input, output, session) {
 
 
     # --------------------------------- cat ------------------------------------
+    output$cat_choice <- renderUI({
+        req(input$inp)
+        selectInput("cat_ref",
+                    h3("Reference contrast"),
+                    selected = names(mydata_use())[1],
+                    choices = names(mydata_use()))
+    })
+
     output$cat <- renderPlot({
         validate(
             need(input$inp,
@@ -742,7 +752,11 @@ server <- function(input, output, session) {
 
         req(input$inp)
         req(input$cat_maxrank)
+        req(input$cat_ref)
+
+        ref <- match(input$cat_ref, names(mydata_use()))
         res <- deedee_cat(mydata_use(),
+                   ref = ref,
                    maxrank = input$cat_maxrank,
                    pthresh = input$cat_pthresh)
 
