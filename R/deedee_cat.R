@@ -16,6 +16,7 @@
 #'
 
 deedee_cat <- function(data,
+                       ref = 1,
                        pthresh = 0.05,
                        maxrank = 1000) {
 
@@ -24,6 +25,7 @@ deedee_cat <- function(data,
   for (i in 1:length(data)) {
     checkmate::assert_data_frame(data[[i]], type = "numeric")
   }
+  checkmate::assert_number(ref, lower = 1, upper = length(data))
   checkmate::assert_number(pthresh, lower = 0)
   checkmate::assert_number(maxrank, lower = 1)
 
@@ -36,7 +38,7 @@ deedee_cat <- function(data,
       return(NULL)
     }
 
-    data[i][[1]] <- data[i][[1]]["logFC"]   # removing p-value column
+    data[i][[1]] <- data[i][[1]]["logFC"]   # remove p-value column
     colnames(data[i][[1]]) <- c(paste("logFC", i, sep=""))
     data[i][[1]] <- as.matrix(data[i][[1]]) # conversion to matrix
     names <- rownames(data[i][[1]])
@@ -47,38 +49,34 @@ deedee_cat <- function(data,
   }
 
   # ----------------------- calculation of concordance ------------------------
-  output <- data.frame(rank=1:min(maxrank, min(length(data[i][[1]]))),
-                       concordance=NA)
+  output <- list()
 
-  for (i in 1:nrow(output)){
-    intsec <- intersect(data[1][[1]][1:i], data[2][[1]][1:i])
-    dat_new <- rlist::list.append(data[1][[1]][1:i], data[2][[1]][1:i])
-    if (length(data) > 2) {
-      for (j in 3:length(data)) {
-        intsec <- rlist::list.append(intersect(dat_new, data[j][[1]][1:i]))
-        dat_new <- rlist::list.append(dat_new, data[j][[1]][1:i])
+  for (i in 1:length(data)) {
+    if (i != ref) {
+      output[[i]] <- data.frame(rank=1:min(maxrank, length(data[i][[1]])),
+                         concordance=NA)
+
+      for (j in 1:nrow(output[[i]])) {
+        intsec <- intersect(data[ref][[1]][1:j], data[i][[1]][1:j])
+        output[[i]][[j, "concordance"]] <- length(intsec)/j
       }
     }
-    output[i,"concordance"] <- length(intsec)/i
   }
 
   # ------------------------- calculation of the AUC --------------------------
-  auc <- DescTools::AUC(output$rank, output$concordance)
-  print(auc)
-  print(length(output[[1]]))
-  auc <- auc/length(output[[1]])
+  # auc <- DescTools::AUC(output$rank, output$concordance)
+  # print(auc)
+  # print(length(output[[1]]))
+  # auc <- auc/length(output[[1]])
   # auc <- mean(output$concordance)
 
   # ------------------- creation of the resulting CAT plot --------------------
-  res <- ggplot2::ggplot(data = output, ggplot2::aes(rank, concordance)) +
-      ggplot2::geom_line()
-  res <- res + ggplot2::annotate("text",
-                        x = (7/8*length(output$rank)),
-                        y = 0.9,
-                        label = paste("AUC =", round(auc, 2), sep = " ")) +
-    ggplot2::theme_light()
+  res <- ggplot2::ggplot(dplyr::bind_rows(output, .id="df"),
+                         ggplot2::aes(rank, concordance, colour=df)) +
+    ggplot2::geom_line() +
+    ggplot2::theme_light() +
+    viridis::scale_color_viridis(option = "magma", discrete = TRUE)
 
   # --------------------------------- return ----------------------------------
-  # print(paste("Area under curve: ", round(auc, 2), sep=""))
   return(res)
 }
