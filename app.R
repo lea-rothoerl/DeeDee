@@ -39,8 +39,8 @@ ui <- navbarPage("DeeDee",
                  numericInput("scatter_pthresh" , h3("P-value threshold"),
                               value = 0.05, min = 0.01, max = 1, step = 0.01),
 
-                 bsCollapse(
-                     bsCollapsePanel("INFO",
+                 shinyBS::bsCollapse(
+                     shinyBS::bsCollapsePanel("INFO",
                         includeMarkdown("scatter.md")))),
 
              mainPanel(shinycssloaders::withSpinner(
@@ -86,8 +86,8 @@ ui <- navbarPage("DeeDee",
                  numericInput("heatmap_pthresh" , h3("P-value threshold"),
                               value = 0.05, min = 0.01, max = 1, step = 0.01),
 
-                 bsCollapse(
-                     bsCollapsePanel("INFO",
+                 shinyBS::bsCollapse(
+                     shinyBS::bsCollapsePanel("INFO",
                             includeMarkdown("heatmap.md")))),
 
              mainPanel(textOutput("heatmap_errors"),
@@ -109,8 +109,8 @@ ui <- navbarPage("DeeDee",
                  numericInput("venn_pthresh" , h3("P-value threshold"),
                               value = 0.05, min = 0.01, max = 1, step = 0.01),
 
-                 bsCollapse(
-                     bsCollapsePanel("INFO",
+                 shinyBS::bsCollapse(
+                     shinyBS::bsCollapsePanel("INFO",
                         includeMarkdown("venn.md")))),
 
              mainPanel(
@@ -136,8 +136,8 @@ ui <- navbarPage("DeeDee",
                  numericInput("upSet_pthresh" , h3("P-value threshold"),
                               value = 0.05, min = 0.01, max = 1, step = 0.01),
 
-                 bsCollapse(
-                     bsCollapsePanel("INFO",
+                 shinyBS::bsCollapse(
+                     shinyBS::bsCollapsePanel("INFO",
                         includeMarkdown("upSet.md")))),
 
              mainPanel(
@@ -160,8 +160,8 @@ ui <- navbarPage("DeeDee",
                  numericInput("qq_pthresh" , h3("P-value threshold"),
                               value = 0.05, min = 0.01, max = 1, step = 0.01),
 
-                 bsCollapse(
-                     bsCollapsePanel("INFO",
+                 shinyBS::bsCollapse(
+                     shinyBS::bsCollapsePanel("INFO",
                         includeMarkdown("qq.md")))),
 
              mainPanel(
@@ -184,8 +184,8 @@ ui <- navbarPage("DeeDee",
                 numericInput("cat_pthresh" , h3("P-value threshold"),
                              value = 0.05, min = 0.01, max = 1, step = 0.01),
 
-                bsCollapse(
-                    bsCollapsePanel("INFO",
+                shinyBS::bsCollapse(
+                    shinyBS::bsCollapsePanel("INFO",
                         includeMarkdown("cat.md")))),
 
              mainPanel(

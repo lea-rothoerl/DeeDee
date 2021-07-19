@@ -64,7 +64,9 @@ deedee_cat <- function(data,
 
   # ------------------------- calculation of the AUC --------------------------
   auc <- DescTools::AUC(output$rank, output$concordance)
-  auc <- auc/(min(maxrank, min(length(data[i][[1]]))))
+  print(auc)
+  print(length(output[[1]]))
+  auc <- auc/length(output[[1]])
   # auc <- mean(output$concordance)
 
   # ------------------- creation of the resulting CAT plot --------------------
