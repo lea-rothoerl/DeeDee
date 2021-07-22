@@ -50,6 +50,7 @@ deedee_cat <- function(data,
 
   # ----------------------- calculation of concordance ------------------------
   output <- list()
+  nm <- c()
 
   for (i in 1:length(data)) {
     if (i != ref) {
@@ -60,8 +61,11 @@ deedee_cat <- function(data,
         intsec <- intersect(data[ref][[1]][1:j], data[i][[1]][1:j])
         output[[i]][[j, "concordance"]] <- length(intsec)/j
       }
+      nm[[i]] <- names(data[i])
     }
   }
+
+  names(output) <- nm
 
   # ------------------------- calculation of the AUC --------------------------
   # auc <- DescTools::AUC(output$rank, output$concordance)
@@ -71,8 +75,8 @@ deedee_cat <- function(data,
   # auc <- mean(output$concordance)
 
   # ------------------- creation of the resulting CAT plot --------------------
-  res <- ggplot2::ggplot(dplyr::bind_rows(output, .id="df"),
-                         ggplot2::aes(rank, concordance, colour=df)) +
+  res <- ggplot2::ggplot(dplyr::bind_rows(output, .id="contrast"),
+                         ggplot2::aes(rank, concordance, colour=contrast)) +
     ggplot2::geom_line() +
     ggplot2::theme_light() +
     viridis::scale_color_viridis(option = "magma", discrete = TRUE)
