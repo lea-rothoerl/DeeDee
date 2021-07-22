@@ -7,12 +7,17 @@ source("~/Development/DeeDee/R/deedee_heatmap.R")
 source("~/Development/DeeDee/R/deedee_qq.R")
 source("~/Development/DeeDee/R/deedee_cat.R")
 source("~/Development/DeeDee/R/deedee_prepare.R")
+library(org.Hs.eg.db)
+library(org.Mm.eg.db)
+library(org.Dm.eg.db)
+library(org.Rn.eg.db)
+library(shinythemes)
 
 # ------------------------------------------------------------------------------
 # --------------------------------- U I ----------------------------------------
 # ------------------------------------------------------------------------------
 
-ui <- navbarPage("DeeDee",
+ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
 
     # ----------------------------- data input ---------------------------------
     tabPanel("Input",
@@ -20,6 +25,12 @@ ui <- navbarPage("DeeDee",
                        multiple = TRUE,
                        accept = c(".rds", ".txt", ".xlsx")),
              uiOutput("datasets"),
+             selectInput("organism", "Organism",
+                         choices = list("Human" = "org.Hs.eg.db",
+                                        "Mouse" = "org.Mm.eg.db",
+                                        "Fly" = "org.Dm.eg.db",
+                                        "Rat" = "org.Rn.eg.db")),
+             uiOutput("key_inp"),
              downloadButton("inp_download", "Download DeeDee object (.RDS)"),
              tableOutput("inp_infobox")),
 
@@ -31,12 +42,12 @@ ui <- navbarPage("DeeDee",
 
                  uiOutput("scatter_choices2"),
 
-                 selectInput("scatter_color_by", h3("Color by"),
+                 selectInput("scatter_color_by", "Color by",
                              choices = list("1st p-value" = "pval1",
                                             "2nd p-value" = "pval2"),
                                             selected = "pval1"),
 
-                 numericInput("scatter_pthresh" , h3("P-value threshold"),
+                 numericInput("scatter_pthresh" , "P-value threshold",
                               value = 0.05, min = 0.01, max = 1, step = 0.01),
 
                  shinyBS::bsCollapse(
@@ -57,7 +68,7 @@ ui <- navbarPage("DeeDee",
     tabPanel("Heatmap",
              sidebarPanel(
                  numericInput("heatmap_show_first",
-                              h3("Show first"),
+                              "Show first",
                               value = 25,
                               min = 1),
 
@@ -69,21 +80,21 @@ ui <- navbarPage("DeeDee",
                                "Show NA",
                                value = FALSE),
 
-                 selectInput("heatmap_dist", h3("Distance measure"),
+                 selectInput("heatmap_dist", "Distance measure",
                              choices = list("Euclidean" = "euclidean",
                                             "Manhattan" = "manhattan",
                                             "Pearson" = "pearson",
                                             "Spearman" = "spearman"),
                              selected = "euclidean"),
 
-                 selectInput("heatmap_clust", h3("Clustering method"),
+                 selectInput("heatmap_clust", "Clustering method",
                              choices = list("Single" = "single",
                                             "Complete" = "complete",
                                             "Average" = "average",
                                             "Centroid" = "centroid"),
                              selected = "average"),
 
-                 numericInput("heatmap_pthresh" , h3("P-value threshold"),
+                 numericInput("heatmap_pthresh" , "P-value threshold",
                               value = 0.05, min = 0.01, max = 1, step = 0.01),
 
                  shinyBS::bsCollapse(
@@ -100,13 +111,13 @@ ui <- navbarPage("DeeDee",
     # -------------------------------- venn ------------------------------------
     tabPanel("Venn Diagram",
              sidebarPanel(
-                 selectInput("venn_mode", h3("Mode"),
+                 selectInput("venn_mode", "Mode",
                              choices = list("Up" = "up",
                                             "Down" = "down",
                                             "Both" = "both"),
                              selected = "both"),
 
-                 numericInput("venn_pthresh" , h3("P-value threshold"),
+                 numericInput("venn_pthresh" , "P-value threshold",
                               value = 0.05, min = 0.01, max = 1, step = 0.01),
 
                  shinyBS::bsCollapse(
@@ -121,7 +132,7 @@ ui <- navbarPage("DeeDee",
     # -------------------------------- upSet -----------------------------------
     tabPanel("UpSet Plot",
              sidebarPanel(
-                 selectInput("upSet_mode", h3("Mode"),
+                 selectInput("upSet_mode", "Mode",
                              choices = list("Up" = "up",
                                             "Down" = "down",
                                             "Both" = "both"),
@@ -133,7 +144,7 @@ ui <- navbarPage("DeeDee",
                                    "Coloring",
                                    TRUE)),
 
-                 numericInput("upSet_pthresh" , h3("P-value threshold"),
+                 numericInput("upSet_pthresh" , "P-value threshold",
                               value = 0.05, min = 0.01, max = 1, step = 0.01),
 
                  shinyBS::bsCollapse(
@@ -152,12 +163,12 @@ ui <- navbarPage("DeeDee",
 
                  uiOutput("qq_choices2"),
 
-                 selectInput("qq_color_by", h3("Color by"),
+                 selectInput("qq_color_by", "Color by",
                              choices = list("1st p-value" = "pval1",
                                             "2nd p-value" = "pval2"),
                              selected = "pval1"),
 
-                 numericInput("qq_pthresh" , h3("P-value threshold"),
+                 numericInput("qq_pthresh" , "P-value threshold",
                               value = 0.05, min = 0.01, max = 1, step = 0.01),
 
                  shinyBS::bsCollapse(
@@ -177,11 +188,11 @@ ui <- navbarPage("DeeDee",
     tabPanel("Concordance At the Top Plot",
              sidebarPanel(
                 numericInput("cat_maxrank",
-                            h3("Max rank"),
+                            "Max rank",
                             value = 1000,
                             min = 1),
 
-                numericInput("cat_pthresh" , h3("P-value threshold"),
+                numericInput("cat_pthresh" , "P-value threshold",
                              value = 0.05, min = 0.01, max = 1, step = 0.01),
 
                 uiOutput("cat_choice"),
@@ -202,6 +213,13 @@ ui <- navbarPage("DeeDee",
 server <- function(input, output, session) {
 
     # ----------------------------- data input ---------------------------------
+    output$key_inp <- renderUI({
+        req(input$organism)
+        selectInput("key_type",
+                    "Key type of gene IDs",
+                    choices = keytypes(get(input$organism)))
+    })
+
     mydata <- reactive({
         req(input$inp)
 
@@ -400,14 +418,14 @@ server <- function(input, output, session) {
     output$scatter_choices1 <- renderUI({
         req(input$inp)
         selectInput("scatter_select1",
-                    h3("1st dataset"),
+                    "1st dataset",
                     choices = names(mydata_use()))
     })
 
     output$scatter_choices2 <- renderUI({
         req(input$inp)
         selectInput("scatter_select2",
-                    h3("2nd dataset"),
+                    "2nd dataset",
                     selected = names(mydata_use())[2],
                     choices = names(mydata_use()))
     })
@@ -485,7 +503,6 @@ server <- function(input, output, session) {
             ranges$y <- NULL
         }
     })
-
 
 
     # ------------------------------- heatmap ----------------------------------
@@ -615,14 +632,14 @@ server <- function(input, output, session) {
     output$qq_choices1 <- renderUI ({
         req(input$inp)
         selectInput("qq_select1",
-                    h3("1st dataset"),
+                    "1st dataset",
                     choices = names(mydata_use()))
     })
 
     output$qq_choices2 <- renderUI ({
         req(input$inp)
         selectInput("qq_select2",
-                    h3("2nd dataset"),
+                    "2nd dataset",
                     selected = names(mydata_use())[2],
                     choices = names(mydata_use()))
     })
@@ -731,7 +748,7 @@ server <- function(input, output, session) {
     output$cat_choice <- renderUI({
         req(input$inp)
         selectInput("cat_ref",
-                    h3("Reference contrast"),
+                    "Reference contrast",
                     selected = names(mydata_use())[1],
                     choices = names(mydata_use()))
     })
