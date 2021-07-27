@@ -7,6 +7,7 @@ source("~/Development/DeeDee/R/deedee_heatmap.R")
 source("~/Development/DeeDee/R/deedee_qq.R")
 source("~/Development/DeeDee/R/deedee_cat.R")
 source("~/Development/DeeDee/R/deedee_prepare.R")
+source("~/Development/DeeDee/R/gsea.R")
 library(org.Hs.eg.db)
 library(org.Mm.eg.db)
 library(org.Dm.eg.db)
@@ -21,190 +22,217 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
 
     # ----------------------------- data input ---------------------------------
     tabPanel("Input",
-             fileInput("inp", "Upload",
-                       multiple = TRUE,
-                       accept = c(".rds", ".txt", ".xlsx")),
-             uiOutput("datasets"),
-             selectInput("organism", "Organism",
-                         choices = list("Human" = "org.Hs.eg.db",
+             fluidRow(
+                 column(8,
+                    fileInput("inp", "Upload your DEA results or DeeDee objects",
+                           multiple = TRUE,
+                           accept = c(".rds", ".txt", ".xlsx")),
+                        tableOutput("inp_infobox")),
+
+                 column(4,
+                    selectInput("organism", "Organism",
+                                choices = list("Human" = "org.Hs.eg.db",
                                         "Mouse" = "org.Mm.eg.db",
                                         "Fly" = "org.Dm.eg.db",
                                         "Rat" = "org.Rn.eg.db")),
-             uiOutput("key_inp"),
-             downloadButton("inp_download", "Download DeeDee object (.RDS)"),
-             tableOutput("inp_infobox")),
+                        uiOutput("key_inp"),
+                        uiOutput("datasets"),
+                        conditionalPanel("output.inp_infobox",
+                             downloadButton("inp_download",
+                                    "Download DeeDee object (.RDS)"))))),
+
 
 
     # ------------------------------- scatter ----------------------------------
     tabPanel("Scatterplot",
-             sidebarPanel(
-                 uiOutput("scatter_choices1"),
+             fluidRow(
+                 column(3,
+                     uiOutput("scatter_choices1"),
 
-                 uiOutput("scatter_choices2"),
+                     uiOutput("scatter_choices2"),
 
-                 selectInput("scatter_color_by", "Color by",
-                             choices = list("1st p-value" = "pval1",
-                                            "2nd p-value" = "pval2"),
-                                            selected = "pval1"),
+                     selectInput("scatter_color_by", "Color by",
+                                 choices = list("1st p-value" = "pval1",
+                                                "2nd p-value" = "pval2"),
+                                                selected = "pval1"),
 
-                 numericInput("scatter_pthresh" , "P-value threshold",
-                              value = 0.05, min = 0.01, max = 1, step = 0.01),
+                     numericInput("scatter_pthresh" , "P-value threshold",
+                                  value = 0.05, min = 0.01, max = 1, step = 0.01)),
 
-                 shinyBS::bsCollapse(
-                     shinyBS::bsCollapsePanel("INFO",
-                        includeMarkdown("scatter.md")))),
-
-             mainPanel(shinycssloaders::withSpinner(
-                 plotOutput("scatter",
+             column(6,
+                shinycssloaders::withSpinner(
+                    plotOutput("scatter",
                        dblclick = "scatter_dblclick",
                        brush = brushOpts(id = "scatter_brush",
-                                         resetOnNew = FALSE))),
-                       downloadButton("scatter_brush_download",
-                                      "Download brushed genes (.txt)"),
-                       tableOutput("scatter_brush_info"))),
+                                         resetOnNew = FALSE)))),
+
+             column(3,
+                    uiOutput("scatter_choose_enrich"),
+                    conditionalPanel("input.scatter_select_enrich",
+                        shinycssloaders::withSpinner(
+                        textOutput("scatter_enrich"))))),
+
+             shinyBS::bsCollapse(
+                 shinyBS::bsCollapsePanel("INFO",
+                                          includeMarkdown("scatter.md"),
+                                          style = "primary")),
+
+             downloadButton("scatter_brush_download",
+                            "Download brushed genes (.txt)"),
+             tableOutput("scatter_brush_info")),
 
 
     # ------------------------------- heatmap ----------------------------------
-    tabPanel("Heatmap",
-             sidebarPanel(
-                 numericInput("heatmap_show_first",
-                              "Show first",
-                              value = 25,
-                              min = 1),
-
-                 checkboxInput("heatmap_show_gene_names",
-                               "Show gene names",
-                               value = FALSE),
-
-                 checkboxInput("heatmap_showNA",
-                               "Show NA",
-                               value = FALSE),
-
-                 selectInput("heatmap_dist", "Distance measure",
-                             choices = list("Euclidean" = "euclidean",
-                                            "Manhattan" = "manhattan",
-                                            "Pearson" = "pearson",
-                                            "Spearman" = "spearman"),
-                             selected = "euclidean"),
-
-                 selectInput("heatmap_clust", "Clustering method",
-                             choices = list("Single" = "single",
-                                            "Complete" = "complete",
-                                            "Average" = "average",
-                                            "Centroid" = "centroid"),
-                             selected = "average"),
-
-                 numericInput("heatmap_pthresh" , "P-value threshold",
-                              value = 0.05, min = 0.01, max = 1, step = 0.01),
-
-                 shinyBS::bsCollapse(
-                     shinyBS::bsCollapsePanel("INFO",
-                            includeMarkdown("heatmap.md")))),
-
-             mainPanel(textOutput("heatmap_errors"),
-                       conditionalPanel("output.heatmap_errors == ''",
-                                        shinycssloaders::withSpinner(
-                                            InteractiveComplexHeatmap::
-                                                InteractiveComplexHeatmapOutput())))),
-
+    # tabPanel("Heatmap",
+    #          sidebarPanel(
+    #              numericInput("heatmap_show_first",
+    #                           "Show first",
+    #                           value = 25,
+    #                           min = 1),
+    #
+    #              checkboxInput("heatmap_show_gene_names",
+    #                            "Show gene names",
+    #                            value = FALSE),
+    #
+    #              checkboxInput("heatmap_showNA",
+    #                            "Show NA",
+    #                            value = FALSE),
+    #
+    #              selectInput("heatmap_dist", "Distance measure",
+    #                          choices = list("Euclidean" = "euclidean",
+    #                                         "Manhattan" = "manhattan",
+    #                                         "Pearson" = "pearson",
+    #                                         "Spearman" = "spearman"),
+    #                          selected = "euclidean"),
+    #
+    #              selectInput("heatmap_clust", "Clustering method",
+    #                          choices = list("Single" = "single",
+    #                                         "Complete" = "complete",
+    #                                         "Average" = "average",
+    #                                         "Centroid" = "centroid"),
+    #                          selected = "average"),
+    #
+    #              numericInput("heatmap_pthresh" , "P-value threshold",
+    #                           value = 0.05, min = 0.01, max = 1, step = 0.01),
+    #
+    #              shinyBS::bsCollapse(
+    #                  shinyBS::bsCollapsePanel("INFO",
+    #                         includeMarkdown("heatmap.md"),
+    #                         style = "primary"))),
+    #
+    #          mainPanel(textOutput("heatmap_errors"),
+    #                    conditionalPanel("output.heatmap_errors == ''",
+    #                                     shinycssloaders::withSpinner(
+    #                                         InteractiveComplexHeatmap::
+    #                                             InteractiveComplexHeatmapOutput())))),
+    #
 
     # -------------------------------- venn ------------------------------------
     tabPanel("Venn Diagram",
-             sidebarPanel(
-                 selectInput("venn_mode", "Mode",
-                             choices = list("Up" = "up",
-                                            "Down" = "down",
-                                            "Both" = "both"),
-                             selected = "both"),
+             fluidRow(
+                 column(4,
+                     selectInput("venn_mode", "Mode",
+                                 choices = list("Up" = "up",
+                                                "Down" = "down",
+                                                "Both" = "both"),
+                                 selected = "both"),
 
-                 numericInput("venn_pthresh" , "P-value threshold",
-                              value = 0.05, min = 0.01, max = 1, step = 0.01),
+                     numericInput("venn_pthresh" , "P-value threshold",
+                                  value = 0.05, min = 0.01, max = 1, step = 0.01)),
+
+                 column(8,
+                     shinycssloaders::withSpinner(
+                        plotOutput("venn")))),
 
                  shinyBS::bsCollapse(
                      shinyBS::bsCollapsePanel("INFO",
-                        includeMarkdown("venn.md")))),
-
-             mainPanel(
-                 shinycssloaders::withSpinner(
-                    plotOutput("venn")))),
+                        includeMarkdown("venn.md"),
+                        style = "primary"))),
 
 
     # -------------------------------- upSet -----------------------------------
     tabPanel("UpSet Plot",
-             sidebarPanel(
-                 selectInput("upSet_mode", "Mode",
-                             choices = list("Up" = "up",
-                                            "Down" = "down",
-                                            "Both" = "both"),
-                             selected = "both"),
+             fluidRow(
+                 column(4,
+                     selectInput("upSet_mode", "Mode",
+                                 choices = list("Up" = "up",
+                                                "Down" = "down",
+                                                "Both" = "both"),
+                                 selected = "both"),
 
-                 conditionalPanel(
-                     condition = "input.upSet_mode == 'both'",
-                     checkboxInput("upSet_colored",
-                                   "Coloring",
-                                   TRUE)),
+                     conditionalPanel(
+                         condition = "input.upSet_mode == 'both'",
+                         checkboxInput("upSet_colored",
+                                       "Coloring",
+                                       TRUE)),
 
-                 numericInput("upSet_pthresh" , "P-value threshold",
-                              value = 0.05, min = 0.01, max = 1, step = 0.01),
+                     numericInput("upSet_pthresh" , "P-value threshold",
+                                  value = 0.05, min = 0.01, max = 1, step = 0.01)),
+
+                    column(8,
+                        shinycssloaders::withSpinner(
+                            plotOutput("upSet")))),
 
                  shinyBS::bsCollapse(
                      shinyBS::bsCollapsePanel("INFO",
-                        includeMarkdown("upSet.md")))),
-
-             mainPanel(
-                 shinycssloaders::withSpinner(
-                     plotOutput("upSet")))),
+                        includeMarkdown("upSet.md"),
+                        style = "primary"))),
 
 
     # --------------------------------- qq -------------------------------------
     tabPanel("Quantile-Quantile Plot",
-             sidebarPanel(
-                 uiOutput("qq_choices1"),
+             fluidRow(
+                 column(4,
+                     uiOutput("qq_choices1"),
 
-                 uiOutput("qq_choices2"),
+                     uiOutput("qq_choices2"),
 
-                 selectInput("qq_color_by", "Color by",
-                             choices = list("1st p-value" = "pval1",
-                                            "2nd p-value" = "pval2"),
-                             selected = "pval1"),
+                     selectInput("qq_color_by", "Color by",
+                                 choices = list("1st p-value" = "pval1",
+                                                "2nd p-value" = "pval2"),
+                                 selected = "pval1"),
 
-                 numericInput("qq_pthresh" , "P-value threshold",
-                              value = 0.05, min = 0.01, max = 1, step = 0.01),
+                     numericInput("qq_pthresh" , "P-value threshold",
+                                  value = 0.05, min = 0.01, max = 1, step = 0.01)),
 
-                 shinyBS::bsCollapse(
-                     shinyBS::bsCollapsePanel("INFO",
-                        includeMarkdown("qq.md")))),
+                 column(8,
+                     shinycssloaders::withSpinner(
+                         plotOutput("qq",
+                                      brush = "qq_brush")))),
 
-             mainPanel(
-                 shinycssloaders::withSpinner(
-                     plotOutput("qq",
-                                  brush = "qq_brush")),
-                       downloadButton("qq_brush_download",
-                                      "Download brushed genes (.txt)"),
-                       tableOutput("qq_brush_info"))),
+             shinyBS::bsCollapse(
+                 shinyBS::bsCollapsePanel("INFO",
+                                          includeMarkdown("qq.md"),
+                                          style = "primary")),
+
+             downloadButton("qq_brush_download",
+                            "Download brushed genes (.txt)"),
+
+             tableOutput("qq_brush_info")),
 
 
     # --------------------------------- cat ------------------------------------
     tabPanel("Concordance At the Top Plot",
-             sidebarPanel(
-                numericInput("cat_maxrank",
-                            "Max rank",
-                            value = 1000,
-                            min = 1),
+             fluidRow(
+                 column(4,
+                    numericInput("cat_maxrank",
+                                "Max rank",
+                                value = 1000,
+                                min = 1),
 
-                numericInput("cat_pthresh" , "P-value threshold",
-                             value = 0.05, min = 0.01, max = 1, step = 0.01),
+                    numericInput("cat_pthresh" , "P-value threshold",
+                                 value = 0.05, min = 0.01, max = 1, step = 0.01),
 
-                uiOutput("cat_choice"),
+                    uiOutput("cat_choice")),
+
+                 column(8,
+                     shinycssloaders::withSpinner(
+                         plotOutput("cat")))),
 
                 shinyBS::bsCollapse(
                     shinyBS::bsCollapsePanel("INFO",
-                        includeMarkdown("cat.md")))),
-
-             mainPanel(
-                 shinycssloaders::withSpinner(
-                     plotOutput("cat"))))
-)
+                        includeMarkdown("cat.md"),
+                        style = "primary"))))
 
 # ------------------------------------------------------------------------------
 # ----------------------------- S E R V E R ------------------------------------
@@ -415,6 +443,7 @@ server <- function(input, output, session) {
 
 
     # ------------------------------- scatter ----------------------------------
+    # --- selectors ---
     output$scatter_choices1 <- renderUI({
         req(input$inp)
         selectInput("scatter_select1",
@@ -430,6 +459,17 @@ server <- function(input, output, session) {
                     choices = names(mydata_use()))
     })
 
+    output$scatter_choose_enrich <- renderUI({
+        req(input$inp)
+        sel1 <- match(input$scatter_select1, names(mydata_use()))
+        sel2 <- match(input$scatter_select2, names(mydata_use()))
+        selectInput("scatter_select_enrich",
+                    "Contrast for enrichment analysis",
+                    choices = c(names(mydata_use())[sel1],
+                                names(mydata_use())[sel2]))
+    })
+
+    # --- plot output ---
     ranges <- reactiveValues(x = NULL, y = NULL)
 
     output$scatter <- renderPlot({
@@ -464,6 +504,7 @@ server <- function(input, output, session) {
                                       expand = FALSE)
     })
 
+    # --- brushing ---
     scatter_brushed <- reactive ({
         req(input$scatter_brush)
         df <- data.frame(x = mydata_use()[[input$scatter_select1]],
@@ -504,66 +545,89 @@ server <- function(input, output, session) {
         }
     })
 
+    # --- enrich ---
+    output$scatter_enrich <- renderPrint({
+        req(input$inp)
+        validate(need(scatter_brushed(),
+                      "No brushed genes."))
+        sel1 <- match(input$scatter_select1, names(mydata_use()))
+        sel2 <- match(input$scatter_select2, names(mydata_use()))
+        if (input$scatter_select_enrich == input$scatter_select1) {
+            selE <- 1
+        }
+        else {
+            selE <- 2
+        }
+        req(sel1)
+        req(sel2)
+        data <- list(mydata_use()[[sel1]], mydata_use()[[sel2]])
+        res <- gsea(geneList = scatter_brushed(),
+             universe = data,
+             orgDB = input$organism,
+             select = selE)
+        print(res)
+    })
+
 
     # ------------------------------- heatmap ----------------------------------
-    output$heatmap_errors <- renderText({
-        validate(
-            need(input$inp,
-                 'Please input at least two contrasts.')
-        )
-        validate(
-            need(length(mydata()) >= 2,
-                 'Please upload at least two contrasts.')
-        )
-        validate(
-            need(length(mydata_use()) >= 2,
-                 'Please select at least two contrasts.')
-        )
-        validate(
-            need(!is.null(heatmap_output()),
-                 "No common genes in input datasets.")
-        )
-        ''
-    })
-
-    heatmap_output <- reactive({
-        req(input$inp)
-        req(input$heatmap_show_first)
-        req(mydata_use())
-        res <- deedee_heatmap(mydata_use(),
-                              show_first = input$heatmap_show_first,
-                              show_gene_names = input$heatmap_show_gene_names,
-                              dist = input$heatmap_dist,
-                              clust = input$heatmap_clust,
-                              pthresh = input$heatmap_pthresh,
-                              show_na = input$heatmap_showNA)
-        validate(
-            need(!is.null(res), "No common genes in input datasets.")
-        )
-
-        res <- ComplexHeatmap::draw(res)
-
-        return(res)
-    })
-
-    listen <- reactive({
-        list(input$heatmap_show_first,
-          input$heatmap_show_gene_names,
-          input$heatmap_dist,
-          input$heatmap_clust,
-          input$heatmap_pthresh,
-          input$heatmap_showNA,
-          mydata_use())
-    })
-
-    observeEvent(listen(), {
-        req(length(mydata_use()) >= 2)
-        InteractiveComplexHeatmap::makeInteractiveComplexHeatmap(
-             input,
-             output,
-             session,
-             heatmap_output())})
-
+    # output$heatmap_errors <- renderText({
+    #     validate(
+    #         need(input$inp,
+    #              'Please input at least two contrasts.')
+    #     )
+    #     validate(
+    #         need(length(mydata()) >= 2,
+    #              'Please upload at least two contrasts.')
+    #     )
+    #     validate(
+    #         need(length(mydata_use()) >= 2,
+    #              'Please select at least two contrasts.')
+    #     )
+    #     validate(
+    #         need(!is.null(heatmap_output()),
+    #              "No common genes in input datasets.")
+    #     )
+    #     ''
+    # })
+    #
+    # heatmap_output <- reactive({
+    #     req(input$inp)
+    #     req(input$heatmap_show_first)
+    #     req(mydata_use())
+    #     res <- deedee_heatmap(mydata_use(),
+    #                           show_first = input$heatmap_show_first,
+    #                           show_gene_names = input$heatmap_show_gene_names,
+    #                           dist = input$heatmap_dist,
+    #                           clust = input$heatmap_clust,
+    #                           pthresh = input$heatmap_pthresh,
+    #                           show_na = input$heatmap_showNA)
+    #     validate(
+    #         need(!is.null(res), "No common genes in input datasets.")
+    #     )
+    #
+    #     res <- ComplexHeatmap::draw(res)
+    #
+    #     return(res)
+    # })
+    #
+    # listen <- reactive({
+    #     list(input$heatmap_show_first,
+    #       input$heatmap_show_gene_names,
+    #       input$heatmap_dist,
+    #       input$heatmap_clust,
+    #       input$heatmap_pthresh,
+    #       input$heatmap_showNA,
+    #       mydata_use())
+    # })
+    #
+    # observeEvent(listen(), {
+    #     req(length(mydata_use()) >= 2)
+    #     InteractiveComplexHeatmap::makeInteractiveComplexHeatmap(
+    #          input,
+    #          output,
+    #          session,
+    #          heatmap_output())})
+    #
 
     # -------------------------------- venn ------------------------------------
     output$venn <- renderPlot({
