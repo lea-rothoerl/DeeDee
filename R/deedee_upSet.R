@@ -32,7 +32,7 @@ deedee_upSet <- function(data,
   checkmate::assert_choice(mode, choices)
 
   # ---------------------------- data preparation -----------------------------
-  for(i in 1:length(data)){
+  for(i in 1:length(data)) {
     data[i][[1]] <- subset(data[i][[1]], data[i][[1]]$pval < pthresh) # pthresh
 
     if (length(data[i][[1]][[1]]) == 0) {
@@ -55,22 +55,18 @@ deedee_upSet <- function(data,
       data[i][[1]] <- subset(data[i][[1]], data[i][[1]]$logFC == -1)
     }
     data[i][[1]] <- tibble::rownames_to_column(data[i][[1]])
-    if (mode != "both_colored") {
-      data[i][[1]] <- subset(data[i][[1]], select = "rowname")
-      colnames(data[i][[1]]) <- names(data)[i]
-      data[i] <- data[i][[1]]
+  }
+  comp <- dplyr::full_join(data[1][[1]], data[2][[1]], by = "rowname",
+                             copy = FALSE)
+  if (length(data) > 2) {
+    for (i in 3:length(data)) {
+      comp <- dplyr::full_join(comp, data[i][[1]], by = "rowname", copy = FALSE)
     }
   }
+
+  comp = (comp != 0 & !isNA(comp))
   # -------------------------------- coloring ---------------------------------
   if (mode == "both_colored") {
-    comp <- dplyr::full_join(data[1][[1]], data[2][[1]], by = "rowname",
-                             copy = FALSE)
-    if (length(data) > 2) {
-      for (i in 3:length(data)) {
-        comp <- dplyr::full_join(comp, data[i][[1]], by = "rowname", copy = FALSE)
-      }
-    }
-
     comp <- tibble::column_to_rownames(comp, "rowname")
     count <- vector(mode = "numeric", length = length(comp["logFC.x"]))
     comp <- cbind(comp, count)
@@ -135,9 +131,7 @@ deedee_upSet <- function(data,
 
   }
   else {
-    res <- UpSetR::upset(UpSetR::fromList(data),
-                         order.by = "freq",
-                         nsets = length(data))
+    res <- ComplexUpset::upset(comp, names(comp)[2:length(names(comp))])
   }
 
   # --------------------------------- return ----------------------------------
