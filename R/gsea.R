@@ -1,7 +1,7 @@
 
 gsea <- function(geneList,
                  universe,
-                 #orgDB,
+                 orgDB,
                  select = 1) {
 
   # ---------------------------- data preparation -----------------------------
@@ -21,7 +21,7 @@ gsea <- function(geneList,
   # ---------------------------------- GSEA -----------------------------------
   res <- clusterProfiler::enrichGO(gene = genes,
                                    universe = univ,
-                                   OrgDb = org.Hs.eg.db,
+                                   OrgDb = get(orgDB),
                                    ont = "BP",
                                    keyType = "ENSEMBL",
                                    pAdjustMethod = "BH",
