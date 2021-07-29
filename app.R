@@ -280,22 +280,56 @@ server <- function(input, output, session) {
                     names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
                                                        split=".",
                                                        fixed=TRUE))[1]
-                } else if (class(res[[i]]) == "DGEExact") {
+                }
+                else if (class(res[[i]]) == "DGEExact") {
                     res[[i]] <- deedee_prepare(res[[i]], "edgeR")
                     res[[i]] <- list(res[[i]])
                     names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
                                                        split=".",
                                                        fixed=TRUE))[1]
-                } else if (length(names(res[[i]])) == 6) {
-                    res[[i]] <- deedee_prepare(res[[i]], "limma")
-                    res[[i]] <- list(res[[i]])
-                    names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
+                }
+                else if (class(res[[i]]) == "list") {
+                    for (j in length(res[[i]])) {
+                        if (checkmate::test_subset(names(res[[i]]),
+                                            c("logFC", "pval")) == FALSE) {
+                            return(NULL)
+                        }
+                    }
+                }
+                else if (class(res[[i]]) == "data.frame") {
+                    if (length(res[[i]]) == 2) {
+                        if (checkmate::test_subset(names(res[[i]]),
+                                            c("logFC", "pval")) == FALSE) {
+                            return(NULL)
+                        }
+                        res[[i]] <- list(res[[i]])
+                        names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
+                                                           split=".",
+                                                           fixed=TRUE))[1]
+                    }
+                    else if (length(res[[i]]) == 6) {
+                        if (checkmate::test_subset(names(res[[i]]), c("logFC",
+                                                           "AveExpr",
+                                                           "t",
+                                                           "P.Value",
+                                                           "adj.P.Val",
+                                                           "B")) == FALSE) {
+                            return(NULL)
+                        }
+                        res[[i]] <- deedee_prepare(res[[i]], "limma")
+                        res[[i]] <- list(res[[i]])
+                        names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
                                                        split=".",
                                                        fixed=TRUE))[1]
+                    }
+                    else {
+                        return(NULL)
+                    }
                 }
+            }
 
             # .xlsx input
-            } else if (ext[[i]] == "xlsx") {
+            else if (ext[[i]] == "xlsx") {
                 sheets <- readxl::excel_sheets(input$inp[[i, "datapath"]])
                 res[[i]] <- lapply(sheets,
                                     readxl::read_excel,
@@ -306,9 +340,10 @@ server <- function(input, output, session) {
                     res[[i]][[sheets[j]]] <- tibble::column_to_rownames(
                         res[[i]][[sheets[j]]], "rowname")
                 }
+            }
 
             # .txt input
-            } else if (ext[[i]] == "txt") {
+            else if (ext[[i]] == "txt") {
                 temp <- read.table(input$inp[[i, "datapath"]])
                 temp2 <- list()
                 nm <- c()
