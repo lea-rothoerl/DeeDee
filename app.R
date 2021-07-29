@@ -39,7 +39,10 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
                         uiOutput("datasets"),
                         conditionalPanel("output.inp_infobox",
                              downloadButton("inp_download",
-                                    "Download DeeDee object (.RDS)"))))),
+                                    "Download DeeDee object (.RDS)")))),
+             # downloadButton("vignette",
+             #                "Download DeeDee Package vignette (.html)")
+             ),
 
 
 
@@ -83,49 +86,51 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
 
 
     # ------------------------------- heatmap ----------------------------------
-    # tabPanel("Heatmap",
-    #          sidebarPanel(
-    #              numericInput("heatmap_show_first",
-    #                           "Show first",
-    #                           value = 25,
-    #                           min = 1),
-    #
-    #              checkboxInput("heatmap_show_gene_names",
-    #                            "Show gene names",
-    #                            value = FALSE),
-    #
-    #              checkboxInput("heatmap_showNA",
-    #                            "Show NA",
-    #                            value = FALSE),
-    #
-    #              selectInput("heatmap_dist", "Distance measure",
-    #                          choices = list("Euclidean" = "euclidean",
-    #                                         "Manhattan" = "manhattan",
-    #                                         "Pearson" = "pearson",
-    #                                         "Spearman" = "spearman"),
-    #                          selected = "euclidean"),
-    #
-    #              selectInput("heatmap_clust", "Clustering method",
-    #                          choices = list("Single" = "single",
-    #                                         "Complete" = "complete",
-    #                                         "Average" = "average",
-    #                                         "Centroid" = "centroid"),
-    #                          selected = "average"),
-    #
-    #              numericInput("heatmap_pthresh" , "P-value threshold",
-    #                           value = 0.05, min = 0.01, max = 1, step = 0.01),
-    #
-    #              shinyBS::bsCollapse(
-    #                  shinyBS::bsCollapsePanel("INFO",
-    #                         includeMarkdown("heatmap.md"),
-    #                         style = "primary"))),
-    #
-    #          mainPanel(textOutput("heatmap_errors"),
-    #                    conditionalPanel("output.heatmap_errors == ''",
-    #                                     shinycssloaders::withSpinner(
-    #                                         InteractiveComplexHeatmap::
-    #                                             InteractiveComplexHeatmapOutput())))),
-    #
+    tabPanel("Heatmap",
+             fluidRow(
+                 column(4,
+                     numericInput("heatmap_show_first",
+                                  "Show first",
+                                  value = 25,
+                                  min = 1),
+
+                     checkboxInput("heatmap_show_gene_names",
+                                   "Show gene names",
+                                   value = FALSE),
+
+                     checkboxInput("heatmap_showNA",
+                                   "Show NA",
+                                   value = FALSE),
+
+                     selectInput("heatmap_dist", "Distance measure",
+                                 choices = list("Euclidean" = "euclidean",
+                                                "Manhattan" = "manhattan",
+                                                "Pearson" = "pearson",
+                                                "Spearman" = "spearman"),
+                                 selected = "euclidean"),
+
+                     selectInput("heatmap_clust", "Clustering method",
+                                 choices = list("Single" = "single",
+                                                "Complete" = "complete",
+                                                "Average" = "average",
+                                                "Centroid" = "centroid"),
+                                 selected = "average"),
+
+                     numericInput("heatmap_pthresh" , "P-value threshold",
+                                  value = 0.05, min = 0.01, max = 1, step = 0.01)),
+
+                 column(8,
+                        textOutput("heatmap_errors"),
+                           conditionalPanel("output.heatmap_errors == ''",
+                                            shinycssloaders::withSpinner(
+                                                InteractiveComplexHeatmap::
+                                                    InteractiveComplexHeatmapOutput())))),
+
+                 shinyBS::bsCollapse(
+                     shinyBS::bsCollapsePanel("INFO",
+                            includeMarkdown("heatmap.md"),
+                            style = "primary"))),
+
 
     # -------------------------------- venn ------------------------------------
     tabPanel("Venn Diagram",
@@ -167,7 +172,10 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
                                        TRUE)),
 
                      numericInput("upSet_pthresh" , "P-value threshold",
-                                  value = 0.05, min = 0.01, max = 1, step = 0.01)),
+                                  value = 0.05, min = 0.01, max = 1, step = 0.01),
+
+                     numericInput("upSet_minset", "Minimum set size",
+                                  value = 10, min = 0, step = 1)),
 
                     column(8,
                         shinycssloaders::withSpinner(
@@ -360,6 +368,10 @@ server <- function(input, output, session) {
             req(input$inp)
             saveRDS(mydata_use(), file)
         })
+
+    # output$vignette <- downloadHandler(
+    #         filename = "DeeDee_vignette.html",
+    #         content = function (file) {file.copy("vignette.html", file)})
 
     output$inp_infobox <- renderTable({
         req(input$inp)
@@ -570,64 +582,64 @@ server <- function(input, output, session) {
 
 
     # ------------------------------- heatmap ----------------------------------
-    # output$heatmap_errors <- renderText({
-    #     validate(
-    #         need(input$inp,
-    #              'Please input at least two contrasts.')
-    #     )
-    #     validate(
-    #         need(length(mydata()) >= 2,
-    #              'Please upload at least two contrasts.')
-    #     )
-    #     validate(
-    #         need(length(mydata_use()) >= 2,
-    #              'Please select at least two contrasts.')
-    #     )
-    #     validate(
-    #         need(!is.null(heatmap_output()),
-    #              "No common genes in input datasets.")
-    #     )
-    #     ''
-    # })
-    #
-    # heatmap_output <- reactive({
-    #     req(input$inp)
-    #     req(input$heatmap_show_first)
-    #     req(mydata_use())
-    #     res <- deedee_heatmap(mydata_use(),
-    #                           show_first = input$heatmap_show_first,
-    #                           show_gene_names = input$heatmap_show_gene_names,
-    #                           dist = input$heatmap_dist,
-    #                           clust = input$heatmap_clust,
-    #                           pthresh = input$heatmap_pthresh,
-    #                           show_na = input$heatmap_showNA)
-    #     validate(
-    #         need(!is.null(res), "No common genes in input datasets.")
-    #     )
-    #
-    #     res <- ComplexHeatmap::draw(res)
-    #
-    #     return(res)
-    # })
-    #
-    # listen <- reactive({
-    #     list(input$heatmap_show_first,
-    #       input$heatmap_show_gene_names,
-    #       input$heatmap_dist,
-    #       input$heatmap_clust,
-    #       input$heatmap_pthresh,
-    #       input$heatmap_showNA,
-    #       mydata_use())
-    # })
-    #
-    # observeEvent(listen(), {
-    #     req(length(mydata_use()) >= 2)
-    #     InteractiveComplexHeatmap::makeInteractiveComplexHeatmap(
-    #          input,
-    #          output,
-    #          session,
-    #          heatmap_output())})
-    #
+    output$heatmap_errors <- renderText({
+        validate(
+            need(input$inp,
+                 'Please input at least two contrasts.')
+        )
+        validate(
+            need(length(mydata()) >= 2,
+                 'Please upload at least two contrasts.')
+        )
+        validate(
+            need(length(mydata_use()) >= 2,
+                 'Please select at least two contrasts.')
+        )
+        validate(
+            need(!is.null(heatmap_output()),
+                 "No common genes in input datasets.")
+        )
+        ''
+    })
+
+    heatmap_output <- reactive({
+        req(input$inp)
+        req(input$heatmap_show_first)
+        req(mydata_use())
+        res <- deedee_heatmap(mydata_use(),
+                              show_first = input$heatmap_show_first,
+                              show_gene_names = input$heatmap_show_gene_names,
+                              dist = input$heatmap_dist,
+                              clust = input$heatmap_clust,
+                              pthresh = input$heatmap_pthresh,
+                              show_na = input$heatmap_showNA)
+        validate(
+            need(!is.null(res), "No common genes in input datasets.")
+        )
+
+        res <- ComplexHeatmap::draw(res)
+
+        return(res)
+    })
+
+    listen <- reactive({
+        list(input$heatmap_show_first,
+          input$heatmap_show_gene_names,
+          input$heatmap_dist,
+          input$heatmap_clust,
+          input$heatmap_pthresh,
+          input$heatmap_showNA,
+          mydata_use())
+    })
+
+    observeEvent(listen(), {
+        req(length(mydata_use()) >= 2)
+        InteractiveComplexHeatmap::makeInteractiveComplexHeatmap(
+             input,
+             output,
+             session,
+             heatmap_output())})
+
 
     # -------------------------------- venn ------------------------------------
     output$venn <- renderPlot({
@@ -681,7 +693,8 @@ server <- function(input, output, session) {
         }
         res <- deedee_upSet(mydata_use(),
                      mode = mode,
-                     pthresh = input$upSet_pthresh)
+                     pthresh = input$upSet_pthresh,
+                     min_setsize = input$upSet_minset)
 
         validate(
             need(!is.null(res),
