@@ -83,7 +83,7 @@ deedee_heatmap <- function(data,
                                  clustering_distance_rows = dist,
                                  clustering_method_rows = clust)
 
-  ComplexHeatmap::draw(res)
+ # ComplexHeatmap::draw(res)
 
   # --------------------------------- return ----------------------------------
   return(res)
