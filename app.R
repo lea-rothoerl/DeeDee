@@ -478,8 +478,7 @@ server <- function(input, output, session) {
                     type[count] <- "DeeDee object"
                     filename[count] <- input$inp[i, "name"]
                     contrast[count] <- names(res[[i]])[j]
-                    genes[count] <- length(res[[i]][j]
-                                           [[contrast[count]]][["logFC"]])
+                    genes[count] <- length(res[[i]][[j]][["logFC"]])
                 }
             }
         }
