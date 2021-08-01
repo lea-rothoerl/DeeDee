@@ -290,8 +290,8 @@ server <- function(input, output, session) {
                 }
                 else if (class(res[[i]]) == "list") {
                     for (j in length(res[[i]])) {
-                        if (checkmate::test_subset(names(res[[i]]),
-                                            c("logFC", "pval")) == FALSE) {
+                        if (checkmate::test_subset(names(res[[i]][[j]]),
+                                                c("logFC", "pval")) == FALSE) {
                             return(NULL)
                         }
                     }
@@ -326,10 +326,8 @@ server <- function(input, output, session) {
                         return(NULL)
                     }
                 }
-            }
-
             # .xlsx input
-            else if (ext[[i]] == "xlsx") {
+            } else if (ext[[i]] == "xlsx") {
                 sheets <- readxl::excel_sheets(input$inp[[i, "datapath"]])
                 res[[i]] <- lapply(sheets,
                                     readxl::read_excel,
@@ -339,11 +337,13 @@ server <- function(input, output, session) {
                     res[[i]][[sheets[j]]] <- as.data.frame(res[[i]][[sheets[j]]])
                     res[[i]][[sheets[j]]] <- tibble::column_to_rownames(
                         res[[i]][[sheets[j]]], "rowname")
+                    if (checkmate::test_subset(names(res[[i]][[j]]),
+                                                c("logFC", "pval"))) {
+                        return(NULL)
+                    }
                 }
-            }
-
             # .txt input
-            else if (ext[[i]] == "txt") {
+            } else if (ext[[i]] == "txt") {
                 temp <- read.table(input$inp[[i, "datapath"]])
                 temp2 <- list()
                 nm <- c()
@@ -358,12 +358,13 @@ server <- function(input, output, session) {
                 }
                 res[[i]] <- c(temp2[1:length(temp2)])
                 names(res[[i]]) <- nm
-                for (j in 1:((length(temp)/2))) {
-                }
                 for (j in 1:length(res[[i]])) {
                     names(res[[i]][[j]]) <- c("logFC", "pval")
                     row.names(res[[i]][[j]]) <- row.names(temp)
                 }
+            }
+            else {
+                return(NULL)
             }
         }
 
@@ -404,11 +405,10 @@ server <- function(input, output, session) {
             saveRDS(mydata_use(), file)
         })
 
-    # output$vignette <- downloadHandler(
-    #         filename = "DeeDee_vignette.html",
-    #         content = function (file) {file.copy("vignette.html", file)})
-
     output$inp_infobox <- renderTable({
+        validate(need(!is.null(mydata()),
+                      'Faulty input data provided.'))
+
         req(input$inp)
 
         ext <- c()
@@ -473,12 +473,19 @@ server <- function(input, output, session) {
                                        [[contrast[count]]][["logFC"]])
 
             } else {
+                if (class(res[[i]]) == "data.frame") {
+                    res[[i]] <- list(res[[i]])
+                    names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
+                                                       split=".",
+                                                       fixed=TRUE))[1]
+                }
                 for (j in 1:length(res[[i]])) {
                     count <- count + 1
                     type[count] <- "DeeDee object"
                     filename[count] <- input$inp[i, "name"]
                     contrast[count] <- names(res[[i]])[j]
-                    genes[count] <- length(res[[i]][[j]][["logFC"]])
+                    genes[count] <- length(res[[i]][j]
+                                           [[contrast[count]]][["logFC"]])
                 }
             }
         }
