@@ -4,7 +4,7 @@
 \alias{deedee_upSet}
 \title{DeeDee UpSet Plot}
 \usage{
-deedee_upSet(data, pthresh = 0.05, mode = "both")
+deedee_upSet(data, pthresh = 0.05, mode = "both", min_setsize = 10)
 }
 \arguments{
 \item{data}{list of results from deedee_prepare}

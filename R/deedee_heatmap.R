@@ -30,9 +30,8 @@ deedee_heatmap <- function(data,
   for (i in 1:length(data)) {
     checkmate::assert_data_frame(data[[i]], type = "numeric")
   }
-  checkmate::assert_number(pthresh, lower = 0)
-  checkmate::assert_number(show_first, lower = 1,
-                           upper = max(length(data[[i]]$logFC)))
+  checkmate::assert_number(pthresh, lower = 0, upper = 1)
+  checkmate::assert_number(show_first, lower = 1)
   checkmate::assert_logical(show_gene_names)
   choices1 <- c("euclidean", "manhattan", "pearson", "spearman")
   checkmate::assert_choice(dist, choices1)

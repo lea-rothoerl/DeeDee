@@ -25,7 +25,7 @@ deedee_venn <- function(data,
   for (i in 1:length(data)) {
     checkmate::assert_data_frame(data[[i]], type = "numeric")
   }
-  checkmate::assert_number(pthresh, lower = 0)
+  checkmate::assert_number(pthresh, lower = 0, upper = 1)
   choices <- c("up", "down", "both")
   checkmate::assert_choice(mode, choices)
 

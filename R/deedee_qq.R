@@ -29,7 +29,7 @@ deedee_qq <- function(data,
   for (i in 1:length(data)) {
     checkmate::assert_data_frame(data[[i]], type = "numeric")
   }
-  checkmate::assert_number(pthresh, lower = 0)
+  checkmate::assert_number(pthresh, lower = 0, upper = 1)
   checkmate::assert_number(select1, lower = 1, upper = length(data))
   checkmate::assert_number(select2, lower = 1, upper = length(data))
   choices <- c("pval1", "pval2")

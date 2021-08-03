@@ -26,7 +26,7 @@ deedee_cat <- function(data,
     checkmate::assert_data_frame(data[[i]], type = "numeric")
   }
   checkmate::assert_number(ref, lower = 1, upper = length(data))
-  checkmate::assert_number(pthresh, lower = 0)
+  checkmate::assert_number(pthresh, lower = 0, upper = 1)
   checkmate::assert_number(maxrank, lower = 1)
 
   # ---------------------------- data preparation -----------------------------

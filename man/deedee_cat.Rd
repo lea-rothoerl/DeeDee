@@ -4,7 +4,7 @@
 \alias{deedee_cat}
 \title{Title}
 \usage{
-deedee_cat(data, pthresh = 0.05, maxrank = 1000)
+deedee_cat(data, ref = 1, pthresh = 0.05, maxrank = 1000)
 }
 \arguments{
 \item{data}{(named) list of results from deedee_prepare}
