@@ -12,6 +12,7 @@ gsea <- function(geneList,
     genes <- geneList[3]
   }
   genes <- row.names(genes)
+  genes <- genes[!is.na(genes)]
 
   universe[[1]] <- tibble::rownames_to_column(universe[[1]])
   universe[[2]] <- tibble::rownames_to_column(universe[[2]])
