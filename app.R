@@ -13,6 +13,7 @@ library(org.Mm.eg.db)
 library(org.Dm.eg.db)
 library(org.Rn.eg.db)
 library(shinythemes)
+library(shinyBS)
 
 # ------------------------------------------------------------------------------
 # --------------------------------- U I ----------------------------------------
@@ -49,7 +50,7 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
     # ------------------------------- scatter ----------------------------------
     tabPanel("Scatterplot",
              fluidRow(
-                 column(3,
+                 column(4,
                      uiOutput("scatter_choices1"),
 
                      uiOutput("scatter_choices2"),
@@ -60,26 +61,30 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
                                                 selected = "pval1"),
 
                      numericInput("scatter_pthresh" , "P-value threshold",
-                                  value = 0.05, min = 0.01, max = 1, step = 0.01)),
+                                  value = 0.05, min = 0.01, max = 1, step = 0.01),
 
-             column(6,
+                     actionButton("ora_button", "Over-representation analysis")),
+
+             column(8,
                 shinycssloaders::withSpinner(
                     plotOutput("scatter",
                        dblclick = "scatter_dblclick",
                        brush = brushOpts(id = "scatter_brush",
-                                         resetOnNew = TRUE)))),
-
-             column(3,
-                    uiOutput("scatter_choose_enrich"),
-
-                    conditionalPanel("input.scatter_select_enrich",
-                        shinycssloaders::withSpinner(
-                        plotOutput("scatter_enrich"))))),
+                                         resetOnNew = FALSE))))),
 
              shinyBS::bsCollapse(
                  shinyBS::bsCollapsePanel("INFO",
                                           includeMarkdown("scatter.md"),
                                           style = "primary")),
+
+
+                shinyBS::bsModal(id = "modalExample",
+                                 title = "Gene Ontology over-enrichment analysis",
+                                 trigger = "ora_button",
+                                 size = "large",
+                        shinycssloaders::withSpinner(plotOutput("scatter_ora")),
+                        downloadButton('ora_download',
+                                       'Download enrichment result object (.RDS)')),
 
              downloadButton("scatter_brush_download",
                             "Download brushed genes (.txt)"),
@@ -510,16 +515,6 @@ server <- function(input, output, session) {
                     choices = names(mydata_use()))
     })
 
-    output$scatter_choose_enrich <- renderUI({
-        req(input$inp)
-        sel1 <- match(input$scatter_select1, names(mydata_use()))
-        sel2 <- match(input$scatter_select2, names(mydata_use()))
-        selectInput("scatter_select_enrich",
-                    "Contrast for enrichment analysis",
-                    choices = c(names(mydata_use())[sel1],
-                                names(mydata_use())[sel2]))
-    })
-
     # --- plot output ---
     ranges <- reactiveValues(x = NULL, y = NULL)
 
@@ -597,30 +592,43 @@ server <- function(input, output, session) {
     })
 
     # --- enrich ---
-    output$scatter_enrich <- renderPlot({
+    enrich <- reactive({
         req(input$inp)
         validate(need(scatter_brushed(),
                       "No brushed genes."))
         sel1 <- match(input$scatter_select1, names(mydata_use()))
         sel2 <- match(input$scatter_select2, names(mydata_use()))
-        if (input$scatter_select_enrich == input$scatter_select1) {
-            selE <- 1
-        }
-        else {
-            selE <- 2
-        }
         req(sel1)
         req(sel2)
         data <- list(mydata_use()[[sel1]], mydata_use()[[sel2]])
         res <- gsea(geneList = scatter_brushed(),
-             universe = data,
-             orgDB = input$organism,
-             select = selE)
+                    universe = data,
+                    orgDB = input$organism,
+                    select = 1)
         validate(need(class(res) == "enrichResult",
                       "Not working."))
-        barplot(res)
+
+        temp <- as.data.frame(res)
+        if (dim(temp)[1] == 0) {
+            return(NULL)
+        }
+        return(res)
     })
 
+    output$scatter_ora <- renderPlot({
+        req(!is.null(enrich()))
+        en <- enrich()
+        validate(need(class(en) == "enrichResult",
+                      "No enriched terms found."))
+        enrichplot::emapplot(enrichplot::pairwise_termsim(en))
+    })
+
+    output$ora_download <- downloadHandler(
+        filename = "enrichment_results.RDS",
+        content = function(file) {
+            req(!is.null(enrich()))
+            readr::writeRDS(enrich(), file)
+    })
 
     # ------------------------------- heatmap ----------------------------------
     output$heatmap_errors <- renderText({
