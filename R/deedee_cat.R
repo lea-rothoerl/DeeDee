@@ -67,19 +67,18 @@ deedee_cat <- function(data,
 
   names(output) <- nm
 
-  # ------------------------- calculation of the AUC --------------------------
-  # auc <- DescTools::AUC(output$rank, output$concordance)
-  # print(auc)
-  # print(length(output[[1]]))
-  # auc <- auc/length(output[[1]])
-  # auc <- mean(output$concordance)
-
   # ------------------- creation of the resulting CAT plot --------------------
   res <- ggplot2::ggplot(dplyr::bind_rows(output, .id="contrast"),
                          ggplot2::aes(rank, concordance, colour=contrast)) +
     ggplot2::geom_line() +
     ggplot2::theme_light() +
-    viridis::scale_color_viridis(option = "magma", discrete = TRUE)
+    viridis::scale_color_viridis(option = "magma", discrete = TRUE) +
+    ggplot2::annotate("text",
+                      label = paste("reference: ",
+                            names(data)[ref],
+                            sep = ''),
+                      x = maxrank*0.8,
+                      y = max(output[[i]][["concordance"]])*1.1)
 
   # --------------------------------- return ----------------------------------
   return(res)
