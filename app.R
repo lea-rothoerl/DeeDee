@@ -185,11 +185,11 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
                                        "Coloring",
                                        TRUE)),
 
-                     numericInput("upSet_pthresh" , "P-value threshold",
-                                  value = 0.05, min = 0.01, max = 1, step = 0.01),
-
                      numericInput("upSet_minset", "Minimum set size",
-                                  value = 10, min = 0, step = 1)),
+                                  value = 10, min = 0, step = 1),
+
+                     numericInput("upSet_pthresh" , "P-value threshold",
+                                  value = 0.05, min = 0.01, max = 1, step = 0.01)),
 
                     column(8,
                         shinycssloaders::withSpinner(
@@ -237,15 +237,20 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
     tabPanel("Concordance At the Top Plot",
              fluidRow(
                  column(4,
+                    selectInput("cat_mode", "Mode",
+                                choices = list("Up" = "up",
+                                               "Down" = "down",
+                                               "Both" = "both"),
+                                selected = "up"),
                     numericInput("cat_maxrank",
                                 "Max rank",
                                 value = 1000,
                                 min = 1),
 
-                    numericInput("cat_pthresh" , "P-value threshold",
-                                 value = 0.05, min = 0.01, max = 1, step = 0.01),
+                    uiOutput("cat_choice"),
 
-                    uiOutput("cat_choice")),
+                    numericInput("cat_pthresh" , "P-value threshold",
+                                 value = 0.05, min = 0.01, max = 1, step = 0.01)),
 
                  column(8,
                      shinycssloaders::withSpinner(
@@ -511,14 +516,14 @@ server <- function(input, output, session) {
     output$scatter_choices1 <- renderUI({
         req(input$inp)
         selectInput("scatter_select1",
-                    "1st dataset",
+                    "1st data set",
                     choices = names(mydata_use()))
     })
 
     output$scatter_choices2 <- renderUI({
         req(input$inp)
         selectInput("scatter_select2",
-                    "2nd dataset",
+                    "2nd data set",
                     selected = names(mydata_use())[2],
                     choices = names(mydata_use()))
     })
@@ -771,14 +776,14 @@ server <- function(input, output, session) {
     output$qq_choices1 <- renderUI ({
         req(input$inp)
         selectInput("qq_select1",
-                    "1st dataset",
+                    "1st data set",
                     choices = names(mydata_use()))
     })
 
     output$qq_choices2 <- renderUI ({
         req(input$inp)
         selectInput("qq_select2",
-                    "2nd dataset",
+                    "2nd data set",
                     selected = names(mydata_use())[2],
                     choices = names(mydata_use()))
     })
@@ -914,6 +919,7 @@ server <- function(input, output, session) {
         res <- deedee_cat(mydata_use(),
                    ref = ref,
                    maxrank = input$cat_maxrank,
+                   mode = input$cat_mode,
                    pthresh = input$cat_pthresh)
 
         validate(

@@ -17,8 +17,9 @@
 
 deedee_cat <- function(data,
                        ref = 1,
-                       pthresh = 0.05,
-                       maxrank = 1000) {
+                       maxrank = 1000,
+                       mode = "up",
+                       pthresh = 0.05) {
 
   # ----------------------------- argument check ------------------------------
   checkmate::assert_list(data, type = "data.frame", min.len = 2)
@@ -28,6 +29,8 @@ deedee_cat <- function(data,
   checkmate::assert_number(ref, lower = 1, upper = length(data))
   checkmate::assert_number(pthresh, lower = 0, upper = 1)
   checkmate::assert_number(maxrank, lower = 1)
+  choices <- c("up", "down", "both")
+  checkmate::assert_choice(mode, choices)
 
   # ---------------------------- data preparation -----------------------------
   for(i in 1:length(data)) {
@@ -44,7 +47,17 @@ deedee_cat <- function(data,
     names <- rownames(data[i][[1]])
     data[i][[1]] <- as.vector(data[i][[1]]) # conversion to vector
     names(data[i][[1]]) <- names
-    data[i][[1]] <- sort(data[i][[1]], decreasing = TRUE)
+    if (mode == "up") {
+      data[i][[1]] <- sort(data[i][[1]], decreasing = TRUE)
+    }
+    else if (mode == "down") {
+      data[i][[1]] <- sort(data[i][[1]], decreasing = FALSE)
+    }
+    else if (mode == "both") {
+      data[i][[1]] <- abs(data[i][[1]])
+      data[i][[1]] <- sort(data[i][[1]], decreasing = TRUE)
+    }
+
     data[i][[1]] <- names(data[i][[1]])
   }
 
