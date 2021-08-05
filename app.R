@@ -79,7 +79,7 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
 
 
                 shinyBS::bsModal(id = "modalExample",
-                                 title = "Gene Ontology over-enrichment analysis",
+                                 title = "Gene Ontology over-representation analysis",
                                  trigger = "ora_button",
                                  size = "large",
                         shinycssloaders::withSpinner(plotOutput("scatter_ora")),
@@ -627,7 +627,7 @@ server <- function(input, output, session) {
         filename = "enrichment_results.RDS",
         content = function(file) {
             req(!is.null(enrich()))
-            readr::writeRDS(enrich(), file)
+            saveRDS(enrich(), file)
     })
 
     # ------------------------------- heatmap ----------------------------------
