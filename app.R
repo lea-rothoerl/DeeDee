@@ -41,6 +41,13 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
                         conditionalPanel("output.inp_infobox",
                              downloadButton("inp_download",
                                     "Download DeeDee object (.RDS)")))),
+
+
+             shinyBS::bsCollapse(
+                 shinyBS::bsCollapsePanel("INFO",
+                                          includeMarkdown("input.md"),
+                                          style = "primary")),
+
              # downloadButton("vignette",
              #                "Download DeeDee Package vignette (.html)")
              ),
@@ -88,6 +95,7 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
 
              downloadButton("scatter_brush_download",
                             "Download brushed genes (.txt)"),
+
              tableOutput("scatter_brush_info")),
 
 
@@ -551,6 +559,11 @@ server <- function(input, output, session) {
     })
 
     # --- brushing ---
+    # scatter_download_button <- renderUI(
+    #     conditionalPanel("output.scatter_brushed()",
+    #     downloadButton("scatter_brush_download",
+    #                    "Download brushed genes (.txt)")))
+
     scatter_brushed <- reactive ({
         req(input$scatter_brush)
         df <- data.frame(x = mydata_use()[[input$scatter_select1]],
