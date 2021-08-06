@@ -7,7 +7,7 @@ source("~/Development/DeeDee/R/deedee_heatmap.R")
 source("~/Development/DeeDee/R/deedee_qq.R")
 source("~/Development/DeeDee/R/deedee_cat.R")
 source("~/Development/DeeDee/R/deedee_prepare.R")
-source("~/Development/DeeDee/R/gsea.R")
+source("~/Development/DeeDee/R/ora.R")
 library(org.Hs.eg.db)
 library(org.Mm.eg.db)
 library(org.Dm.eg.db)
@@ -619,7 +619,7 @@ server <- function(input, output, session) {
         req(sel1)
         req(sel2)
         data <- list(mydata_use()[[sel1]], mydata_use()[[sel2]])
-        res <- gsea(geneList = scatter_brushed(),
+        res <- ora(geneList = scatter_brushed(),
                     universe = data,
                     orgDB = input$organism,
                     select = 1)

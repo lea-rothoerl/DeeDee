@@ -1,5 +1,5 @@
 
-gsea <- function(geneList,
+ora <- function(geneList,
                  universe,
                  orgDB,
                  select = 1) {
