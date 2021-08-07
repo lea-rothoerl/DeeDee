@@ -1,7 +1,7 @@
 # ------------------------------- source packages ------------------------------
 library(shiny)
 source("~/Development/DeeDee/R/deedee_venn.R")
-source("~/Development/DeeDee/R/deedee_upSet.R")
+source("~/Development/DeeDee/R/deedee_upset.R")
 source("~/Development/DeeDee/R/deedee_scatter.R")
 source("~/Development/DeeDee/R/deedee_heatmap.R")
 source("~/Development/DeeDee/R/deedee_qq.R")
@@ -173,31 +173,31 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
     tabPanel("UpSet Plot",
              fluidRow(
                  column(4,
-                     selectInput("upSet_mode", "Mode",
+                     selectInput("upset_mode", "Mode",
                                  choices = list("Up" = "up",
                                                 "Down" = "down",
                                                 "Both" = "both"),
                                  selected = "both"),
 
                      conditionalPanel(
-                         condition = "input.upSet_mode == 'both'",
-                         checkboxInput("upSet_colored",
+                         condition = "input.upset_mode == 'both'",
+                         checkboxInput("upset_colored",
                                        "Coloring",
                                        TRUE)),
 
-                     numericInput("upSet_minset", "Minimum set size",
+                     numericInput("upset_minset", "Minimum set size",
                                   value = 10, min = 0, step = 1),
 
-                     numericInput("upSet_pthresh" , "P-value threshold",
+                     numericInput("upset_pthresh" , "P-value threshold",
                                   value = 0.05, min = 0.01, max = 1, step = 0.01)),
 
                     column(8,
                         shinycssloaders::withSpinner(
-                            plotOutput("upSet")))),
+                            plotOutput("upset")))),
 
                  shinyBS::bsCollapse(
                      shinyBS::bsCollapsePanel("INFO",
-                        includeMarkdown("upSet.md"),
+                        includeMarkdown("upset.md"),
                         style = "primary"))),
 
 
@@ -737,8 +737,8 @@ server <- function(input, output, session) {
     })
 
 
-    # -------------------------------- upSet -----------------------------------
-    output$upSet <- renderPlot({
+    # -------------------------------- upset -----------------------------------
+    output$upset <- renderPlot({
         validate(
             need(input$inp,
                  'Please input at least two contrasts.')
@@ -753,15 +753,15 @@ server <- function(input, output, session) {
         )
 
         req(input$inp)
-        if (input$upSet_mode == "both" && input$upSet_colored) {
+        if (input$upset_mode == "both" && input$upset_colored) {
              mode = "both_colored"
         } else {
-            mode = input$upSet_mode
+            mode = input$upset_mode
         }
-        res <- deedee_upSet(mydata_use(),
+        res <- deedee_upset(mydata_use(),
                      mode = mode,
-                     pthresh = input$upSet_pthresh,
-                     min_setsize = input$upSet_minset)
+                     pthresh = input$upset_pthresh,
+                     min_setsize = input$upset_minset)
 
         validate(
             need(!is.null(res),

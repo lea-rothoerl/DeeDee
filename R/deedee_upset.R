@@ -18,7 +18,7 @@
 #' @export
 #'
 
-deedee_upSet <- function(data,
+deedee_upset <- function(data,
                          pthresh = 0.05,
                          mode = "both",
                          min_setsize = 10) {

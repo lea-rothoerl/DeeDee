@@ -1,5 +1,5 @@
 ---
-title: "upSet.md"
+title: "upset.md"
 author: "Lea Rothörl"
 date: "7/12/2021"
 output: html_document
