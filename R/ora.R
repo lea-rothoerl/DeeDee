@@ -2,6 +2,7 @@
 ora <- function(geneList,
                  universe,
                  orgDB,
+                 key_type,
                  select = 1) {
 
   # ---------------------------- data preparation -----------------------------
@@ -24,7 +25,7 @@ ora <- function(geneList,
                                    universe = univ,
                                    OrgDb = get(orgDB),
                                    ont = "BP",
-                                   keyType = "ENSEMBL",
+                                   keyType = key_type,
                                    pAdjustMethod = "BH",
                                    pvalueCutoff = 0.01,
                                    qvalueCutoff = 0.05,
