@@ -75,7 +75,7 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
              column(8,
                 shinycssloaders::withSpinner(
                     plotOutput("scatter",
-                       dblclick = "scatter_dblclick",
+                      # dblclick = "scatter_dblclick",
                        brush = brushOpts(id = "scatter_brush",
                                          resetOnNew = FALSE))))),
 
@@ -597,17 +597,17 @@ server <- function(input, output, session) {
             write.table(scatter_brushed(), file)
     })
 
-    observeEvent(input$scatter_dblclick, {
-        brush <- input$scatter_brush
-        if (!is.null(brush)) {
-            ranges$x <- c(brush$xmin, brush$xmax)
-            ranges$y <- c(brush$ymin, brush$ymax)
-
-        } else {
-            ranges$x <- NULL
-            ranges$y <- NULL
-        }
-    })
+    # observeEvent(input$scatter_dblclick, {
+    #     brush <- input$scatter_brush
+    #     if (!is.null(brush)) {
+    #         ranges$x <- c(brush$xmin, brush$xmax)
+    #         ranges$y <- c(brush$ymin, brush$ymax)
+    #
+    #     } else {
+    #         ranges$x <- NULL
+    #         ranges$y <- NULL
+    #     }
+    # })
 
     # --- enrich ---
     enrich <- reactive({
@@ -622,6 +622,7 @@ server <- function(input, output, session) {
         res <- ora(geneList = scatter_brushed(),
                     universe = data,
                     orgDB = input$organism,
+                    key_type = input$key_type,
                     select = 1)
         validate(need(class(res) == "enrichResult",
                       "Not working."))
