@@ -94,7 +94,7 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
                                        'Download enrichment result object (.RDS)')),
 
              downloadButton("scatter_brush_download",
-                            "Download brushed genes (.txt)"),
+                            "Download brushed genes (.xlsx)"),
 
              tableOutput("scatter_brush_info")),
 
@@ -228,7 +228,7 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
                                           style = "primary")),
 
              downloadButton("qq_brush_download",
-                            "Download brushed genes (.txt)"),
+                            "Download brushed genes (.xlsx)"),
 
              tableOutput("qq_brush_info")),
 
@@ -357,7 +357,7 @@ server <- function(input, output, session) {
                         res[[i]][[sheets[j]]] <- as.data.frame(res[[i]][[sheets[j]]])
                         res[[i]][[sheets[j]]] <- tibble::column_to_rownames(
                             res[[i]][[sheets[j]]], "rowname")
-                        if (checkmate::test_subset(names(res[[i]][[j]]),
+                        if (checkmate::test_subset(names(res[[i]][[j]]) == FALSE,
                                                    c("logFC", "pval"))) {
                             return(NULL)
                         }
@@ -419,7 +419,7 @@ server <- function(input, output, session) {
         content = function(file) {
             req(input$inp)
             saveRDS(mydata_use(), file)
-        })
+    })
 
     output$inp_infobox <- renderTable({
         validate(need(!is.null(mydata()),
@@ -577,10 +577,23 @@ server <- function(input, output, session) {
         scatter_brushed()}, rownames = TRUE)
 
     output$scatter_brush_download <- downloadHandler(
-        filename = "scatter_brushed_genes.txt",
+        filename = "scatter_brushed_genes.xlsx",
         content = function(file) {
             req(input$scatter_brush)
-            write.table(scatter_brushed(), file)
+            bru <- tibble::rownames_to_column(scatter_brushed())
+            first <- data.frame(bru[1], bru[2], bru[3])
+            nm1 <- unlist(strsplit(names(first)[2],
+                                   split=".",
+                                   fixed=TRUE))[1]
+            names(first) <- c("rowname", "logFC", "pval")
+            second <- data.frame(bru[1], bru[4], bru[5])
+            nm2 <- unlist(strsplit(names(second)[2],
+                                   split=".",
+                                   fixed=TRUE))[1]
+            names(second) <- c("rowname", "logFC", "pval")
+            l <- list(first, second)
+            names(l) <- c(nm1, nm2)
+            openxlsx::write.xlsx(l, file)
     })
 
     # observeEvent(input$scatter_dblclick, {
@@ -868,10 +881,23 @@ server <- function(input, output, session) {
         qq_brushed()}, rownames = FALSE)
 
     output$qq_brush_download <- downloadHandler(
-        filename = "scatter_brushed_genes.txt",
+        filename = "qq_brushed_genes.xlsx",
         content = function(file) {
             req(input$qq_brush)
-            write.table(qq_brushed(), file)
+            bru <- qq_brushed()
+            first <- data.frame(bru[1], bru[2], bru[3])
+            nm1 <- unlist(strsplit(names(first)[2],
+                                   split=".",
+                                   fixed=TRUE))[1]
+            names(first) <- c("rowname", "logFC", "pval")
+            second <- data.frame(bru[4], bru[5], bru[6])
+            nm2 <- unlist(strsplit(names(second)[2],
+                                   split=".",
+                                   fixed=TRUE))[1]
+            names(second) <- c("rowname", "logFC", "pval")
+            l <- list(first, second)
+            names(l) <- c(nm1, nm2)
+            openxlsx::write.xlsx(l, file)
         })
 
 
