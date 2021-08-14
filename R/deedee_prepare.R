@@ -8,6 +8,26 @@
 #'
 #' @return table to be used as input for other DeeDee functions
 #'
+#' @examples
+#'   library("macrophage")
+#'   library("DESeq2")
+#'   source("~/Development/DeeDee_wip/deedee_prepare.R")
+#'
+#'   data(gse, "macrophage")
+#'
+#'   dds_macrophage <- DESeqDataSet(gse, design = ~line + condition)
+#'   rownames(dds_macrophage) <- substr(rownames(dds_macrophage), 1, 15)
+#'
+#'   keep <- rowSums(counts(dds_macrophage) >= 10) >= 6
+#'   dds_macrophage <- dds_macrophage[keep, ]
+#'   dds_macrophage <- DESeq(dds_macrophage)
+#'
+#'   IFNg_naive <- results(dds_macrophage,
+#'   contrast = c("condition", "IFNg", "naive"),
+#'   lfcThreshold = 1, alpha = 0.05)
+#'
+#'   dd_table <- deedee_prepare(IFNg_naive, "DESeq2")
+#'
 #' @export
 #'
 
