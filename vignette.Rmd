@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r, echo = FALSE, warning = FALSE, message = FALSE, results = "hide"}
 DeeDee_obj <- readRDS("~/Development/DeeDee_wip/tests/testdata_macrophage.RDS")
 source("~/Development/DeeDee/R/deedee_venn.R", local = knitr::knit_global())
-source("~/Development/DeeDee/R/deedee_upSet.R", local = knitr::knit_global())
+source("~/Development/DeeDee/R/deedee_upset.R", local = knitr::knit_global())
 source("~/Development/DeeDee/R/deedee_heatmap.R", local = knitr::knit_global())
 source("~/Development/DeeDee/R/deedee_qq.R", local = knitr::knit_global())
 source("~/Development/DeeDee/R/deedee_cat.R", local = knitr::knit_global())
@@ -120,10 +120,10 @@ deedee_venn(data = DeeDee_obj, pthresh = 0.05, mode = "both")
 \pagebreak
 ### DeeDee UpSet plot
 
-The function `deedee_upSet` creates an UpSet plot depicting the overlaps of differentially expressed genes in the input datasets. Contrary to [`deedee_venn`](#deedee-venn-diagram), the UpSet plot can compare multiple (and even more than four) datasets in a visually pleasing way. The parameter `mode` can be set to `up`, `down`, `both` (default), or `both_colored`, specifying if only up-regulated, down-regulated or both DE genes shall be depicted. If `both_colored` is chosen, the result is the same UpSet plot as for `both`, but the shares of the intersections where all samples have positive/negative logFC values are colored dark-violet/light-beige. The minimum size for an intersection to be included in the plot can be defined by the parameter `min_setsize`, default is 10.
+The function `deedee_upset` creates an UpSet plot depicting the overlaps of differentially expressed genes in the input datasets. Contrary to [`deedee_venn`](#deedee-venn-diagram), the UpSet plot can compare multiple (and even more than four) datasets in a visually pleasing way. The parameter `mode` can be set to `up`, `down`, `both` (default), or `both_colored`, specifying if only up-regulated, down-regulated or both DE genes shall be depicted. If `both_colored` is chosen, the result is the same UpSet plot as for `both`, but the shares of the intersections where all samples have positive/negative logFC values are colored dark-violet/light-beige. The minimum size for an intersection to be included in the plot can be defined by the parameter `min_setsize`, default is 10.
 
 ```{r, echo = TRUE, warning = FALSE, message = FALSE}
-deedee_upSet(data = DeeDee_obj, pthresh = 0.05, mode = "both_colored", min_setsize = 15)
+deedee_upset(data = DeeDee_obj, pthresh = 0.05, mode = "both_colored", min_setsize = 15)
 ```
 
 
