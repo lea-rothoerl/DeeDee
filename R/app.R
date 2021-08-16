@@ -19,63 +19,63 @@ library(shinyBS)
 # --------------------------------- U I ----------------------------------------
 # ------------------------------------------------------------------------------
 
-ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
+ui <- shiny::navbarPage("DeeDee", theme = shinytheme("flatly"),
 
     # ----------------------------- data input ---------------------------------
-    tabPanel("Input",
-             fluidRow(
-                 column(8,
-                    fileInput("inp", "Upload your DEA results or DeeDee objects",
-                           multiple = TRUE,
-                           accept = c(".rds", ".txt", ".xlsx")),
-                        tableOutput("inp_infobox")),
+    shiny::tabPanel("Input",
+                    shiny::fluidRow(
+                        shiny::column(8,
+                                      shiny::fileInput("inp", "Upload your DEA results or DeeDee objects",
+                                                       multiple = TRUE,
+                                                       accept = c(".rds", ".txt", ".xlsx")),
+                                      shiny::tableOutput("inp_infobox")),
 
-                 column(4,
-                    selectInput("organism", "Organism",
-                                choices = list("Human" = "org.Hs.eg.db",
-                                        "Mouse" = "org.Mm.eg.db",
-                                        "Fly" = "org.Dm.eg.db",
-                                        "Rat" = "org.Rn.eg.db")),
-                        uiOutput("key_inp"),
-                        uiOutput("datasets"),
-                        conditionalPanel("output.inp_infobox",
-                             downloadButton("inp_download",
-                                    "Download DeeDee object (.RDS)")))),
+                        shiny::column(4,
+                                      shiny::selectInput("organism", "Organism",
+                                                         choices = list("Human" = "org.Hs.eg.db",
+                                                                        "Mouse" = "org.Mm.eg.db",
+                                                                        "Fly" = "org.Dm.eg.db",
+                                                                        "Rat" = "org.Rn.eg.db")),
+                                      shiny::uiOutput("key_inp"),
+                                      shiny::uiOutput("datasets"),
+                                      shiny::conditionalPanel("output.inp_infobox",
+                                                              shiny::downloadButton("inp_download",
+                                                                                    "Download DeeDee object (.RDS)")))),
 
 
-             shinyBS::bsCollapse(
-                 shinyBS::bsCollapsePanel("INFO",
-                                          includeMarkdown(system.file("extdata",
-                                               "input.md", package = "DeeDee")),
-                                          style = "primary")),
+                    shinyBS::bsCollapse(
+                        shinyBS::bsCollapsePanel("INFO",
+                                                 shiny::includeMarkdown(system.file("extdata",
+                                                                                    "input.md", package = "DeeDee")),
+                                                 style = "primary")),
 
-             # downloadButton("vignette",
-             #                "Download DeeDee Package vignette (.html)")
-             ),
+                    # shiny::downloadButton("vignette",
+                    #                "Download DeeDee Package vignette (.html)")
+    ),
 
 
 
     # ------------------------------- scatter ----------------------------------
-    tabPanel("Scatterplot",
-             fluidRow(
-                 column(4,
-                     uiOutput("scatter_choices1"),
+    shiny::tabPanel("Scatterplot",
+                    shiny::fluidRow(
+                        shiny::column(4,
+                                      shiny::uiOutput("scatter_choices1"),
 
-                     uiOutput("scatter_choices2"),
+                                      shiny::uiOutput("scatter_choices2"),
 
-                     selectInput("scatter_color_by", "Color by",
+                                      shiny::selectInput("scatter_color_by", "Color by",
                                  choices = list("1st p-value" = "pval1",
                                                 "2nd p-value" = "pval2"),
                                                 selected = "pval1"),
 
-                     numericInput("scatter_pthresh" , "P-value threshold",
+                                 shiny::numericInput("scatter_pthresh" , "P-value threshold",
                                   value = 0.05, min = 0.01, max = 1, step = 0.01),
 
-                     actionButton("ora_button", "Over-representation analysis")),
+                                 shiny::actionButton("ora_button", "Over-representation analysis")),
 
-             column(8,
+                        shiny::column(8,
                 shinycssloaders::withSpinner(
-                    plotOutput("scatter",
+                    shiny::plotOutput("scatter",
                       # dblclick = "scatter_dblclick",
                        brush = brushOpts(id = "scatter_brush",
                                          resetOnNew = FALSE))))),
@@ -92,181 +92,181 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
                                  trigger = "ora_button",
                                  size = "large",
                         shinycssloaders::withSpinner(plotOutput("scatter_ora")),
-                        downloadButton('ora_download',
+                        shiny::downloadButton('ora_download',
                                        'Download enrichment result object (.RDS)')),
 
-             downloadButton("scatter_brush_download",
+             shiny::downloadButton("scatter_brush_download",
                             "Download brushed genes (.xlsx)"),
 
-             tableOutput("scatter_brush_info")),
+             shiny::tableOutput("scatter_brush_info")),
 
 
     # ------------------------------- heatmap ----------------------------------
-    tabPanel("Heatmap",
-             fluidRow(
-                 column(4,
-                     numericInput("heatmap_show_first",
-                                  "Show first",
-                                  value = 25,
-                                  min = 1),
+    shiny::tabPanel("Heatmap",
+                    shiny::fluidRow(
+                        shiny::column(4,
+                                      shiny::numericInput("heatmap_show_first",
+                                                          "Show first",
+                                                          value = 25,
+                                                          min = 1),
 
-                     checkboxInput("heatmap_show_gene_names",
-                                   "Show gene names",
-                                   value = FALSE),
+                                      shiny::checkboxInput("heatmap_show_gene_names",
+                                                           "Show gene names",
+                                                           value = FALSE),
 
-                     checkboxInput("heatmap_showNA",
-                                   "Show NA",
-                                   value = FALSE),
+                                      shiny::checkboxInput("heatmap_showNA",
+                                                           "Show NA",
+                                                           value = FALSE),
 
-                     selectInput("heatmap_dist", "Distance measure",
-                                 choices = list("Euclidean" = "euclidean",
-                                                "Manhattan" = "manhattan",
-                                                "Pearson" = "pearson",
-                                                "Spearman" = "spearman"),
-                                 selected = "euclidean"),
+                                      shiny::selectInput("heatmap_dist", "Distance measure",
+                                                         choices = list("Euclidean" = "euclidean",
+                                                                        "Manhattan" = "manhattan",
+                                                                        "Pearson" = "pearson",
+                                                                        "Spearman" = "spearman"),
+                                                         selected = "euclidean"),
 
-                     selectInput("heatmap_clust", "Clustering method",
+                                      shiny::selectInput("heatmap_clust", "Clustering method",
                                  choices = list("Single" = "single",
                                                 "Complete" = "complete",
                                                 "Average" = "average",
                                                 "Centroid" = "centroid"),
                                  selected = "average"),
 
-                     numericInput("heatmap_pthresh" , "P-value threshold",
+                                 shiny::numericInput("heatmap_pthresh" , "P-value threshold",
                                   value = 0.05, min = 0.01, max = 1, step = 0.01)),
 
-                 column(8,
-                        textOutput("heatmap_errors"),
-                           conditionalPanel("output.heatmap_errors == ''",
-                                            shinycssloaders::withSpinner(
-                                                InteractiveComplexHeatmap::
-                                                    InteractiveComplexHeatmapOutput())))),
+                        shiny::column(8,
+                                      shiny::textOutput("heatmap_errors"),
+                                      shiny::conditionalPanel("output.heatmap_errors == ''",
+                                                              shinycssloaders::withSpinner(
+                                                                  InteractiveComplexHeatmap::
+                                                                      InteractiveComplexHeatmapOutput())))),
 
-                 shinyBS::bsCollapse(
-                     shinyBS::bsCollapsePanel("INFO",
-                                              includeMarkdown(system.file("extdata",
-                                                                          "heatmap.md", package = "DeeDee")),
-                            style = "primary"))),
+                    shinyBS::bsCollapse(
+                        shinyBS::bsCollapsePanel("INFO",
+                                                 shiny::includeMarkdown(system.file("extdata",
+                                                                                    "heatmap.md", package = "DeeDee")),
+                                                 style = "primary"))),
 
 
     # -------------------------------- venn ------------------------------------
-    tabPanel("Venn Diagram",
-             fluidRow(
-                 column(4,
-                     selectInput("venn_mode", "Mode",
-                                 choices = list("Up" = "up",
-                                                "Down" = "down",
-                                                "Both" = "both"),
-                                 selected = "both"),
+    shiny::tabPanel("Venn Diagram",
+                    shiny::fluidRow(
+                        shiny::column(4,
+                                      shiny::selectInput("venn_mode", "Mode",
+                                                         choices = list("Up" = "up",
+                                                                        "Down" = "down",
+                                                                        "Both" = "both"),
+                                                         selected = "both"),
 
-                     numericInput("venn_pthresh" , "P-value threshold",
-                                  value = 0.05, min = 0.01, max = 1, step = 0.01)),
+                                      shiny::numericInput("venn_pthresh" , "P-value threshold",
+                                                          value = 0.05, min = 0.01, max = 1, step = 0.01)),
 
-                 column(8,
-                     shinycssloaders::withSpinner(
-                        plotOutput("venn")))),
+                        shiny::column(8,
+                                      shinycssloaders::withSpinner(
+                                          shiny::plotOutput("venn")))),
 
-                 shinyBS::bsCollapse(
-                     shinyBS::bsCollapsePanel("INFO",
-                                              includeMarkdown(system.file("extdata",
-                                                                                 "venn.md", package = "DeeDee")),
-                        style = "primary"))),
+                    shinyBS::bsCollapse(
+                        shinyBS::bsCollapsePanel("INFO",
+                                                 shiny::includeMarkdown(system.file("extdata",
+                                                                                    "venn.md", package = "DeeDee")),
+                                                 style = "primary"))),
 
 
     # -------------------------------- upSet -----------------------------------
-    tabPanel("UpSet Plot",
-             fluidRow(
-                 column(4,
-                     selectInput("upset_mode", "Mode",
-                                 choices = list("Up" = "up",
-                                                "Down" = "down",
-                                                "Both" = "both"),
-                                 selected = "both"),
+    shiny::tabPanel("UpSet Plot",
+                    shiny::fluidRow(
+                        shiny::column(4,
+                                      shiny::selectInput("upset_mode", "Mode",
+                                                  choices = list("Up" = "up",
+                                                                 "Down" = "down",
+                                                                 "Both" = "both"),
+                                                  selected = "both"),
 
-                     conditionalPanel(
-                         condition = "input.upset_mode == 'both'",
-                         checkboxInput("upset_colored",
-                                       "Coloring",
-                                       TRUE)),
+                                      shiny::conditionalPanel(
+                                          condition = "input.upset_mode == 'both'",
+                                          shiny::checkboxInput("upset_colored",
+                                                               "Coloring",
+                                                               TRUE)),
 
-                     numericInput("upset_minset", "Minimum set size",
-                                  value = 10, min = 0, step = 1),
+                                      shiny::numericInput("upset_minset", "Minimum set size",
+                                                          value = 10, min = 0, step = 1),
 
-                     numericInput("upset_pthresh" , "P-value threshold",
-                                  value = 0.05, min = 0.01, max = 1, step = 0.01)),
+                                      shiny::numericInput("upset_pthresh" , "P-value threshold",
+                                                          value = 0.05, min = 0.01, max = 1, step = 0.01)),
 
-                    column(8,
-                        shinycssloaders::withSpinner(
-                            plotOutput("upset")))),
+                        shiny::column(8,
+                                      shinycssloaders::withSpinner(
+                                          shiny::plotOutput("upset")))),
 
-                 shinyBS::bsCollapse(
-                     shinyBS::bsCollapsePanel("INFO",
-                                              includeMarkdown(system.file("extdata",
-                                                                                 "upset.md", package = "DeeDee")),
-                        style = "primary"))),
+                    shinyBS::bsCollapse(
+                        shinyBS::bsCollapsePanel("INFO",
+                                                 shiny::includeMarkdown(system.file("extdata",
+                                                                                    "upset.md", package = "DeeDee")),
+                                                 style = "primary"))),
 
 
     # --------------------------------- qq -------------------------------------
-    tabPanel("Quantile-Quantile Plot",
-             fluidRow(
-                 column(4,
-                     uiOutput("qq_choices1"),
+    shiny::tabPanel("Quantile-Quantile Plot",
+                    shiny::fluidRow(
+                        shiny::column(4,
+                                      shiny::uiOutput("qq_choices1"),
 
-                     uiOutput("qq_choices2"),
+                                      shiny::uiOutput("qq_choices2"),
 
-                     selectInput("qq_color_by", "Color by",
-                                 choices = list("1st p-value" = "pval1",
-                                                "2nd p-value" = "pval2"),
-                                 selected = "pval1"),
+                                      shiny::selectInput("qq_color_by", "Color by",
+                                                         choices = list("1st p-value" = "pval1",
+                                                                        "2nd p-value" = "pval2"),
+                                                         selected = "pval1"),
 
-                     numericInput("qq_pthresh" , "P-value threshold",
-                                  value = 0.05, min = 0.01, max = 1, step = 0.01)),
+                                      shiny::numericInput("qq_pthresh" , "P-value threshold",
+                                                          value = 0.05, min = 0.01, max = 1, step = 0.01)),
 
-                 column(8,
-                     shinycssloaders::withSpinner(
-                         plotOutput("qq",
-                                      brush = "qq_brush")))),
+                        shiny::column(8,
+                                      shinycssloaders::withSpinner(
+                                          shiny::plotOutput("qq",
+                                                            brush = "qq_brush")))),
 
-             shinyBS::bsCollapse(
-                 shinyBS::bsCollapsePanel("INFO",
-                                          includeMarkdown(system.file("extdata",
-                                                                      "qq.md", package = "DeeDee")),
-                                          style = "primary")),
+                    shinyBS::bsCollapse(
+                        shinyBS::bsCollapsePanel("INFO",
+                                                 shiny::includeMarkdown(system.file("extdata",
+                                                                                    "qq.md", package = "DeeDee")),
+                                                 style = "primary")),
 
-             downloadButton("qq_brush_download",
-                            "Download brushed genes (.xlsx)"),
+                    shiny::downloadButton("qq_brush_download",
+                                          "Download brushed genes (.xlsx)"),
 
-             tableOutput("qq_brush_info")),
+                    shiny::tableOutput("qq_brush_info")),
 
 
     # --------------------------------- cat ------------------------------------
-    tabPanel("Concordance At the Top Plot",
-             fluidRow(
-                 column(4,
-                    selectInput("cat_mode", "Mode",
-                                choices = list("Up" = "up",
-                                               "Down" = "down",
-                                               "Both" = "both"),
-                                selected = "up"),
-                    numericInput("cat_maxrank",
-                                "Max rank",
-                                value = 1000,
-                                min = 1),
+    shiny::tabPanel("Concordance At the Top Plot",
+                    shiny::fluidRow(
+                        shiny::column(4,
+                                      shiny::selectInput("cat_mode", "Mode",
+                                                         choices = list("Up" = "up",
+                                                                        "Down" = "down",
+                                                                        "Both" = "both"),
+                                                         selected = "up"),
+                                      shiny::numericInput("cat_maxrank",
+                                                          "Max rank",
+                                                          value = 1000,
+                                                          min = 1),
 
-                    uiOutput("cat_choice"),
+                                      shiny::uiOutput("cat_choice"),
 
-                    numericInput("cat_pthresh" , "P-value threshold",
-                                 value = 0.05, min = 0.01, max = 1, step = 0.01)),
+                                      shiny::numericInput("cat_pthresh" , "P-value threshold",
+                                                          value = 0.05, min = 0.01, max = 1, step = 0.01)),
 
-                 column(8,
-                     shinycssloaders::withSpinner(
-                         plotOutput("cat")))),
+                        shiny::column(8,
+                                      shinycssloaders::withSpinner(
+                                          shiny::plotOutput("cat")))),
 
-                shinyBS::bsCollapse(
-                    shinyBS::bsCollapsePanel("INFO",
-                                             includeMarkdown(system.file("extdata",
-                                                                         "cat.md", package = "DeeDee")),
-                        style = "primary"))))
+                    shinyBS::bsCollapse(
+                        shinyBS::bsCollapsePanel("INFO",
+                                                 shiny::includeMarkdown(system.file("extdata",
+                                                                                    "cat.md", package = "DeeDee")),
+                                                 style = "primary"))))
 
 # ------------------------------------------------------------------------------
 # ----------------------------- S E R V E R ------------------------------------
@@ -275,15 +275,15 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
 server <- function(input, output, session) {
 
     # ----------------------------- data input ---------------------------------
-    output$key_inp <- renderUI({
-        req(input$organism)
-        selectInput("key_type",
+    output$key_inp <- shiny::renderUI({
+        shiny::req(input$organism)
+        shiny::selectInput("key_type",
                     "Key type of gene IDs",
                     choices = keytypes(get(input$organism)))
     })
 
-    mydata <- reactive({
-        req(input$inp)
+    mydata <- shiny::reactive({
+        shiny::req(input$inp)
 
         ext <- vector(mode = "numeric", length = length(input$inp[,1]))
         res <- list()
@@ -291,7 +291,7 @@ server <- function(input, output, session) {
         # reading out input files
         for(i in 1:length(input$inp[,1])) {
             ext[i] <- tools::file_ext(input$inp[i, "datapath"])
-            validate(need(ext[[i]] == "rds"||
+            shiny::validate(shiny::need(ext[[i]] == "rds"||
                               ext[[i]] == "RDS" ||
                               ext[[i]] == "xlsx" ||
                               ext[[i]] == "txt",
@@ -380,7 +380,7 @@ server <- function(input, output, session) {
                 }
             # .txt input
             } else if (ext[[i]] == "txt") {
-                temp <- read.table(input$inp[[i, "datapath"]])
+                temp <- utils::read.table(input$inp[[i, "datapath"]])
                 res[[i]] <- list(temp)
                 names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
                                                    split=".",
@@ -403,16 +403,16 @@ server <- function(input, output, session) {
         return(dat)
     })
 
-    output$datasets <- renderUI({
-        req(input$inp)
-        checkboxGroupInput("select_datasets",
+    output$datasets <- shiny::renderUI({
+        shiny::req(input$inp)
+        shiny::checkboxGroupInput("select_datasets",
                            "Select datasets to be used",
                            choices = names(mydata()),
                            selected = names(mydata()))
     })
 
-    mydata_use <- reactive({
-        req(input$inp)
+    mydata_use <- shiny::reactive({
+        shiny::req(input$inp)
         use <- input$select_datasets
         dat2 <- list()
         for (i in use) {
@@ -421,18 +421,18 @@ server <- function(input, output, session) {
         return(dat2)
     })
 
-    output$inp_download <- downloadHandler(
+    output$inp_download <- shiny::downloadHandler(
         filename = "DeeDee_object.RDS",
         content = function(file) {
-            req(input$inp)
+            shiny::req(input$inp)
             saveRDS(mydata_use(), file)
     })
 
-    output$inp_infobox <- renderTable({
-        validate(need(!is.null(mydata()),
+    output$inp_infobox <- shiny::renderTable({
+        shiny::validate(shiny::need(!is.null(mydata()),
                       'Faulty input data provided.'))
 
-        req(input$inp)
+        shiny::req(input$inp)
 
         ext <- c()
         filename <- c()
@@ -461,7 +461,7 @@ server <- function(input, output, session) {
                 }
 
             } else if (ext[[i]] == "txt") {
-                temp <- read.table(input$inp[[i, "datapath"]])
+                temp <- utils::read.table(input$inp[[i, "datapath"]])
                 res[[i]] <- list(temp)
                 names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
                                                split=".",
@@ -506,49 +506,49 @@ server <- function(input, output, session) {
 
     # ------------------------------- scatter ----------------------------------
     # --- selectors ---
-    output$scatter_choices1 <- renderUI({
-        req(input$inp)
-        selectInput("scatter_select1",
+    output$scatter_choices1 <- shiny::renderUI({
+        shiny::req(input$inp)
+        shiny::selectInput("scatter_select1",
                     "1st data set",
                     choices = names(mydata_use()))
     })
 
-    output$scatter_choices2 <- renderUI({
-        req(input$inp)
-        selectInput("scatter_select2",
+    output$scatter_choices2 <- shiny::renderUI({
+        shiny::req(input$inp)
+        shiny::selectInput("scatter_select2",
                     "2nd data set",
                     selected = names(mydata_use())[2],
                     choices = names(mydata_use()))
     })
 
     # --- plot output ---
-    ranges <- reactiveValues(x = NULL, y = NULL)
+    ranges <- shiny::reactiveValues(x = NULL, y = NULL)
 
-    output$scatter <- renderPlot({
-        validate(
-            need(input$inp,
+    output$scatter <- shiny::renderPlot({
+        shiny::validate(
+            shiny::need(input$inp,
                  'Please input at least two contrasts.')
         )
-        validate(
-            need(length(mydata()) >= 2,
+        shiny::validate(
+            shiny::need(length(mydata()) >= 2,
                  'Please upload at least two contrasts.')
         )
-        validate(
-            need(length(mydata_use()) >= 2,
+        shiny::validate(
+            shiny::need(length(mydata_use()) >= 2,
                  'Please select at least two contrasts.')
         )
 
         sel1 <- match(input$scatter_select1, names(mydata_use()))
         sel2 <- match(input$scatter_select2, names(mydata_use()))
-        req(sel1)
-        req(sel2)
+        shiny::req(sel1)
+        shiny::req(sel2)
         res <- deedee_scatter(mydata_use(),
                               select1 = sel1,
                               select2 = sel2,
                               color_by = input$scatter_color_by,
                               pthresh = input$scatter_pthresh)
-        validate(
-            need(!is.null(res), "No common genes in input datasets.")
+        shiny::validate(
+            shiny::need(!is.null(res), "No common genes in input datasets.")
         )
         res +
             ggplot2::coord_cartesian(xlim = ranges$x,
@@ -557,13 +557,13 @@ server <- function(input, output, session) {
     })
 
     # --- brushing ---
-    # scatter_download_button <- renderUI(
+    # scatter_download_button <- shiny::renderUI(
     #     conditionalPanel("output.scatter_brushed()",
     #     downloadButton("scatter_brush_download",
     #                    "Download brushed genes (.txt)")))
 
-    scatter_brushed <- reactive ({
-        req(input$scatter_brush)
+    scatter_brushed <- shiny::reactive ({
+        shiny::req(input$scatter_brush)
         df <- data.frame(x = mydata_use()[[input$scatter_select1]],
                          y = mydata_use()[[input$scatter_select2]])
 
@@ -573,20 +573,20 @@ server <- function(input, output, session) {
                        paste(input$scatter_select1, ".pval", sep = ""),
                        paste(input$scatter_select2, ".logFC", sep = ""),
                        paste(input$scatter_select2, ".pval", sep = ""))
-        brushedPoints(df,
+        shiny::brushedPoints(df,
                       input$scatter_brush,
                       xvar = paste(input$scatter_select1, ".logFC", sep = ""),
                       yvar = paste(input$scatter_select2, ".logFC", sep = ""))
     })
 
-    output$scatter_brush_info <- renderTable({
-        req(scatter_brushed())
+    output$scatter_brush_info <- shiny::renderTable({
+        shiny::req(scatter_brushed())
         scatter_brushed()}, rownames = TRUE)
 
-    output$scatter_brush_download <- downloadHandler(
+    output$scatter_brush_download <- shiny::downloadHandler(
         filename = "scatter_brushed_genes.xlsx",
         content = function(file) {
-            req(input$scatter_brush)
+            shiny::req(input$scatter_brush)
             bru <- tibble::rownames_to_column(scatter_brushed())
             first <- data.frame(bru[1], bru[2], bru[3])
             nm1 <- unlist(strsplit(names(first)[2],
@@ -603,7 +603,7 @@ server <- function(input, output, session) {
             openxlsx::write.xlsx(l, file)
         })
 
-    # observeEvent(input$scatter_dblclick, {
+    # shiny::observeEvent(input$scatter_dblclick, {
     #     brush <- input$scatter_brush
     #     if (!is.null(brush)) {
     #         ranges$x <- c(brush$xmin, brush$xmax)
@@ -616,14 +616,14 @@ server <- function(input, output, session) {
     # })
 
     # --- enrich ---
-    enrich <- reactive({
-        req(input$inp)
-        validate(need(scatter_brushed(),
+    enrich <- shiny::reactive({
+        shiny::req(input$inp)
+        shiny::validate(shiny::need(scatter_brushed(),
                       "No brushed genes."))
         sel1 <- match(input$scatter_select1, names(mydata_use()))
         sel2 <- match(input$scatter_select2, names(mydata_use()))
-        req(sel1)
-        req(sel2)
+        shiny::req(sel1)
+        shiny::req(sel2)
         data <- list(mydata_use()[[sel1]], mydata_use()[[sel2]])
         print("done1")
         res <- ora(geneList = scatter_brushed(),
@@ -632,7 +632,7 @@ server <- function(input, output, session) {
                    key_type = input$key_type,
                    select = 1)
         print("done2")
-        validate(need(class(res) == "enrichResult",
+        shiny::validate(shiny::need(class(res) == "enrichResult",
                       "Not working."))
         # temp <- as.data.frame(res)
         # if (dim(temp)[1] == 0) {
@@ -642,56 +642,56 @@ server <- function(input, output, session) {
         return(res)
     })
 
-    output$scatter_ora <- renderPlot({
-        validate(need(!is.null(enrich()),
+    output$scatter_ora <- shiny::renderPlot({
+        shiny::validate(shiny::need(!is.null(enrich()),
                       "Something went wrong..."))
         print("done4")
         en <- enrich()
         en_df <- as.data.frame(en)
-        validate(need(nrow(en_df) > 0,
-                      "Something went wrong..."))
+        shiny::validate(shiny::need(nrow(en_df) > 0,
+                      "No enriched terms found."))
         print("done5")
-        ggrepel::options(ggrepel.max.overlaps = Inf)
+        options(ggrepel.max.overlaps = Inf)
         plt <- enrichplot::emapplot(enrichplot::pairwise_termsim(en))
         print("done5")
-        validate(need(!is.null(plt),
+        shiny::validate(shiny::need(!is.null(plt),
                       "No enriched terms found."))
         print("done6")
         print(plt)
     })
 
-    output$ora_download <- downloadHandler(
+    output$ora_download <- shiny::downloadHandler(
         filename = "enrichment_results.RDS",
         content = function(file) {
-            req(!is.null(enrich()))
+            shiny::req(!is.null(enrich()))
             saveRDS(enrich(), file)
         })
 
     # ------------------------------- heatmap ----------------------------------
-    output$heatmap_errors <- renderText({
-        validate(
-            need(input$inp,
+    output$heatmap_errors <- shiny::renderText({
+        shiny::validate(
+            shiny::need(input$inp,
                  'Please input at least two contrasts.')
         )
-        validate(
-            need(length(mydata()) >= 2,
+        shiny::validate(
+            shiny::need(length(mydata()) >= 2,
                  'Please upload at least two contrasts.')
         )
-        validate(
-            need(length(mydata_use()) >= 2,
+        shiny::validate(
+            shiny::need(length(mydata_use()) >= 2,
                  'Please select at least two contrasts.')
         )
-        validate(
-            need(!is.null(heatmap_output()),
+        shiny::validate(
+            shiny::need(!is.null(heatmap_output()),
                  "No common genes in input datasets.")
         )
         ''
     })
 
-    heatmap_output <- reactive({
-        req(input$inp)
-        req(input$heatmap_show_first)
-        req(mydata_use())
+    heatmap_output <- shiny::reactive({
+        shiny::req(input$inp)
+        shiny::req(input$heatmap_show_first)
+        shiny::req(mydata_use())
         res <- deedee_heatmap(mydata_use(),
                               show_first = input$heatmap_show_first,
                               show_gene_names = input$heatmap_show_gene_names,
@@ -699,8 +699,8 @@ server <- function(input, output, session) {
                               clust = input$heatmap_clust,
                               pthresh = input$heatmap_pthresh,
                               show_na = input$heatmap_showNA)
-        validate(
-            need(!is.null(res), "No common genes in input datasets.")
+        shiny::validate(
+            shiny::need(!is.null(res), "No common genes in input datasets.")
         )
 
         res <- ComplexHeatmap::draw(res)
@@ -708,7 +708,7 @@ server <- function(input, output, session) {
         return(res)
     })
 
-    listen <- reactive({
+    listen <- shiny::reactive({
         list(input$heatmap_show_first,
              input$heatmap_show_gene_names,
              input$heatmap_dist,
@@ -718,8 +718,8 @@ server <- function(input, output, session) {
              mydata_use())
     })
 
-    observeEvent(listen(), {
-        req(length(mydata_use()) >= 2)
+    shiny::observeEvent(listen(), {
+        shiny::req(length(mydata_use()) >= 2)
         InteractiveComplexHeatmap::makeInteractiveComplexHeatmap(
              input,
              output,
@@ -728,27 +728,27 @@ server <- function(input, output, session) {
 
 
     # -------------------------------- venn ------------------------------------
-    output$venn <- renderPlot({
-        validate(
-            need(input$inp,
+    output$venn <- shiny::renderPlot({
+        shiny::validate(
+            shiny::need(input$inp,
                  'Please input at least two contrasts.')
         )
-        validate(
-            need(length(mydata()) >= 2,
+        shiny::validate(
+            shiny::need(length(mydata()) >= 2,
                  'Please upload at least two contrasts.')
         )
-        validate(
-            need(length(mydata_use()) >= 2,
+        shiny::validate(
+            shiny::need(length(mydata_use()) >= 2,
                  'Please select at least two contrasts.')
         )
 
-        req(input$inp)
+        shiny::req(input$inp)
         res <- deedee_venn(mydata_use(),
                     mode = input$venn_mode,
                     pthresh = input$venn_pthresh)
 
-        validate(
-            need(!is.null(res),
+        shiny::validate(
+            shiny::need(!is.null(res),
                  "No genes in your datasets. Maybe your specified p-value threshold is too low?")
         )
 
@@ -757,21 +757,21 @@ server <- function(input, output, session) {
 
 
     # -------------------------------- upset -----------------------------------
-    output$upset <- renderPlot({
-        validate(
-            need(input$inp,
+    output$upset <- shiny::renderPlot({
+        shiny::validate(
+            shiny::need(input$inp,
                  'Please input at least two contrasts.')
         )
-        validate(
-            need(length(mydata()) >= 2,
+        shiny::validate(
+            shiny::need(length(mydata()) >= 2,
                  'Please upload at least two contrasts.')
         )
-        validate(
-            need(length(mydata_use()) >= 2,
+        shiny::validate(
+            shiny::need(length(mydata_use()) >= 2,
                  'Please select at least two contrasts.')
         )
 
-        req(input$inp)
+        shiny::req(input$inp)
         if (input$upset_mode == "both" && input$upset_colored) {
              mode = "both_colored"
         } else {
@@ -782,8 +782,8 @@ server <- function(input, output, session) {
                      pthresh = input$upset_pthresh,
                      min_setsize = input$upset_minset)
 
-        validate(
-            need(!is.null(res),
+        shiny::validate(
+            shiny::need(!is.null(res),
                  "No genes in your datasets. Maybe your specified p-value threshold is too low?")
         )
 
@@ -792,56 +792,56 @@ server <- function(input, output, session) {
 
 
     # --------------------------------- qq -------------------------------------
-    output$qq_choices1 <- renderUI ({
-        req(input$inp)
-        selectInput("qq_select1",
+    output$qq_choices1 <- shiny::renderUI ({
+        shiny::req(input$inp)
+        shiny::selectInput("qq_select1",
                     "1st data set",
                     choices = names(mydata_use()))
     })
 
-    output$qq_choices2 <- renderUI ({
-        req(input$inp)
-        selectInput("qq_select2",
+    output$qq_choices2 <- shiny::renderUI ({
+        shiny::req(input$inp)
+        shiny::selectInput("qq_select2",
                     "2nd data set",
                     selected = names(mydata_use())[2],
                     choices = names(mydata_use()))
     })
 
-    output$qq <- renderPlot({
-        validate(
-            need(input$inp,
+    output$qq <- shiny::renderPlot({
+        shiny::validate(
+            shiny::need(input$inp,
                  'Please input at least two contrasts.')
         )
-        validate(
-            need(length(mydata()) >= 2,
+        shiny::validate(
+            shiny::need(length(mydata()) >= 2,
                  'Please upload at least two contrasts.')
         )
-        validate(
-            need(length(mydata_use()) >= 2,
+        shiny::validate(
+            shiny::need(length(mydata_use()) >= 2,
                  'Please select at least two contrasts.')
         )
 
-        req(input$inp)
+        shiny::req(input$inp)
         sel1 <- match(input$qq_select1, names(mydata_use()))
         sel2 <- match(input$qq_select2, names(mydata_use()))
-        req(sel1)
-        req(sel2)
+        shiny::req(sel1)
+        shiny::req(sel2)
         res <- deedee_qq(mydata_use(),
                   select1 = sel1,
                   select2 = sel2,
                   color_by = input$qq_color_by,
                   pthresh = input$qq_pthresh)
 
-        validate(
-            need(!is.null(res),
+        shiny::validate(
+            shiny::need(!is.null(res),
                  "No genes in your datasets. Maybe your specified p-value threshold is too low?")
         )
 
         res
     })
 
-    qq_brushed <- reactive ({
-        req(input$qq_brush)
+    qq_brushed <- shiny::reactive ({
+        shiny::req(input$qq_brush)
         x <- mydata()[[input$qq_select1]]$logFC
         y <- mydata()[[input$qq_select2]]$logFC
         pval1 <- mydata()[[input$qq_select2]]$pval
@@ -861,12 +861,12 @@ server <- function(input, output, session) {
         leny <- length(sy)
 
         if (leny < lenx) {
-            sx <- approx(1L:lenx, sx, n = leny)$y
-            pval1 <- approx(1L:lenx, pval1, n = leny)$y
+            sx <- stats::approx(1L:lenx, sx, n = leny)$y
+            pval1 <- stats::approx(1L:lenx, pval1, n = leny)$y
         }
         if (leny > lenx) {
-            sy <- approx(1L:leny, sy, n = lenx)$y
-            pval2 <- approx(1L:leny, pval2, n = lenx)$y
+            sy <- stats::approx(1L:leny, sy, n = lenx)$y
+            pval2 <- stats::approx(1L:leny, pval2, n = lenx)$y
         }
 
         sx <- tibble::rownames_to_column(as.data.frame(sx))
@@ -889,20 +889,20 @@ server <- function(input, output, session) {
         temp1 <- paste(input$qq_select1, "logFC", sep = ".")
         temp2 <- paste(input$qq_select2, "logFC", sep = ".")
 
-        brushedPoints(qq,
+        shiny::brushedPoints(qq,
                       input$qq_brush,
                       xvar = temp1,
                       yvar = temp2)
     })
 
-    output$qq_brush_info <- renderTable({
-        req(qq_brushed())
+    output$qq_brush_info <- shiny::renderTable({
+        shiny::req(qq_brushed())
         qq_brushed()}, rownames = FALSE)
 
-    output$qq_brush_download <- downloadHandler(
+    output$qq_brush_download <- shiny::downloadHandler(
         filename = "qq_brushed_genes.xlsx",
         content = function(file) {
-            req(input$qq_brush)
+            shiny::req(input$qq_brush)
             bru <- qq_brushed()
             first <- data.frame(bru[1], bru[2], bru[3])
             nm1 <- unlist(strsplit(names(first)[2],
@@ -921,31 +921,31 @@ server <- function(input, output, session) {
 
 
     # --------------------------------- cat ------------------------------------
-    output$cat_choice <- renderUI({
-        req(input$inp)
-        selectInput("cat_ref",
+    output$cat_choice <- shiny::renderUI({
+        shiny::req(input$inp)
+        shiny::selectInput("cat_ref",
                     "Reference contrast",
                     selected = names(mydata_use())[1],
                     choices = names(mydata_use()))
     })
 
-    output$cat <- renderPlot({
-        validate(
-            need(input$inp,
+    output$cat <- shiny::renderPlot({
+        shiny::validate(
+            shiny::need(input$inp,
                  'Please input at least two contrasts.')
         )
-        validate(
-            need(length(mydata()) >= 2,
+        shiny::validate(
+            shiny::need(length(mydata()) >= 2,
                  'Please upload at least two contrasts.')
         )
-        validate(
-            need(length(mydata_use()) >= 2,
+        shiny::validate(
+            shiny::need(length(mydata_use()) >= 2,
                  'Please select at least two contrasts.')
         )
 
-        req(input$inp)
-        req(input$cat_maxrank)
-        req(input$cat_ref)
+        shiny::req(input$inp)
+        shiny::req(input$cat_maxrank)
+        shiny::req(input$cat_ref)
 
         ref <- match(input$cat_ref, names(mydata_use()))
         res <- deedee_cat(mydata_use(),
@@ -954,8 +954,8 @@ server <- function(input, output, session) {
                    mode = input$cat_mode,
                    pthresh = input$cat_pthresh)
 
-        validate(
-            need(!is.null(res),
+        shiny::validate(
+            shiny::need(!is.null(res),
                  "No genes in your datasets. Maybe your specified p-value threshold is too low?")
         )
 
