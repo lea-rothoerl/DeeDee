@@ -28,42 +28,23 @@ upset element (plottable with show()/print())
 differentially expressed genes in the input datasets.
 }
 \examples{
-  library("macrophage")
-  library("DESeq2")
-  source("~/Development/DeeDee_wip/deedee_prepare.R")
+  library(DeeDee)
 
-  data(gse, "macrophage")
+  data(DE_results_IFNg_naive, package = "DeeDee")
+  IFNg_naive <- deedee_prepare(IFNg_naive, "DESeq2")
 
-  dds_macrophage <- DESeqDataSet(gse, design = ~line + condition)
-  rownames(dds_macrophage) <- substr(rownames(dds_macrophage), 1, 15)
+  data(DE_results_IFNg_both, package = "DeeDee")
+  IFNg_both <- deedee_prepare(IFNg_both, "DESeq2")
 
-  keep <- rowSums(counts(dds_macrophage) >= 10) >= 6
-  dds_macrophage <- dds_macrophage[keep, ]
-  dds_macrophage <- DESeq(dds_macrophage)
+  data(DE_results_Salm_naive, package = "DeeDee")
+  Salm_naive <- deedee_prepare(Salm_naive, "DESeq2")
 
-  IFNg_naive <- results(dds_macrophage,
-  contrast = c("condition", "IFNg", "naive"),
-  lfcThreshold = 1, alpha = 0.05)
-  inp1 <- deedee_prepare(IFNg_naive, "DESeq2")
+  data(DE_results_Salm_both, package = "DeeDee")
+  Salm_both <- deedee_prepare(Salm_both, "DESeq2")
 
-  IFNg_IFNgSL1344 <- results(dds_macrophage,
-  contrast = c("condition", "IFNg_SL1344", "IFNg"),
-  lfcThreshold = 1, alpha = 0.05)
-  inp2 <- deedee_prepare(IFNg_IFNgSL1344, "DESeq2")
+  dd_list <- list(IFNg_naive = IFNg_naive, IFNg_both = IFNg_both,
+                  Salm_naive = Salm_naive, Salm_both = Salm_both)
 
- SL1344_naive <- results(dds_macrophage,
- contrast = c("condition", "SL1344", "naive"),
- lfcThreshold = 1, alpha = 0.05)
- inp3 <- deedee_prepare(SL1344_naive, "DESeq2")
-
- SL1344_IFNgSL1344 <- results(dds_macrophage,
- contrast = c("condition", "IFNg_SL1344", "SL1344"),
- lfcThreshold = 1, alpha = 0.05)
- inp4 <- deedee_prepare(SL1344_IFNgSL1344, "DESeq2")
-
- dd_list <- list(naive_IFNg = inp1, IFNg_both = inp2, naive_Salm = inp3,
- Salm_both = inp4)
-
- deedee_upset(dd_list, pthresh = 0.05, mode = "both_colored", min_setsize = 10)
+  deedee_upset(dd_list, pthresh = 0.05, mode = "both_colored", min_setsize = 10)
 
 }

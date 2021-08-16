@@ -9,6 +9,8 @@
 #' @return table to be used as input for other DeeDee functions
 #'
 #' @examples
+#'   library(DeeDee)
+#'
 #'   library("macrophage")
 #'   library("DESeq2")
 #'   source("~/Development/DeeDee_wip/deedee_prepare.R")
