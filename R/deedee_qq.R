@@ -81,12 +81,12 @@ deedee_qq <- function(data,
   leny <- length(sy)
 
   if (leny < lenx) {
-    sx <- approx(1L:lenx, sx, n = leny)$y
-    pval1 <- approx(1L:lenx, pval1, n = leny)$y
+    sx <- stats::approx(1L:lenx, sx, n = leny)$y
+    pval1 <- stats::approx(1L:lenx, pval1, n = leny)$y
   }
   if (leny > lenx) {
-    sy <- approx(1L:leny, sy, n = lenx)$y
-    pval2 <- approx(1L:leny, pval2, n = lenx)$y
+    sy <- stats::approx(1L:leny, sy, n = lenx)$y
+    pval2 <- stats::approx(1L:leny, pval2, n = lenx)$y
   }
 
   qq <- data.frame(x = sx, y = sy, pval1 = pval1, pval2 = pval2)
