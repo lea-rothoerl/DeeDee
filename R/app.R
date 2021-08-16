@@ -45,7 +45,8 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
 
              shinyBS::bsCollapse(
                  shinyBS::bsCollapsePanel("INFO",
-                                          includeMarkdown("input.md"),
+                                          includeMarkdown(system.file("extdata",
+                                               "input.md", package = "DeeDee")),
                                           style = "primary")),
 
              # downloadButton("vignette",
@@ -81,7 +82,8 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
 
              shinyBS::bsCollapse(
                  shinyBS::bsCollapsePanel("INFO",
-                                          includeMarkdown("scatter.md"),
+                                          includeMarkdown(system.file("extdata",
+                                                                      "scatter.md", package = "DeeDee")),
                                           style = "primary")),
 
 
@@ -142,7 +144,8 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
 
                  shinyBS::bsCollapse(
                      shinyBS::bsCollapsePanel("INFO",
-                            includeMarkdown("heatmap.md"),
+                                              includeMarkdown(system.file("extdata",
+                                                                          "heatmap.md", package = "DeeDee")),
                             style = "primary"))),
 
 
@@ -165,7 +168,8 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
 
                  shinyBS::bsCollapse(
                      shinyBS::bsCollapsePanel("INFO",
-                        includeMarkdown("venn.md"),
+                                              includeMarkdown(system.file("extdata",
+                                                                                 "venn.md", package = "DeeDee")),
                         style = "primary"))),
 
 
@@ -197,7 +201,8 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
 
                  shinyBS::bsCollapse(
                      shinyBS::bsCollapsePanel("INFO",
-                        includeMarkdown("upset.md"),
+                                              includeMarkdown(system.file("extdata",
+                                                                                 "upset.md", package = "DeeDee")),
                         style = "primary"))),
 
 
@@ -224,7 +229,8 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
 
              shinyBS::bsCollapse(
                  shinyBS::bsCollapsePanel("INFO",
-                                          includeMarkdown("qq.md"),
+                                          includeMarkdown(system.file("extdata",
+                                                                      "qq.md", package = "DeeDee")),
                                           style = "primary")),
 
              downloadButton("qq_brush_download",
@@ -258,7 +264,8 @@ ui <- navbarPage("DeeDee", theme = shinytheme("flatly"),
 
                 shinyBS::bsCollapse(
                     shinyBS::bsCollapsePanel("INFO",
-                        includeMarkdown("cat.md"),
+                                             includeMarkdown(system.file("extdata",
+                                                                         "cat.md", package = "DeeDee")),
                         style = "primary"))))
 
 # ------------------------------------------------------------------------------
@@ -536,17 +543,17 @@ server <- function(input, output, session) {
         req(sel1)
         req(sel2)
         res <- deedee_scatter(mydata_use(),
-                       select1 = sel1,
-                       select2 = sel2,
-                       color_by = input$scatter_color_by,
-                       pthresh = input$scatter_pthresh)
+                              select1 = sel1,
+                              select2 = sel2,
+                              color_by = input$scatter_color_by,
+                              pthresh = input$scatter_pthresh)
         validate(
             need(!is.null(res), "No common genes in input datasets.")
         )
-         res +
-             ggplot2::coord_cartesian(xlim = ranges$x,
-                                      ylim = ranges$y,
-                                      expand = FALSE)
+        res +
+            ggplot2::coord_cartesian(xlim = ranges$x,
+                                     ylim = ranges$y,
+                                     expand = FALSE)
     })
 
     # --- brushing ---
@@ -594,7 +601,7 @@ server <- function(input, output, session) {
             l <- list(first, second)
             names(l) <- c(nm1, nm2)
             openxlsx::write.xlsx(l, file)
-    })
+        })
 
     # observeEvent(input$scatter_dblclick, {
     #     brush <- input$scatter_brush
@@ -618,27 +625,39 @@ server <- function(input, output, session) {
         req(sel1)
         req(sel2)
         data <- list(mydata_use()[[sel1]], mydata_use()[[sel2]])
+        print("done1")
         res <- ora(geneList = scatter_brushed(),
-                    universe = data,
-                    orgDB = input$organism,
-                    key_type = input$key_type,
-                    select = 1)
+                   universe = data,
+                   orgDB = input$organism,
+                   key_type = input$key_type,
+                   select = 1)
+        print("done2")
         validate(need(class(res) == "enrichResult",
                       "Not working."))
-
-        temp <- as.data.frame(res)
-        if (dim(temp)[1] == 0) {
-            return(NULL)
-        }
+        # temp <- as.data.frame(res)
+        # if (dim(temp)[1] == 0) {
+        #     return(NULL)
+        # }
+        print("done3")
         return(res)
     })
 
     output$scatter_ora <- renderPlot({
-        req(!is.null(enrich()))
+        validate(need(!is.null(enrich()),
+                      "Something went wrong..."))
+        print("done4")
         en <- enrich()
-        validate(need(class(en) == "enrichResult",
+        en_df <- as.data.frame(en)
+        validate(need(nrow(en_df) > 0,
+                      "Something went wrong..."))
+        print("done5")
+        ggrepel::options(ggrepel.max.overlaps = Inf)
+        plt <- enrichplot::emapplot(enrichplot::pairwise_termsim(en))
+        print("done5")
+        validate(need(!is.null(plt),
                       "No enriched terms found."))
-        enrichplot::emapplot(enrichplot::pairwise_termsim(en))
+        print("done6")
+        print(plt)
     })
 
     output$ora_download <- downloadHandler(
@@ -646,7 +665,7 @@ server <- function(input, output, session) {
         content = function(file) {
             req(!is.null(enrich()))
             saveRDS(enrich(), file)
-    })
+        })
 
     # ------------------------------- heatmap ----------------------------------
     output$heatmap_errors <- renderText({
@@ -691,12 +710,12 @@ server <- function(input, output, session) {
 
     listen <- reactive({
         list(input$heatmap_show_first,
-          input$heatmap_show_gene_names,
-          input$heatmap_dist,
-          input$heatmap_clust,
-          input$heatmap_pthresh,
-          input$heatmap_showNA,
-          mydata_use())
+             input$heatmap_show_gene_names,
+             input$heatmap_dist,
+             input$heatmap_clust,
+             input$heatmap_pthresh,
+             input$heatmap_showNA,
+             mydata_use())
     })
 
     observeEvent(listen(), {
