@@ -11,8 +11,7 @@ Authors@R:
 Description: DeeDee is a collection of functions to compare the results of two 
     or more Differential Expression Analyses. From data preparation to different
     forms of graphic output, DeeDee has your back.
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
@@ -39,8 +38,7 @@ Imports:
     org.Dm.eg.db,
     shinythemes,
     shinycssloaders,
-    shinyBS,
-    macrophage
+    shinyBS
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
