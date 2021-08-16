@@ -32,7 +32,14 @@ Imports:
     stats,
     tibble,
     UpSetR,
-    viridis
+    viridis,
+    org.Hs.eg.db,
+    org.Mm.eg.db,
+    org.Rn.eg.db,
+    org.Dm.eg.db,
+    shinythemes,
+    shinycssloaders,
+    shinyBS
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
