@@ -629,8 +629,7 @@ server <- function(input, output, session) {
         res <- ora(geneList = scatter_brushed(),
                    universe = data,
                    orgDB = input$organism,
-                   key_type = input$key_type,
-                   select = 1)
+                   key_type = input$key_type)
         print("done2")
         shiny::validate(shiny::need(class(res) == "enrichResult",
                       "Not working."))

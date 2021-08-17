@@ -2,16 +2,10 @@
 ora <- function(geneList,
                  universe,
                  orgDB,
-                 key_type,
-                 select = 1) {
+                 key_type) {
 
   # ---------------------------- data preparation -----------------------------
-  if (select == 1) {
-    genes <- geneList[1]
-  }
-  else {
-    genes <- geneList[3]
-  }
+  genes <- geneList[1]
   genes <- row.names(genes)
   genes <- genes[!is.na(genes)]
 
