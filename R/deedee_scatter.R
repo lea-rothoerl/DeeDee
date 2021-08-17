@@ -1,4 +1,4 @@
-#' DeeDee logFC Scatterplot
+#' DeeDee logFC Scatter Plot
 #'
 #' @description "deedee_scatter" creates a scatterplot of the genes in two input
 #' datasets based on their logFC values.

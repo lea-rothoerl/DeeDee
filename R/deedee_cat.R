@@ -1,4 +1,4 @@
-#' Title
+#' DeeDee Concordance At the Top Plot
 #'
 #' @description "deedee_cat" creates a Concordance at the Top plot depicting
 #' the concordance of genes in the first n elements of the logFC-ranked lists
