@@ -4,11 +4,8 @@ Title: Comparative Evaluation and Visualization of Differential Expression
 Version: 0.1.0
 Authors@R: 
     c(
-        person(given = "Lea",
-           family = "Rothörl",
-           role = c("aut", "cre"),
-           email = "lea.rothoerl@posteo.de",
-           comment = c(ORCID = "YOUR-ORCID-ID")
+        person(given = "Lea", family = "Rothörl", role = c("aut", "cre"),
+           email = "lea.rothoerl@posteo.de", comment = c(ORCID = "0000-0003-2554-0583")
         ),
         person(
             given = "Federico", family = "Marini", role = c("aut"), 
