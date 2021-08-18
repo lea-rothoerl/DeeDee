@@ -3,25 +3,33 @@ Title: Comparative Evaluation and Visualization of Differential Expression
     Analyses
 Version: 0.1.0
 Authors@R: 
-    person(given = "Lea",
+    c(
+        person(given = "Lea",
            family = "Rothörl",
            role = c("aut", "cre"),
            email = "lea.rothoerl@posteo.de",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+           comment = c(ORCID = "YOUR-ORCID-ID")
+        ),
+        person(
+            given = "Federico", family = "Marini", role = c("aut"), 
+            email = "marinif@uni-mainz.de", comment = c(ORCID = "0000-0003-3252-7758")
+        )
+    )
 Description: DeeDee is a collection of functions to compare the results of two 
     or more Differential Expression Analyses. From data preparation to different
-    forms of graphic output, DeeDee has your back.
+    forms of graphic output, DeeDee has your back. TODO TODO TODO.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+Depends:
+    R (>= 4.1.0)
 Imports: 
     AnnotationDbi, 
     checkmate,
     clusterProfiler,
     ComplexHeatmap,
     ComplexUpset,
-    DescTools,
     DESeq2,
     dplyr,
     enrichplot, 
