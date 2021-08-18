@@ -107,7 +107,7 @@ deedee_cat <- function(data,
   # ------------------- creation of the resulting CAT plot --------------------
   res <- ggplot2::ggplot(
     dplyr::bind_rows(output, .id = "contrast"),
-    ggplot2::aes(rank, concordance, colour = contrast)
+    ggplot2::aes_string("rank", "concordance", colour = "contrast")
   ) +
     ggplot2::geom_line() +
     ggplot2::theme_light() +
