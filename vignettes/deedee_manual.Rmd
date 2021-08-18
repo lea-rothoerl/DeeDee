@@ -166,7 +166,12 @@ deedee_cat(data = DeeDee_obj, ref = 2, pthresh = 0.05, maxrank = 800)
 ```
 
 
+# Session Info {-}
 
+
+```{r}
+sessionInfo()
+```
 
 
 
