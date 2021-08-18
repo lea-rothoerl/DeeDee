@@ -34,6 +34,10 @@ Imports:
     ggvenn,
     InteractiveComplexHeatmap,
     openxlsx, 
+    org.Hs.eg.db,
+    org.Mm.eg.db,
+    org.Rn.eg.db,
+    org.Dm.eg.db,
     readxl, 
     shiny, 
     shinythemes,
@@ -46,10 +50,6 @@ Imports:
     viridis
 Suggests: 
     macrophage,
-    org.Hs.eg.db,
-    org.Mm.eg.db,
-    org.Rn.eg.db,
-    org.Dm.eg.db,
     rmarkdown,
     knitr,
     testthat (>= 3.0.0)
