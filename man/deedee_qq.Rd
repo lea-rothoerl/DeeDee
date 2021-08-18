@@ -27,7 +27,6 @@ ggplot object (plottable with show()/print())
 distribution of the logFC of the genes in two input datasets.
 }
 \examples{
-library(DeeDee)
 
 data(DE_results_IFNg_naive, package = "DeeDee")
 IFNg_naive <- deedee_prepare(IFNg_naive, "DESeq2")

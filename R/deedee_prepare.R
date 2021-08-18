@@ -9,7 +9,6 @@
 #' @return table to be used as input for other DeeDee functions
 #'
 #' @examples
-#' library(DeeDee)
 #'
 #' data(DE_results_IFNg_naive, package = "DeeDee")
 #'

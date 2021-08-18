@@ -19,7 +19,6 @@ table to be used as input for other DeeDee functions
 create DeeDee object from DEA result
 }
 \examples{
-library(DeeDee)
 
 data(DE_results_IFNg_naive, package = "DeeDee")
 
