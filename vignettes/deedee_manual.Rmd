@@ -44,35 +44,22 @@ DeeDee_obj <- list(IFNg_naive = IFNg_naive,
                    Salm_both = Salm_both)
 ```
 
-## What DeeDee is for
+# What DeeDee is for
 
 When you want to compare results from multiple Differential Expression Analyses (DEAs), the DeeDee package is your friend. It contains various functions that help shed light on the similarities and differences between the experiments in question. DeeDee is designed to be used after the application of a DE analysis program (like DESeq2, edgeR or limma) on the single DEAs. 
 
 
-## How to Install
-
-To use DeeDee, the following packages need to be installed in your environment: 
-
- * checkmate
- * DescTools
- * dplyr
- * ffpe
- * ggplot2
- * ggplotify
- * ggvenn
- * gplots
- * idr
- * tibble
- * UpSetR
- * viridis
+# How to Install
 
 
-## Example Dataset Used in this Vignette
+
+
+# Example Dataset Used in this Vignette
 
 The examples in the following chapters utilize the data from the Bioconductor package `macrophage`([Human macrophage immune response](https://bioconductor.org/packages/release/data/experiment/html/macrophage.html "Bioconductor - macrophage")). The macrophage dataset includes data from 24 RNA-seq samples of human macrophages exposed to different conditions: naive, associated with IFNg (an interferon), SL1344 (a strain of Salmonella), or both. The preprocessing of the data was done using DESeq2, obtaining the following four DEAs: naive vs. IFNg, IFNg vs. both, naive vs. Salmonella, and Salmonella vs. both. 
 
 
-## What to Provide
+# What to Provide
 
 The main DeeDee functions work on tables of logFC- ("logFC") and p-values ("pval") from DEAs, with the gene identifiers as row names. This table can be built by the user manually or by using `deedee_prepare`. The `deedee_prepare` function accepts results from three of the most used R DE analysis packages (DESeq2, edgeR, limma) and converts them to digestible tables. Which of these packages was used to analyze the raw data needs to be specified using the parameter `input_type`. If, for example, you have a DESeq2 result called `DESeq2_res` and want to convert it to a DeeDee table, you can use the following code chunk to do so. 
 
@@ -89,24 +76,24 @@ DeeDee_obj <- list(naive_IFNg = inp1, IFNg_both = inp2, naive_Salm = inp3, Salm_
 ```
 
 
-### DESeq2
+## DESeq2
 
 When `DESeq2` is applied to analyze the raw data, `deedee_prepare` accepts the output from the `results()` function. 
 
 
-### edgeR
+## edgeR
 
 When `edgeR` is applied to analyze the raw data, `deedee_prepare` accepts the output from the `topTable()` function. 
 
 
-### limma
+## limma
 
 When `limma` is applied to analyze the raw data, `deedee_prepare` accepts the output from the `exactTest()` function. 
 
 
 \pagebreak
-## Main Functions
-### DeeDee scatter plot
+# Main Functions
+## DeeDee scatter plot
 
 The function `deedee_scatter` creates a scatterplot of logFC values of the genes in two input datasets. If the input data list contains more than two datasets (like our example `DeeDee_obj` does),  the `select1` (default = 1) and `select2` (default = 2) parameters specify which ones are to be used. `deedee_scatter` includes a `color_by` parameter that can be set to "pval1" (default), "pval2", "pval_mean", or "idr". The points will be colored according to the color scheme given on the right side of the output. 
 
