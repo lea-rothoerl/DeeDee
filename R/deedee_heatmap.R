@@ -18,27 +18,30 @@
 #' @return ggplot object (plottable with show()/print())
 #'
 #' @examples
-#'   library(DeeDee)
+#' library(DeeDee)
 #'
-#'   data(DE_results_IFNg_naive, package = "DeeDee")
-#'   IFNg_naive <- deedee_prepare(IFNg_naive, "DESeq2")
+#' data(DE_results_IFNg_naive, package = "DeeDee")
+#' IFNg_naive <- deedee_prepare(IFNg_naive, "DESeq2")
 #'
-#'   data(DE_results_IFNg_both, package = "DeeDee")
-#'   IFNg_both <- deedee_prepare(IFNg_both, "DESeq2")
+#' data(DE_results_IFNg_both, package = "DeeDee")
+#' IFNg_both <- deedee_prepare(IFNg_both, "DESeq2")
 #'
-#'   data(DE_results_Salm_naive, package = "DeeDee")
-#'   Salm_naive <- deedee_prepare(Salm_naive, "DESeq2")
+#' data(DE_results_Salm_naive, package = "DeeDee")
+#' Salm_naive <- deedee_prepare(Salm_naive, "DESeq2")
 #'
-#'   data(DE_results_Salm_both, package = "DeeDee")
-#'   Salm_both <- deedee_prepare(Salm_both, "DESeq2")
+#' data(DE_results_Salm_both, package = "DeeDee")
+#' Salm_both <- deedee_prepare(Salm_both, "DESeq2")
 #'
-#'   dd_list <- list(IFNg_naive = IFNg_naive, IFNg_both = IFNg_both,
-#'                   Salm_naive = Salm_naive, Salm_both = Salm_both)
+#' dd_list <- list(
+#'   IFNg_naive = IFNg_naive, IFNg_both = IFNg_both,
+#'   Salm_naive = Salm_naive, Salm_both = Salm_both
+#' )
 #'
-#'   deedee_heatmap(dd_list, pthresh = 0.05, show_first = 25,
-#'                 show_gene_names = FALSE, dist = "euclidean",
-#'                 clust = "average", show_na = FALSE)
-#'
+#' deedee_heatmap(dd_list,
+#'   pthresh = 0.05, show_first = 25,
+#'   show_gene_names = FALSE, dist = "euclidean",
+#'   clust = "average", show_na = FALSE
+#' )
 #' @export
 #'
 
@@ -64,18 +67,19 @@ deedee_heatmap <- function(data,
   checkmate::assert_choice(clust, choices2)
 
   # ---------------------------- data preparation -----------------------------
-  for(i in 1:length(data)){
-    data[i][[1]] <- subset(data[i][[1]], data[i][[1]]$pval < pthresh)  # pthresh
-    data[i][[1]] <- data[i][[1]]["logFC"]   # removing p-value column
-    colnames(data[i][[1]]) <- names(data)[i]  # creating unique colnames
+  for (i in 1:length(data)) {
+    data[i][[1]] <- subset(data[i][[1]], data[i][[1]]$pval < pthresh) # pthresh
+    data[i][[1]] <- data[i][[1]]["logFC"] # removing p-value column
+    colnames(data[i][[1]]) <- names(data)[i] # creating unique colnames
     data[i][[1]] <- tibble::rownames_to_column(data[i][[1]])
   }
 
   # ----- creation of a comp matrix with the modified results from above ------
   comp <- dplyr::full_join(data[1][[1]],
-                            data[2][[1]],
-                            by = "rowname",
-                            copy = FALSE)
+    data[2][[1]],
+    by = "rowname",
+    copy = FALSE
+  )
   if (length(data) > 2) {
     for (i in 3:length(data)) {
       comp <- dplyr::full_join(comp, data[i][[1]], by = "rowname", copy = FALSE)
@@ -83,31 +87,34 @@ deedee_heatmap <- function(data,
   }
 
   row.names(comp) <- comp$rowname
-  comp <- subset(comp, select = -c(rowname))  # removing column with rownames
+  comp <- subset(comp, select = -c(rowname)) # removing column with rownames
   if (show_na == FALSE) {
-    comp <- comp[stats::complete.cases(comp[colnames(comp)]),]
+    comp <- comp[stats::complete.cases(comp[colnames(comp)]), ]
   }
   comp <- as.matrix(comp)
 
-  if (length(comp[,1]) == 0) {
+  if (length(comp[, 1]) == 0) {
     return(NULL)
   }
 
   # ------------------- creation of the resulting heatmap ---------------------
   if (show_gene_names == FALSE) {
-   rownames(comp) <- c()
+    rownames(comp) <- c()
   }
 
   col <- viridis::viridis(n = 15, option = "magma")
 
-  res <- ComplexHeatmap::Heatmap(comp[1:min(show_first,
-                                                length(comp[,1])),],
-                                 name = "logFC",
-                                 col = col,
-                                 clustering_distance_rows = dist,
-                                 clustering_method_rows = clust)
+  res <- ComplexHeatmap::Heatmap(comp[1:min(
+    show_first,
+    length(comp[, 1])
+  ), ],
+  name = "logFC",
+  col = col,
+  clustering_distance_rows = dist,
+  clustering_method_rows = clust
+  )
 
- # ComplexHeatmap::draw(res)
+  # ComplexHeatmap::draw(res)
 
   # --------------------------------- return ----------------------------------
   return(res)

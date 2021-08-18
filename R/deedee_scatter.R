@@ -14,26 +14,29 @@
 #' @return ggplot object (plottable with show()/print())
 #'
 #' @examples
-#'   library(DeeDee)
+#' library(DeeDee)
 #'
-#'   data(DE_results_IFNg_naive, package = "DeeDee")
-#'   IFNg_naive <- deedee_prepare(IFNg_naive, "DESeq2")
+#' data(DE_results_IFNg_naive, package = "DeeDee")
+#' IFNg_naive <- deedee_prepare(IFNg_naive, "DESeq2")
 #'
-#'   data(DE_results_IFNg_both, package = "DeeDee")
-#'   IFNg_both <- deedee_prepare(IFNg_both, "DESeq2")
+#' data(DE_results_IFNg_both, package = "DeeDee")
+#' IFNg_both <- deedee_prepare(IFNg_both, "DESeq2")
 #'
-#'   data(DE_results_Salm_naive, package = "DeeDee")
-#'   Salm_naive <- deedee_prepare(Salm_naive, "DESeq2")
+#' data(DE_results_Salm_naive, package = "DeeDee")
+#' Salm_naive <- deedee_prepare(Salm_naive, "DESeq2")
 #'
-#'   data(DE_results_Salm_both, package = "DeeDee")
-#'   Salm_both <- deedee_prepare(Salm_both, "DESeq2")
+#' data(DE_results_Salm_both, package = "DeeDee")
+#' Salm_both <- deedee_prepare(Salm_both, "DESeq2")
 #'
-#'   dd_list <- list(IFNg_naive = IFNg_naive, IFNg_both = IFNg_both,
-#'                   Salm_naive = Salm_naive, Salm_both = Salm_both)
+#' dd_list <- list(
+#'   IFNg_naive = IFNg_naive, IFNg_both = IFNg_both,
+#'   Salm_naive = Salm_naive, Salm_both = Salm_both
+#' )
 #'
-#'   deedee_scatter(dd_list, pthresh = 0.05, select1 = 1, select2 = 2,
-#'                 color_by = "pval1")
-#'
+#' deedee_scatter(dd_list,
+#'   pthresh = 0.05, select1 = 1, select2 = 2,
+#'   color_by = "pval1"
+#' )
 #' @export
 #'
 
@@ -57,32 +60,36 @@ deedee_scatter <- function(data,
   # ---------------------------- data preparation -----------------------------
   data_red <- list(data[[select1]], data[[select2]]) # selected samples
 
-  for(i in 1:length(data_red)){
-    data_red[i][[1]] <- subset(data_red[i][[1]],
-                               data_red[i][[1]]$pval < pthresh)
+  for (i in 1:length(data_red)) {
+    data_red[i][[1]] <- subset(
+      data_red[i][[1]],
+      data_red[i][[1]]$pval < pthresh
+    )
     data_red[i][[1]] <- tibble::rownames_to_column(data_red[i][[1]])
   }
   comp <- dplyr::inner_join(data_red[1][[1]],
-                     data_red[2][[1]],
-                     by = "rowname",
-                     copy = FALSE)
+    data_red[2][[1]],
+    by = "rowname",
+    copy = FALSE
+  )
   comp <- comp[stats::complete.cases(comp[colnames(comp)]), ]
 
   names(comp) <- c("rowname", "logFC1", "pval1", "logFC2", "pval2")
 
-  if (length(comp[,1]) == 0) {
+  if (length(comp[, 1]) == 0) {
     return(NULL)
   }
 
   # ----------------- creation of the resulting scatter plot ------------------
   res <- ggplot2::ggplot(data = comp, ggplot2::aes(logFC1, logFC2,
-                                                   col = get(color_by))) +
-      ggplot2::geom_point() +
-      viridis::scale_color_viridis(option = "magma") +
-      ggplot2::xlab(names(data)[select1]) +
-      ggplot2::ylab(names(data)[select2]) +
-      ggplot2::labs(color=color_by) +
-      ggplot2::theme_light()
+    col = get(color_by)
+  )) +
+    ggplot2::geom_point() +
+    viridis::scale_color_viridis(option = "magma") +
+    ggplot2::xlab(names(data)[select1]) +
+    ggplot2::ylab(names(data)[select2]) +
+    ggplot2::labs(color = color_by) +
+    ggplot2::theme_light()
 
   # --------------------------------- return ----------------------------------
   return(res)

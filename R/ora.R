@@ -1,8 +1,8 @@
 
 ora <- function(geneList,
-                 universe,
-                 orgDB,
-                 key_type) {
+                universe,
+                orgDB,
+                key_type) {
 
   # ---------------------------- data preparation -----------------------------
   genes <- geneList[1]
@@ -15,15 +15,17 @@ ora <- function(geneList,
   univ <- univ[["rowname"]]
 
   # ---------------------------------- GSEA -----------------------------------
-  res <- clusterProfiler::enrichGO(gene = genes,
-                                   universe = univ,
-                                   OrgDb = get(orgDB),
-                                   ont = "BP",
-                                   keyType = key_type,
-                                   pAdjustMethod = "BH",
-                                   pvalueCutoff = 0.01,
-                                   qvalueCutoff = 0.05,
-                                   readable = TRUE)
+  res <- clusterProfiler::enrichGO(
+    gene = genes,
+    universe = univ,
+    OrgDb = get(orgDB),
+    ont = "BP",
+    keyType = key_type,
+    pAdjustMethod = "BH",
+    pvalueCutoff = 0.01,
+    qvalueCutoff = 0.05,
+    readable = TRUE
+  )
 
   # --------------------------------- return ----------------------------------
   return(res)
