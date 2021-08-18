@@ -1,13 +1,5 @@
 # ------------------------------- source packages ------------------------------
 library(shiny)
-source("~/Development/DeeDee/R/deedee_venn.R")
-source("~/Development/DeeDee/R/deedee_upset.R")
-source("~/Development/DeeDee/R/deedee_scatter.R")
-source("~/Development/DeeDee/R/deedee_heatmap.R")
-source("~/Development/DeeDee/R/deedee_qq.R")
-source("~/Development/DeeDee/R/deedee_cat.R")
-source("~/Development/DeeDee/R/deedee_prepare.R")
-source("~/Development/DeeDee/R/ora.R")
 library(org.Hs.eg.db)
 library(org.Mm.eg.db)
 library(org.Dm.eg.db)
