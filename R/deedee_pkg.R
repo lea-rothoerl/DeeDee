@@ -39,5 +39,5 @@
 NULL
 
 globalVariables(
-  c("x.pval", "y.pval")
+  c("x.pval", "y.pval", "logFC1", "logFC2", "rowname")
 )
