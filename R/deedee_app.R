@@ -370,9 +370,11 @@ deedee_app <- function() {
     # ----------------------------- data input ---------------------------------
     output$key_inp <- shiny::renderUI({
       shiny::req(input$organism)
+      anno <- input$organism
+      require(anno, character.only = TRUE)
       shiny::selectInput("key_type",
         "Key type of gene IDs",
-        choices = keytypes(get(input$organism))
+        choices = keytypes(get(anno))
       )
     })
 
