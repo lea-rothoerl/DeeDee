@@ -61,7 +61,7 @@ The examples in the following chapters utilize the data from the Bioconductor pa
 The main DeeDee functions work on tables of logFC- ("logFC") and p-values ("pval") from DEAs, with the gene identifiers as row names. This table can be built by the user manually or by using `deedee_prepare`. The `deedee_prepare` function accepts results from three of the most used R DE analysis packages (DESeq2, edgeR, limma) and converts them to digestible tables. Which of these packages was used to analyze the raw data needs to be specified using the parameter `input_type`. If, for example, you have a DESeq2 result called `DESeq2_res` and want to convert it to a DeeDee table, you can use the following code chunk to do so. 
 
 ```{r, warning = FALSE, message = FALSE, eval = FALSE}
-inp <- deedee_prepare(data = DESeq2_res, input_type = 'DESeq2')
+inp <- deedee_prepare(data = DESeq2_res, input_type = "DESeq2")
 ```
 
 Every [DeeDee main function](#main-functions) needs to be fed with a (named) list of at least two of these tables as input (`data`). A threshold for p-values can be specified with the parameter `pthresh` (default = 0.05). Besides these, most functions have additional parameters which will be explained in the respective sections below. All functions produce colorblind-friendly output.
