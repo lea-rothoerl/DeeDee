@@ -9,12 +9,11 @@
 #' @return table to be used as input for other DeeDee functions
 #'
 #' @examples
-#'   library(DeeDee)
+#' library(DeeDee)
 #'
-#'   data(DE_results_IFNg_naive, package = "DeeDee")
+#' data(DE_results_IFNg_naive, package = "DeeDee")
 #'
-#'   dd_table <- deedee_prepare(IFNg_naive, "DESeq2")
-#'
+#' dd_table <- deedee_prepare(IFNg_naive, "DESeq2")
 #' @export
 #'
 
@@ -30,22 +29,18 @@ deedee_prepare <- function(data, input_type) {
     pval <- data$padj
     input <- data.frame(logFC, pval)
     rownames(input) <- data@rownames
-  }
-
-    else if (input_type == "edgeR") {
-      checkmate::assertClass(data, "DGEExact")
-      logFC <- data[["table"]][["logFC"]]
-      pval <- data[["table"]][["PValue"]]
-      input <- data.frame(logFC, pval)
-      rownames(input) <- data[["genes"]][["genes"]]
-  }
-
-    else if (input_type == "limma") {
-      checkmate::assertDataFrame(data, types = "numeric")
-      logFC <- data$logFC
-      pval <- data$adj.P.Val
-      input <- data.frame(logFC, pval)
-      rownames(input) <- rownames(data)
+  } else if (input_type == "edgeR") {
+    checkmate::assertClass(data, "DGEExact")
+    logFC <- data[["table"]][["logFC"]]
+    pval <- data[["table"]][["PValue"]]
+    input <- data.frame(logFC, pval)
+    rownames(input) <- data[["genes"]][["genes"]]
+  } else if (input_type == "limma") {
+    checkmate::assertDataFrame(data, types = "numeric")
+    logFC <- data$logFC
+    pval <- data$adj.P.Val
+    input <- data.frame(logFC, pval)
+    rownames(input) <- rownames(data)
   }
   return(input)
 }
