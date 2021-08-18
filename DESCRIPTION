@@ -13,10 +13,10 @@ Description: DeeDee is a collection of functions to compare the results of two
     forms of graphic output, DeeDee has your back.
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: 
+    AnnotationDbi, 
     checkmate,
     clusterProfiler,
     ComplexHeatmap,
@@ -24,21 +24,31 @@ Imports:
     DescTools,
     DESeq2,
     dplyr,
+    enrichplot, 
     ggplot2,
     ggvenn,
     InteractiveComplexHeatmap,
-    macrophage,
+    openxlsx, 
+    readxl, 
+    shiny, 
+    shinythemes,
+    shinycssloaders,
+    shinyBS,
     stats,
     tibble,
-    UpSetR,
-    viridis,
+    tools, 
+    utils, 
+    viridis
+Suggests: 
+    macrophage,
     org.Hs.eg.db,
     org.Mm.eg.db,
     org.Rn.eg.db,
     org.Dm.eg.db,
-    shinythemes,
-    shinycssloaders,
-    shinyBS
-Suggests: 
+    rmarkdown,
+    knitr,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+VignetteBuilder: knitr
+biocViews: GUI, GeneExpression, Software, Transcription, Transcriptomics, 
+    Visualization, DifferentialExpression
