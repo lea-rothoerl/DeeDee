@@ -38,3 +38,6 @@
 #' @docType package
 NULL
 
+globalVariables(
+  c("x.pval", "y.pval")
+)
