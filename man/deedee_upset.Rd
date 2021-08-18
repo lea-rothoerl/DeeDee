@@ -28,23 +28,24 @@ upset element (plottable with show()/print())
 differentially expressed genes in the input datasets.
 }
 \examples{
-  library(DeeDee)
+library(DeeDee)
 
-  data(DE_results_IFNg_naive, package = "DeeDee")
-  IFNg_naive <- deedee_prepare(IFNg_naive, "DESeq2")
+data(DE_results_IFNg_naive, package = "DeeDee")
+IFNg_naive <- deedee_prepare(IFNg_naive, "DESeq2")
 
-  data(DE_results_IFNg_both, package = "DeeDee")
-  IFNg_both <- deedee_prepare(IFNg_both, "DESeq2")
+data(DE_results_IFNg_both, package = "DeeDee")
+IFNg_both <- deedee_prepare(IFNg_both, "DESeq2")
 
-  data(DE_results_Salm_naive, package = "DeeDee")
-  Salm_naive <- deedee_prepare(Salm_naive, "DESeq2")
+data(DE_results_Salm_naive, package = "DeeDee")
+Salm_naive <- deedee_prepare(Salm_naive, "DESeq2")
 
-  data(DE_results_Salm_both, package = "DeeDee")
-  Salm_both <- deedee_prepare(Salm_both, "DESeq2")
+data(DE_results_Salm_both, package = "DeeDee")
+Salm_both <- deedee_prepare(Salm_both, "DESeq2")
 
-  dd_list <- list(IFNg_naive = IFNg_naive, IFNg_both = IFNg_both,
-                  Salm_naive = Salm_naive, Salm_both = Salm_both)
+dd_list <- list(
+  IFNg_naive = IFNg_naive, IFNg_both = IFNg_both,
+  Salm_naive = Salm_naive, Salm_both = Salm_both
+)
 
-  deedee_upset(dd_list, pthresh = 0.05, mode = "both_colored", min_setsize = 10)
-
+deedee_upset(dd_list, pthresh = 0.05, mode = "both_colored", min_setsize = 10)
 }

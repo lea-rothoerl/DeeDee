@@ -19,10 +19,9 @@ table to be used as input for other DeeDee functions
 create DeeDee object from DEA result
 }
 \examples{
-  library(DeeDee)
+library(DeeDee)
 
-  data(DE_results_IFNg_naive, package = "DeeDee")
+data(DE_results_IFNg_naive, package = "DeeDee")
 
-  dd_table <- deedee_prepare(IFNg_naive, "DESeq2")
-
+dd_table <- deedee_prepare(IFNg_naive, "DESeq2")
 }
