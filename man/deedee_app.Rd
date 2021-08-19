@@ -14,5 +14,4 @@ deedee_app
 }
 \examples{
 # deedee_app()
-
 }

@@ -1,8 +1,12 @@
 #' DeeDee
 #'
-#' `DeeDee` is a Bioconductor package ...
+#' `DeeDee` is a package that allows for the visual comparison of two or more
+#'   DEA results.
 #'
-#' `DeeDee` does this and this
+#' `DeeDee` contains functions for the preprocessing of raw DEA result data and
+#'   multiple functions that create graphical output and give an impression of
+#'   similarities and differences in the expression profiles. The functions are
+#'   contained individually as well as included in an interactive Shiny Web App.
 #'
 #' @importFrom AnnotationDbi keytypes
 #' @importFrom checkmate assert_choice assert_data_frame assert_list assert_logical
@@ -17,7 +21,7 @@
 #' scale_fill_manual theme_light xlab ylab
 #' @importFrom ggvenn ggvenn
 #' @importFrom InteractiveComplexHeatmap makeInteractiveComplexHeatmap
-#' @importFrom openxlsx write.xlsx
+#' @importFrom writexl write_xlsx
 #' @importFrom readxl excel_sheets read_excel
 #' @importFrom shiny actionButton brushedPoints brushOpts checkboxGroupInput
 #' checkboxInput column conditionalPanel downloadButton downloadHandler

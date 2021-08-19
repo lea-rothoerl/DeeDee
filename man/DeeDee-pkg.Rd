@@ -5,8 +5,12 @@
 \alias{DeeDee-pkg}
 \title{DeeDee}
 \description{
-\code{DeeDee} is a Bioconductor package ...
+\code{DeeDee} is a package that allows for the visual comparison of two or more
+DEA results.
 }
 \details{
-\code{DeeDee} does this and this
+\code{DeeDee} contains functions for the preprocessing of raw DEA result data and
+multiple functions that create graphical output and give an impression of
+similarities and differences in the expression profiles. The functions are
+contained individually as well as included in an interactive Shiny Web App.
 }
