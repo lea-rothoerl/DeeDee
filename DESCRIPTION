@@ -14,7 +14,10 @@ Authors@R:
     )
 Description: DeeDee is a collection of functions to compare the results of two 
     or more Differential Expression Analyses. From data preparation to different
-    forms of graphic output, DeeDee has your back. TODO TODO TODO.
+    forms of graphic output, DeeDee has your back. Aside from a data preparation 
+    function and six graphical-output producing functions, the package contains
+    a Shiny web application that contains the package's full functionality and 
+    more.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
