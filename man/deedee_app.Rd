@@ -13,5 +13,6 @@ A shiny app
 deedee_app
 }
 \examples{
-# TODO
+# deedee_app()
+
 }
