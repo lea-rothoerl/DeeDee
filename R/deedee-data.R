@@ -1,13 +1,14 @@
 #' A sample `DESeqResults` object
 #'
-#' A sample `DESeqResults` object, generated in the `DESeq2` framework
+#' A sample `DESeqResults` object, generated with `DESeq2`
 #'
-#' @details This `DESeqResults` object on the data from the `macrophage` package
-#' has been created comparing IFNg treated samples vs naive samples, accounting
-#' for the different cell lines included.
+#' @details This `DESeqResults` object contains the results of a Differential
+#' Expression Analysis performed on data from the `macrophage` package, more
+#' precisely contrasting the counts from naive macrophage to those associated
+#' with IFNg.
 #'
-#' Details on how this object has been created are included in the `create_gt_data.R`
-#' script, included in the `scripts` folder of the `GeneTonic` package.
+#' The code to create said object can be found in the folder `/inst/scripts` in
+#' the DeeDee package, the file is called `generate_data.R`.
 #'
 #' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
 #' expression indicate a role for enhancer priming in immune response",
@@ -18,20 +19,17 @@
 NULL
 
 
-#' A sample `res_enrich` object
+#' A sample `DESeqResults` object
 #'
-#' A sample `res_enrich` object, generated with the `topGOtable` function (from
-#' the `pcaExplorer` package).
+#' A sample `DESeqResults` object, generated with `DESeq2`
 #'
-#' @details This `res_enrich` object on the data from the `macrophage` package
-#' has been created by analyzing downstream the differentially expressed genes
-#' when comparing IFNg treated samples vs naive samples, accounting
-#' for the different cell lines included.
+#' @details This `DESeqResults` object contains the results of a Differential
+#' Expression Analysis performed on data from the `macrophage` package, more
+#' precisely contrasting the counts from macrophage associated with IFNg to
+#' those associated with IFNg and Salmonella.
 #'
-#' Details on how this object has been created are included in the `create_gt_data.R`
-#' script, included in the `scripts` folder of the `GeneTonic` package.
-#'
-#' @family pathway-analysis-results
+#' The code to create said object can be found in the folder `/inst/scripts` in
+#' the DeeDee package, the file is called `generate_data.R`.
 #'
 #' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
 #' expression indicate a role for enhancer priming in immune response",
@@ -42,20 +40,17 @@ NULL
 NULL
 
 
-#' A sample output from Enrichr
+#' A sample `DESeqResults` object
 #'
-#' A sample output object as created from a call to Enrichr, with the interface
-#' provided by `enrichR` - using the `enrichr()` function
+#' A sample `DESeqResults` object, generated with `DESeq2`
 #'
-#' @details This object has been created on the data from the `macrophage` package
-#' by analyzing downstream the differentially expressed genes
-#' when comparing IFNg treated samples vs naive samples, accounting
-#' for the different cell lines included.
+#' @details This `DESeqResults` object contains the results of a Differential
+#' Expression Analysis performed on data from the `macrophage` package, more
+#' precisely contrasting the counts from naive macrophage to those associated
+#' with Salmonella.
 #'
-#' Details on how this object has been created are included in the `create_gt_data.R`
-#' script, included in the `scripts` folder of the `GeneTonic` package.
-#'
-#' @family pathway-analysis-results
+#' The code to create said object can be found in the folder `/inst/scripts` in
+#' the DeeDee package, the file is called `generate_data.R`.
 #'
 #' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
 #' expression indicate a role for enhancer priming in immune response",
@@ -67,20 +62,17 @@ NULL
 
 
 
-#' A sample output from g:Profiler
+#' A sample `DESeqResults` object
 #'
-#' A sample output object as created from a call to g:Profiler, with the interface
-#' provided by `gprofiler2` - using the `gost()` function
+#' A sample `DESeqResults` object, generated with `DESeq2`
 #'
-#' @details This object has been created on the data from the `macrophage` package
-#' by analyzing downstream the differentially expressed genes
-#' when comparing IFNg treated samples vs naive samples, accounting
-#' for the different cell lines included.
+#' @details This `DESeqResults` object contains the results of a Differential
+#' Expression Analysis performed on data from the `macrophage` package, more
+#' precisely contrasting the counts from macrophage associated with Salmonella
+#' to those associated with IFNg and Salmonella.
 #'
-#' Details on how this object has been created are included in the `create_gt_data.R`
-#' script, included in the `scripts` folder of the `GeneTonic` package.
-#'
-#' @family pathway-analysis-results
+#' The code to create said object can be found in the folder `/inst/scripts` in
+#' the DeeDee package, the file is called `generate_data.R`.
 #'
 #' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
 #' expression indicate a role for enhancer priming in immune response",
