@@ -111,8 +111,10 @@ deedee_cat <- function(data,
   ) +
     ggplot2::geom_line() +
     ggplot2::theme_light() +
-    viridis::scale_color_viridis(option = "magma", discrete = TRUE,
-                                 begin = 0, end = 0.9) +
+    viridis::scale_color_viridis(
+      option = "magma", discrete = TRUE,
+      begin = 0, end = 0.9
+    ) +
     ggplot2::annotate("text",
       label = paste("reference: ",
         names(data)[ref],
