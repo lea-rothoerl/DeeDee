@@ -4,11 +4,11 @@
 #' @export
 #'
 #' @examples
-#' # TODO
+#' # deedee_app()
 deedee_app <- function() {
-  # ------------------------------------------------------------------------------
-  # --------------------------------- U I ----------------------------------------
-  # ------------------------------------------------------------------------------
+  # ----------------------------------------------------------------------------
+  # --------------------------------- U I --------------------------------------
+  # ----------------------------------------------------------------------------
 
   deedee_ui <- shiny::navbarPage("DeeDee",
     theme = shinythemes::shinytheme("flatly"),
@@ -361,9 +361,9 @@ deedee_app <- function() {
     )
   )
 
-  # ------------------------------------------------------------------------------
-  # ----------------------------- S E R V E R ------------------------------------
-  # ------------------------------------------------------------------------------
+  # ----------------------------------------------------------------------------
+  # ----------------------------- S E R V E R ----------------------------------
+  # ----------------------------------------------------------------------------
 
   deedee_server <- function(input, output, session) {
 
@@ -762,14 +762,12 @@ deedee_app <- function() {
       shiny::req(sel1)
       shiny::req(sel2)
       data <- list(mydata_use()[[sel1]], mydata_use()[[sel2]])
-      print("done1")
       res <- ora(
         geneList = scatter_brushed(),
         universe = data,
         orgDB = input$organism,
         key_type = input$key_type
       )
-      print("done2")
       shiny::validate(shiny::need(
         class(res) == "enrichResult",
         "Not working."
@@ -778,7 +776,6 @@ deedee_app <- function() {
       # if (dim(temp)[1] == 0) {
       #     return(NULL)
       # }
-      print("done3")
       return(res)
     })
 
@@ -787,22 +784,18 @@ deedee_app <- function() {
         !is.null(enrich()),
         "Something went wrong..."
       ))
-      print("done4")
       en <- enrich()
       en_df <- as.data.frame(en)
       shiny::validate(shiny::need(
         nrow(en_df) > 0,
         "No enriched terms found."
       ))
-      print("done5")
       options(ggrepel.max.overlaps = Inf)
       plt <- enrichplot::emapplot(enrichplot::pairwise_termsim(en))
-      print("done5")
       shiny::validate(shiny::need(
         !is.null(plt),
         "No enriched terms found."
       ))
-      print("done6")
       print(plt)
     })
 
