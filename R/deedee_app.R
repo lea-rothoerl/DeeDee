@@ -734,7 +734,7 @@ deedee_app <- function() {
         names(second) <- c("rowname", "logFC", "pval")
         l <- list(first, second)
         names(l) <- c(nm1, nm2)
-        openxlsx::write.xlsx(l, file)
+        writexl::write_xlsx(l, file, col_names = TRUE)
       }
     )
 
@@ -1107,7 +1107,7 @@ deedee_app <- function() {
         names(second) <- c("rowname", "logFC", "pval")
         l <- list(first, second)
         names(l) <- c(nm1, nm2)
-        openxlsx::write.xlsx(l, file)
+        writexl::write_xlsx(l, file, col_names = TRUE)
       }
     )
 
