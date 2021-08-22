@@ -87,6 +87,7 @@ deedee_heatmap <- function(data,
 
   row.names(comp) <- comp$rowname
   comp <- subset(comp, select = -c(rowname)) # removing column with rownames
+  comp <- comp[rowSums(!is.na(comp)) >= floor(length(comp)/2)+1, ]
   if (show_na == FALSE) {
     comp <- comp[stats::complete.cases(comp[colnames(comp)]), ]
   }
