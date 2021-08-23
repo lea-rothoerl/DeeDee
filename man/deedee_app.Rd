@@ -13,5 +13,7 @@ A shiny app
 deedee_app
 }
 \examples{
-# deedee_app()
+if (interactive()) {
+  deedee_app()
+}
 }
