@@ -2,22 +2,24 @@
 title: "DeeDee User Guide"
 author:
 - name: Lea Rothörl
-  affiliation: 
-  - Institute of Medical Biostatistics, Epidemiology and Informatics (IMBEI), Mainz
+  affiliation: Institute of Medical Biostatistics, Epidemiology and Informatics (IMBEI),
+    Mainz
 date: "`r Sys.Date()`"
 output:
   html_document:
-    toc: true
-    toc_float: true
+    toc: yes
+    toc_float: yes
     theme: cosmo
     code_folding: show
-    code_download: true
-vignette: >
-  %\VignetteIndexEntry{The DeeDee User's Guide}
-  %\VignetteEncoding{UTF-8}  
-  %\VignettePackage{DeeDee}
+    code_download: yes
+  pdf_document:
+    toc: yes
+vignette: |
+  %\VignetteIndexEntry{The DeeDee User's Guide} 
+  %\VignetteEncoding{UTF-8}   
+  %\VignettePackage{DeeDee} 
   %\VignetteEngine{knitr::rmarkdown}
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 
@@ -156,7 +158,7 @@ deedee_cat(data = DeeDee_obj, ref = 2, pthresh = 0.05, maxrank = 800)
 # Session Info {-}
 
 
-```{r}
+```{r, collapse=TRUE}
 sessionInfo()
 ```
 
