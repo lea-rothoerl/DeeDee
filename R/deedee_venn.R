@@ -1,13 +1,13 @@
 #' DeeDee Venn Diagram
 #'
-#' @description "deedee_venn" creates a Venn diagram depicting the overlaps of
+#' @description `deedee_venn` creates a Venn diagram depicting the overlaps of
 #' differentially expressed genes in the input datasets.
 #'
 #' @param data (named) list of 2-4 results from deedee_format
 #' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
-#' @param mode show all overlapping DE genes ("both", default),
-#'             only conjointly up-regulated ("up")
-#'             or only conjointly down-regulated ("down") genes
+#' @param mode show all overlapping DE genes (`both`, default),
+#'             only conjointly up-regulated (`up`)
+#'             or only conjointly down-regulated (`down`) genes
 #'
 #' @return ggplot object (plottable with show()/print())
 #'

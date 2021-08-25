@@ -1,15 +1,15 @@
 #' DeeDee UpSet Plot
 #'
-#' @description "deedee_upSet" creates an UpSet plot depicting the overlaps of
+#' @description `deedee_upset` creates an UpSet plot depicting the overlaps of
 #' differentially expressed genes in the input datasets.
 #'
 #' @param data list of results from deedee_prepare
 #' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
-#' @param mode show all overlapping DE genes ("both", default),
-#'             all overlapping genes colored by DE direction ("both_colored",
+#' @param mode show all overlapping DE genes (`both`, default),
+#'             all overlapping genes colored by DE direction (`both_colored`,
 #'             red -> all up, blue -> all down),
-#'             only conjointly up-regulated ("up")
-#'             or only conjointly down-regulated ("down") genes
+#'             only conjointly up-regulated (`up`)
+#'             or only conjointly down-regulated (`down`) genes
 #' @param min_setsize the minimum size of intersections to be displayed in the
 #'                    UpSet plot (default = 10)
 #'

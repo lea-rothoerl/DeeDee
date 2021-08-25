@@ -1,18 +1,19 @@
 #' DeeDee Prepare
 #'
-#' @description create DeeDee object from DEA result
+#' @description `deedee_prepare` creates a DeeDee table from a DEA result
 #'
 #' @param data result from DESeq2, limma or edgeR
-#' @param input_type the program the data comes from ("DESeq2", "limma" or
-#'                  "edgeR")
+#' @param input_type the program the data comes from (`DESeq2`, `limma` or
+#'                  `edgeR`)
 #'
-#' @return table to be used as input for other DeeDee functions
+#' @return Dee Dee table, to be used as part of the input for the other DeeDee
+#' functions
 #'
 #' @examples
 #'
-#' data(DE_results_IFNg_naive, package = "DeeDee")
+#' data(DE_results_IFNg_naive, package = `DeeDee`)
 #'
-#' dd_table <- deedee_prepare(IFNg_naive, "DESeq2")
+#' deedee_table <- deedee_prepare(IFNg_naive, `DESeq2`)
 #' @export
 #'
 

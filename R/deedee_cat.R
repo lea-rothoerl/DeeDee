@@ -1,6 +1,6 @@
 #' DeeDee Concordance At the Top Plot
 #'
-#' @description "deedee_cat" creates a Concordance at the Top plot depicting
+#' @description `deedee_cat` creates a Concordance at the Top plot depicting
 #' the concordance of genes in the first n elements of the logFC-ranked lists
 #' for the given input datasets.
 #'
@@ -8,8 +8,8 @@
 #' @param ref index of the contrast in data to be used as reference contrast
 #'            (default = 1)
 #' @param pthresh threshold for p-values to be in-/excluded (default = 0.05
-#' @param mode sort by highest logFC ("up", default), lowest logFC ("down") or
-#'             greatest deviation from zero ("both")
+#' @param mode sort by highest logFC (`up`, default), lowest logFC (`down`) or
+#'             greatest deviation from zero (`both`)
 #' @param maxrank highest rank that should be displayed (default = 1000)
 #'
 #' @return ggplot object (plottable with show()/print())

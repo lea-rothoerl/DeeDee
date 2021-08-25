@@ -1,6 +1,6 @@
 #' @title DeeDee Heatmap
 #'
-#' @description "deedee_heatmap" creates a heatmap depicting the logFC as a
+#' @description `deedee_heatmap` creates a heatmap depicting the logFC as a
 #' measure of the differential expression of the first genes in the given
 #' datasets.
 #'
@@ -9,10 +9,10 @@
 #' @param show_first indicating the number of genes depicted (default = 500)
 #' @param show_gene_names boolean, show row names next to heatmap
 #'                        (default = FALSE)
-#' @param dist select the distance measure ("euclidean", "manhattan", "pearson",
-#'             "spearman")
-#' @param clust select the clustering method ("single", "complete", "average",
-#'              "centroid")
+#' @param dist select the distance measure (`euclidean`, `manhattan`, `pearson`,
+#'             `spearman`)
+#' @param clust select the clustering method (`single`, `complete`, `average`,
+#'              `centroid`)
 #' @param show_na boolean, include genes with NA values in heatmap
 #'
 #' @return ggplot object (plottable with show()/print())

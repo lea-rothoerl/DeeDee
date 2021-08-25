@@ -1,6 +1,6 @@
 #' DeeDee QQ Plot
 #'
-#' @description "deedee_qq" creates a QQ-plot comparing the statistical
+#' @description `deedee_qq` creates a QQ-plot comparing the statistical
 #' distribution of the logFC of the genes in two input datasets.
 #'
 #' @param data (named) list of results from deedee_prepare
@@ -8,8 +8,8 @@
 #' @param select1 index of first data-list element to be used (default = 1)
 #' @param select2 index of second data-list element to be used (default = 2)
 #' @param color_by indicates which set of values the output should be colored by
-#'                 (possible values = "pval1" (default),
-#'                 "pval2")
+#'                 (possible values = `pval1` (default),
+#'                 `pval2`)
 #'
 #' @return ggplot object (plottable with show()/print())
 #'

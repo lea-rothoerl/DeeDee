@@ -1,5 +1,9 @@
 #' DeeDee App
 #'
+#' @description `deedee_app` opens the DeeDee Shiny web application, combining
+#' the functionalities of all other DeeDee functions with a user-friendly
+#' graphical user interface.
+#'
 #' @return A shiny app
 #' @export
 #'
