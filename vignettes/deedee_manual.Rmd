@@ -53,7 +53,12 @@ When you want to compare results from multiple Differential Expression Analyses 
 
 # How to Install
 
-
+You can install the current development version from GitHub:
+```
+library("remotes")
+remotes::install_github("lea-rothoerl/DeeDee", 
+                        dependencies = TRUE, build_vignettes = TRUE)
+```
 
 
 # Example Dataset Used in this Vignette
