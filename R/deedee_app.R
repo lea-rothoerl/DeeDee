@@ -1,4 +1,4 @@
-#' deedee_app
+#' DeeDee App
 #'
 #' @return A shiny app
 #' @export
