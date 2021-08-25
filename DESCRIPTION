@@ -36,10 +36,6 @@ Imports:
     ggplot2,
     ggvenn,
     InteractiveComplexHeatmap,
-    org.Hs.eg.db,
-    org.Mm.eg.db,
-    org.Rn.eg.db,
-    org.Dm.eg.db,
     readxl, 
     shiny, 
     shinythemes,
@@ -55,6 +51,10 @@ Suggests:
     macrophage,
     rmarkdown,
     knitr,
+    org.Hs.eg.db,
+    org.Mm.eg.db,
+    org.Rn.eg.db,
+    org.Dm.eg.db,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr
