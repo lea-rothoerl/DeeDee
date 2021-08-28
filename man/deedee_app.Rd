@@ -2,7 +2,7 @@
 % Please edit documentation in R/deedee_app.R
 \name{deedee_app}
 \alias{deedee_app}
-\title{deedee_app}
+\title{DeeDee App}
 \usage{
 deedee_app()
 }
@@ -10,7 +10,9 @@ deedee_app()
 A shiny app
 }
 \description{
-deedee_app
+\code{deedee_app} opens the DeeDee Shiny web application, combining
+the functionalities of all other DeeDee functions with a user-friendly
+graphical user interface.
 }
 \examples{
 if (interactive()) {
