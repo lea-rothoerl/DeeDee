@@ -11,9 +11,9 @@
 #'
 #' @examples
 #'
-#' data(DE_results_IFNg_naive, package = `DeeDee`)
+#' data(DE_results_IFNg_naive, package = "DeeDee")
 #'
-#' deedee_table <- deedee_prepare(IFNg_naive, `DESeq2`)
+#' deedee_table <- deedee_prepare(IFNg_naive, "DESeq2")
 #' @export
 #'
 
