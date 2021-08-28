@@ -14,8 +14,8 @@ deedee_cat(data, ref = 1, maxrank = 1000, mode = "up", pthresh = 0.05)
 
 \item{maxrank}{highest rank that should be displayed (default = 1000)}
 
-\item{mode}{sort by highest logFC ("up", default), lowest logFC ("down") or
-greatest deviation from zero ("both")}
+\item{mode}{sort by highest logFC (\code{up}, default), lowest logFC (\code{down}) or
+greatest deviation from zero (\code{both})}
 
 \item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05}
 }
@@ -23,7 +23,7 @@ greatest deviation from zero ("both")}
 ggplot object (plottable with show()/print())
 }
 \description{
-"deedee_cat" creates a Concordance at the Top plot depicting
+\code{deedee_cat} creates a Concordance at the Top plot depicting
 the concordance of genes in the first n elements of the logFC-ranked lists
 for the given input datasets.
 }

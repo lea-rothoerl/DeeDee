@@ -16,14 +16,14 @@ deedee_qq(data, pthresh = 0.05, select1 = 1, select2 = 2, color_by = "pval1")
 \item{select2}{index of second data-list element to be used (default = 2)}
 
 \item{color_by}{indicates which set of values the output should be colored by
-(possible values = "pval1" (default),
-"pval2")}
+(possible values = \code{pval1} (default),
+\code{pval2})}
 }
 \value{
 ggplot object (plottable with show()/print())
 }
 \description{
-"deedee_qq" creates a QQ-plot comparing the statistical
+\code{deedee_qq} creates a QQ-plot comparing the statistical
 distribution of the logFC of the genes in two input datasets.
 }
 \examples{

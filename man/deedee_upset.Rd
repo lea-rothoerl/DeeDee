@@ -11,11 +11,11 @@ deedee_upset(data, pthresh = 0.05, mode = "both_colored", min_setsize = 10)
 
 \item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
 
-\item{mode}{show all overlapping DE genes ("both", default),
-all overlapping genes colored by DE direction ("both_colored",
+\item{mode}{show all overlapping DE genes (\code{both}, default),
+all overlapping genes colored by DE direction (\code{both_colored},
 red -> all up, blue -> all down),
-only conjointly up-regulated ("up")
-or only conjointly down-regulated ("down") genes}
+only conjointly up-regulated (\code{up})
+or only conjointly down-regulated (\code{down}) genes}
 
 \item{min_setsize}{the minimum size of intersections to be displayed in the
 UpSet plot (default = 10)}
@@ -24,7 +24,7 @@ UpSet plot (default = 10)}
 upset element (plottable with show()/print())
 }
 \description{
-"deedee_upSet" creates an UpSet plot depicting the overlaps of
+\code{deedee_upset} creates an UpSet plot depicting the overlaps of
 differentially expressed genes in the input datasets.
 }
 \examples{

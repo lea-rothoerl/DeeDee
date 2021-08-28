@@ -11,15 +11,15 @@ deedee_venn(data, pthresh = 0.05, mode = "both")
 
 \item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
 
-\item{mode}{show all overlapping DE genes ("both", default),
-only conjointly up-regulated ("up")
-or only conjointly down-regulated ("down") genes}
+\item{mode}{show all overlapping DE genes (\code{both}, default),
+only conjointly up-regulated (\code{up})
+or only conjointly down-regulated (\code{down}) genes}
 }
 \value{
 ggplot object (plottable with show()/print())
 }
 \description{
-"deedee_venn" creates a Venn diagram depicting the overlaps of
+\code{deedee_venn} creates a Venn diagram depicting the overlaps of
 differentially expressed genes in the input datasets.
 }
 \examples{

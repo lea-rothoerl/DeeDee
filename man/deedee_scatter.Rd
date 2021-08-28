@@ -22,14 +22,13 @@ deedee_scatter(
 \item{select2}{index of second data-list element to be used (default = 2)}
 
 \item{color_by}{indicates which set of values the output should be colored by
-(possible values = "pval1" (default), "pval2", "idr") (blue
--> lower values, red -> higher values)}
+(possible values = \code{pval1} (default), \code{pval2})}
 }
 \value{
 ggplot object (plottable with show()/print())
 }
 \description{
-"deedee_scatter" creates a scatterplot of the genes in two input
+\code{deedee_scatter} creates a scatterplot of the genes in two input
 datasets based on their logFC values.
 }
 \examples{

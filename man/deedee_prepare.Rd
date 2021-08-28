@@ -9,18 +9,19 @@ deedee_prepare(data, input_type)
 \arguments{
 \item{data}{result from DESeq2, limma or edgeR}
 
-\item{input_type}{the program the data comes from ("DESeq2", "limma" or
-"edgeR")}
+\item{input_type}{the program the data comes from (\code{DESeq2}, \code{limma} or
+\code{edgeR})}
 }
 \value{
-table to be used as input for other DeeDee functions
+Dee Dee table, to be used as part of the input for the other DeeDee
+functions
 }
 \description{
-create DeeDee object from DEA result
+\code{deedee_prepare} creates a DeeDee table from a DEA result
 }
 \examples{
 
 data(DE_results_IFNg_naive, package = "DeeDee")
 
-dd_table <- deedee_prepare(IFNg_naive, "DESeq2")
+deedee_table <- deedee_prepare(IFNg_naive, "DESeq2")
 }

@@ -24,11 +24,11 @@ deedee_heatmap(
 \item{show_gene_names}{boolean, show row names next to heatmap
 (default = FALSE)}
 
-\item{dist}{select the distance measure ("euclidean", "manhattan", "pearson",
-"spearman")}
+\item{dist}{select the distance measure (\code{euclidean}, \code{manhattan}, \code{pearson},
+\code{spearman})}
 
-\item{clust}{select the clustering method ("single", "complete", "average",
-"centroid")}
+\item{clust}{select the clustering method (\code{single}, \code{complete}, \code{average},
+\code{centroid})}
 
 \item{show_na}{boolean, include genes with NA values in heatmap}
 }
@@ -36,7 +36,7 @@ deedee_heatmap(
 ggplot object (plottable with show()/print())
 }
 \description{
-"deedee_heatmap" creates a heatmap depicting the logFC as a
+\code{deedee_heatmap} creates a heatmap depicting the logFC as a
 measure of the differential expression of the first genes in the given
 datasets.
 }
