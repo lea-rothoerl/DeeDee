@@ -4,9 +4,9 @@
 #' measure of the differential expression of the first genes in the given
 #' datasets.
 #'
-#' @param data (named) list of 2-5 results from deedee_format
+#' @param data named list of results from deedee_prepare()
 #' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
-#' @param show_first indicating the number of genes depicted (default = 500)
+#' @param show_first indicating the number of genes depicted (default = 25)
 #' @param show_gene_names boolean, show row names next to heatmap
 #'                        (default = FALSE)
 #' @param dist select the distance measure (`euclidean`, `manhattan`, `pearson`,
@@ -14,8 +14,11 @@
 #' @param clust select the clustering method (`single`, `complete`, `average`,
 #'              `centroid`)
 #' @param show_na boolean, include genes with NA values in heatmap
+#'                (default = FALSE)
 #'
-#' @return ggplot object (plottable with show()/print())
+#' @return Heatmap object (plottable with show()/print()). The resulting heatmap
+#' (`res`) can be opened in a Shiny App with interactive functionality by
+#' running the command `ht_shiny(res)` (see package `InteractiveComplexHeatmap`).
 #'
 #' @examples
 #'
@@ -87,7 +90,7 @@ deedee_heatmap <- function(data,
 
   row.names(comp) <- comp$rowname
   comp <- subset(comp, select = -c(rowname)) # removing column with rownames
-  comp <- comp[rowSums(!is.na(comp)) >= floor(length(comp)/2)+1, ]
+  comp <- comp[rowSums(!is.na(comp)) >= floor(length(comp) / 2) + 1, ]
   if (show_na == FALSE) {
     comp <- comp[stats::complete.cases(comp[colnames(comp)]), ]
   }

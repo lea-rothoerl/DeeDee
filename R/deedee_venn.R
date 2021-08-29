@@ -3,7 +3,7 @@
 #' @description `deedee_venn` creates a Venn diagram depicting the overlaps of
 #' differentially expressed genes in the input datasets.
 #'
-#' @param data (named) list of 2-4 results from deedee_format
+#' @param data named list of results from deedee_prepare()
 #' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
 #' @param mode show all overlapping DE genes (`both`, default),
 #'             only conjointly up-regulated (`up`)

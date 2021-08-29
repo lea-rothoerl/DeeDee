@@ -6,7 +6,7 @@
 #' @param input_type the program the data comes from (`DESeq2`, `limma` or
 #'                  `edgeR`)
 #'
-#' @return Dee Dee table, to be used as part of the input for the other DeeDee
+#' @return DeeDee table, to be used as part of the input for the other DeeDee
 #' functions
 #'
 #' @examples

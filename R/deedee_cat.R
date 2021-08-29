@@ -2,9 +2,10 @@
 #'
 #' @description `deedee_cat` creates a Concordance at the Top plot depicting
 #' the concordance of genes in the first n elements of the logFC-ranked lists
-#' for the given input datasets.
+#' for the given (non-reference) input contrasts against a chosen reference
+#' contrast from the input list.
 #'
-#' @param data (named) list of results from deedee_prepare
+#' @param data named list of results from deedee_prepare()
 #' @param ref index of the contrast in data to be used as reference contrast
 #'            (default = 1)
 #' @param pthresh threshold for p-values to be in-/excluded (default = 0.05

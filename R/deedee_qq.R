@@ -1,9 +1,9 @@
 #' DeeDee QQ Plot
 #'
-#' @description `deedee_qq` creates a QQ-plot comparing the statistical
+#' @description `deedee_qq` creates a Q-Q-plot comparing the statistical
 #' distribution of the logFC of the genes in two input datasets.
 #'
-#' @param data (named) list of results from deedee_prepare
+#' @param data named list of results from deedee_prepare()
 #' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
 #' @param select1 index of first data-list element to be used (default = 1)
 #' @param select2 index of second data-list element to be used (default = 2)
