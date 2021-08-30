@@ -13,7 +13,7 @@ deedee_prepare(data, input_type)
 \code{edgeR})}
 }
 \value{
-Dee Dee table, to be used as part of the input for the other DeeDee
+DeeDee table, to be used as part of the input for the other DeeDee
 functions
 }
 \description{

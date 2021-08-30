@@ -13,7 +13,7 @@ deedee_scatter(
 )
 }
 \arguments{
-\item{data}{list of results from deedee_prepare}
+\item{data}{named list of results from deedee_prepare()}
 
 \item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
 

@@ -7,7 +7,7 @@
 deedee_venn(data, pthresh = 0.05, mode = "both")
 }
 \arguments{
-\item{data}{(named) list of 2-4 results from deedee_format}
+\item{data}{named list of results from deedee_prepare()}
 
 \item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
 

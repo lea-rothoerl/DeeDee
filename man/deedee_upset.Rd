@@ -7,13 +7,13 @@
 deedee_upset(data, pthresh = 0.05, mode = "both_colored", min_setsize = 10)
 }
 \arguments{
-\item{data}{list of results from deedee_prepare}
+\item{data}{named list of results from deedee_prepare()}
 
 \item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
 
-\item{mode}{show all overlapping DE genes (\code{both}, default),
+\item{mode}{show all overlapping DE genes (\code{both}),
 all overlapping genes colored by DE direction (\code{both_colored},
-red -> all up, blue -> all down),
+default),
 only conjointly up-regulated (\code{up})
 or only conjointly down-regulated (\code{down}) genes}
 

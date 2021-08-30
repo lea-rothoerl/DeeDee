@@ -15,11 +15,11 @@ deedee_heatmap(
 )
 }
 \arguments{
-\item{data}{(named) list of 2-5 results from deedee_format}
+\item{data}{named list of results from deedee_prepare()}
 
 \item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
 
-\item{show_first}{indicating the number of genes depicted (default = 500)}
+\item{show_first}{indicating the number of genes depicted (default = 25)}
 
 \item{show_gene_names}{boolean, show row names next to heatmap
 (default = FALSE)}
@@ -30,10 +30,13 @@ deedee_heatmap(
 \item{clust}{select the clustering method (\code{single}, \code{complete}, \code{average},
 \code{centroid})}
 
-\item{show_na}{boolean, include genes with NA values in heatmap}
+\item{show_na}{boolean, include genes with NA values in heatmap
+(default = FALSE)}
 }
 \value{
-ggplot object (plottable with show()/print())
+Heatmap object (plottable with show()/print()). The resulting heatmap
+(\code{res}) can be opened in a Shiny App with interactive functionality by
+running the command \code{ht_shiny(res)} (see package \code{InteractiveComplexHeatmap}).
 }
 \description{
 \code{deedee_heatmap} creates a heatmap depicting the logFC as a

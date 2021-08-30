@@ -7,7 +7,7 @@
 deedee_cat(data, ref = 1, maxrank = 1000, mode = "up", pthresh = 0.05)
 }
 \arguments{
-\item{data}{(named) list of results from deedee_prepare}
+\item{data}{named list of results from deedee_prepare()}
 
 \item{ref}{index of the contrast in data to be used as reference contrast
 (default = 1)}
@@ -25,7 +25,8 @@ ggplot object (plottable with show()/print())
 \description{
 \code{deedee_cat} creates a Concordance at the Top plot depicting
 the concordance of genes in the first n elements of the logFC-ranked lists
-for the given input datasets.
+for the given (non-reference) input contrasts against a chosen reference
+contrast from the input list.
 }
 \examples{
 

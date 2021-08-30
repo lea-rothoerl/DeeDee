@@ -7,7 +7,7 @@
 deedee_qq(data, pthresh = 0.05, select1 = 1, select2 = 2, color_by = "pval1")
 }
 \arguments{
-\item{data}{(named) list of results from deedee_prepare}
+\item{data}{named list of results from deedee_prepare()}
 
 \item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
 
@@ -23,7 +23,7 @@ deedee_qq(data, pthresh = 0.05, select1 = 1, select2 = 2, color_by = "pval1")
 ggplot object (plottable with show()/print())
 }
 \description{
-\code{deedee_qq} creates a QQ-plot comparing the statistical
+\code{deedee_qq} creates a Q-Q-plot comparing the statistical
 distribution of the logFC of the genes in two input datasets.
 }
 \examples{
