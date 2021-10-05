@@ -285,42 +285,67 @@ deedee_app <- function() {
       shiny::fluidRow(
         shiny::column(
           4,
-          shiny::uiOutput("qq_choices1"),
-          shiny::uiOutput("qq_choices2"),
-          shiny::selectInput("qq_color_by", "Color by",
-            choices = list(
-              "1st p-value" = "pval1",
-              "2nd p-value" = "pval2"
-            ),
-            selected = "pval1"
+
+          shiny::checkboxInput("qq_multiple", "Multiple", value = FALSE),
+
+          shiny::conditionalPanel(
+            condition = "!input.qq_multiple",
+            shiny::uiOutput("qq_choices1"),
+            shiny::uiOutput("qq_choices2"),
+            shiny::selectInput("qq_color_by", "Color by",
+              choices = list(
+                "1st p-value" = "pval1",
+                "2nd p-value" = "pval2"
+              ),
+              selected = "pval1"
+            )
           ),
+
+          shiny::conditionalPanel(
+            condition = "input.qq_multiple",
+            shiny::uiOutput("qq_ref"),
+          ),
+
           shiny::numericInput("qq_pthresh", "P-value threshold",
             value = 0.05, min = 0.01, max = 1, step = 0.01
           )
         ),
         shiny::column(
           8,
-          shinycssloaders::withSpinner(
-            shiny::plotOutput("qq",
-              brush = "qq_brush"
+          shiny::conditionalPanel(
+           condition = "!input.qq_multiple",
+           shinycssloaders::withSpinner(
+              shiny::plotOutput("qq",
+                brush = "qq_brush"
+              )
+            )
+          ),
+          shiny::conditionalPanel(
+            condition = "input.qq_multiple",
+            shinycssloaders::withSpinner(
+              shiny::plotOutput("qq_mult")
             )
           )
         )
-      ),
-      shinyBS::bsCollapse(
-        shinyBS::bsCollapsePanel("INFO",
-          shiny::includeMarkdown(system.file("extdata",
-            "qq.md",
-            package = "DeeDee"
-          )),
-          style = "primary"
+        ),
+
+        shinyBS::bsCollapse(
+          shinyBS::bsCollapsePanel("INFO",
+            shiny::includeMarkdown(system.file("extdata",
+              "qq.md",
+              package = "DeeDee"
+            )),
+            style = "primary"
+          )
+        ),
+        shiny::conditionalPanel(
+          condition = "!input.qq_multiple",
+          shiny::downloadButton(
+            "qq_brush_download",
+            "Download brushed genes (.xlsx)"
+          ),
+          shiny::tableOutput("qq_brush_info")
         )
-      ),
-      shiny::downloadButton(
-        "qq_brush_download",
-        "Download brushed genes (.xlsx)"
-      ),
-      shiny::tableOutput("qq_brush_info")
     ),
 
 
@@ -963,7 +988,6 @@ deedee_app <- function() {
           "No genes in your datasets. Maybe your specified p-value threshold is too low?"
         )
       )
-
       res
     })
 
@@ -984,6 +1008,13 @@ deedee_app <- function() {
         selected = names(mydata_use())[2],
         choices = names(mydata_use())
       )
+    })
+
+    output$qq_ref <- shiny::renderUI({
+      shiny::req(input$inp)
+      shiny::selectInput("qq_reference",
+                         "Reference",
+                         choices = names(mydata_use()))
     })
 
     output$qq <- shiny::renderPlot({
@@ -1016,6 +1047,45 @@ deedee_app <- function() {
         select2 = sel2,
         color_by = input$qq_color_by,
         pthresh = input$qq_pthresh
+      )
+
+      shiny::validate(
+        shiny::need(
+          !is.null(res),
+          "No genes in your datasets. Maybe your specified p-value threshold is too low?"
+        )
+      )
+
+      res
+    })
+
+    output$qq_mult <- shiny::renderPlot({
+      shiny::validate(
+        shiny::need(
+          input$inp,
+          "Please input at least two contrasts."
+        )
+      )
+      shiny::validate(
+        shiny::need(
+          length(mydata()) >= 2,
+          "Please upload at least two contrasts."
+        )
+      )
+      shiny::validate(
+        shiny::need(
+          length(mydata_use()) >= 2,
+          "Please select at least two contrasts."
+        )
+      )
+
+      shiny::req(input$inp)
+      ref <- match(input$qq_reference, names(mydata_use()))
+      shiny::req(ref)
+      res <- deedee_qq(mydata_use(),
+                       ref = ref,
+                       color_by = input$qq_color_by,
+                       pthresh = input$qq_pthresh
       )
 
       shiny::validate(
