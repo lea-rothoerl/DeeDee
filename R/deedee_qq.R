@@ -40,9 +40,7 @@ deedee_qq <- function(data,
                       pthresh = 0.05,
                       select1 = 1,
                       select2 = 2,
-                      color_by = "pval1",
-                      multiple = FALSE,
-                      ref = 1) {
+                      color_by = "pval1") {
 
   # ----------------------------- argument check ------------------------------
   checkmate::assert_list(data, type = "data.frame", min.len = 2)
