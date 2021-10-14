@@ -43,49 +43,10 @@ deedee_qq <- function(data,
 
   # ---------------------------- data preparation -----------------------------
   for (i in length(data)-1) {
-    data_red <- list(data[[i]], data[[ref]])
-
-    for (i in 1:length(data_red)) {
-      colnames(data_red[i][[1]]) <- c(
-        paste("logFC", i, sep = ""),
-        paste("pval", i, sep = "")
-      )
-    }
-
-    x <- data_red[1][[1]]$logFC
-    y <- data_red[2][[1]]$logFC
-    pval1 <- data_red[1][[1]]$pval
-    pval2 <- data_red[2][[1]]$pval
-    names(x) <- row.names(data_red[1][[1]])
-    names(y) <- row.names(data_red[2][[1]])
-
-    sx_idx <- order(x)
-    sy_idx <- order(y)
-
-    sx <- x[sx_idx]
-    sy <- y[sy_idx]
-    pval1 <- pval1[sx_idx]
-    pval2 <- pval2[sy_idx]
-
-    lenx <- length(sx)
-    leny <- length(sy)
-
-    if (leny < lenx) {
-      sx <- stats::approx(1L:lenx, sx, n = leny)$y
-      pval1 <- stats::approx(1L:lenx, pval1, n = leny)$y
-    }
-    if (leny > lenx) {
-      sy <- stats::approx(1L:leny, sy, n = lenx)$y
-      pval2 <- stats::approx(1L:leny, pval2, n = lenx)$y
-    }
-
-    qq <- data.frame(x = sx, y = sy, pval1 = pval1, pval2 = pval2)
-
-    qq_f <- qq[qq$pval1 <= pthresh | qq$pval2 <= pthresh, ]
-
-    if (length(qq_f[[1]]) == 0 || length(qq_f[[2]]) == 0) {
-      return(NULL)
-    }
+    deedee_qq(data = data,
+              select1 = ref,
+              select2 = i,
+              as_line = TRUE)
   }
 
   res <- ggplot2::ggplot(qq_f, ggplot2::aes(x, y, col = -log10(get(color_by)))) +
