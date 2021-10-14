@@ -40,7 +40,8 @@ deedee_qq <- function(data,
                       pthresh = 0.05,
                       select1 = 1,
                       select2 = 2,
-                      color_by = "pval1") {
+                      color_by = "pval1",
+                      as_line = FALSE) {
 
   # ----------------------------- argument check ------------------------------
   checkmate::assert_list(data, type = "data.frame", min.len = 2)
@@ -99,13 +100,24 @@ deedee_qq <- function(data,
     return(NULL)
   }
 
-  res <- ggplot2::ggplot(qq_f, ggplot2::aes(x, y, col = -log10(get(color_by)))) +
-    ggplot2::geom_point() +
-    viridis::scale_color_viridis(option = "magma") +
-    ggplot2::xlab(names(data)[select1]) +
-    ggplot2::ylab(names(data)[select2]) +
-    ggplot2::labs(color = paste("-log10(", color_by, ")", sep = "")) +
-    ggplot2::theme_light()
+  if (as_line == FALSE) {
+    res <- ggplot2::ggplot(qq_f, ggplot2::aes(x, y, col = -log10(get(color_by)))) +
+      ggplot2::geom_point() +
+      viridis::scale_color_viridis(option = "magma") +
+      ggplot2::xlab(names(data)[select1]) +
+      ggplot2::ylab(names(data)[select2]) +
+      ggplot2::labs(color = paste("-log10(", color_by, ")", sep = "")) +
+      ggplot2::theme_light()
+  }
+  else {
+    res <- ggplot2::ggplot(qq_f, ggplot2::aes(x, y, col = -log10(get(color_by)))) +
+      ggplot2::geom_line() +
+      viridis::scale_color_viridis(option = "magma") +
+      ggplot2::xlab(names(data)[select1]) +
+      ggplot2::ylab(names(data)[select2]) +
+      ggplot2::labs(color = paste("-log10(", color_by, ")", sep = "")) +
+      ggplot2::theme_light()
+  }
 
   # --------------------------------- return ----------------------------------
   return(res)
