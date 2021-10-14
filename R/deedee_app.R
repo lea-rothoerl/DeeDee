@@ -298,7 +298,8 @@ deedee_app <- function() {
                 "2nd p-value" = "pval2"
               ),
               selected = "pval1"
-            )
+            ),
+            shiny::checkboxInput("qq_line", "As line", value = FALSE)
           ),
 
           shiny::conditionalPanel(
@@ -1046,7 +1047,8 @@ deedee_app <- function() {
         select1 = sel1,
         select2 = sel2,
         color_by = input$qq_color_by,
-        pthresh = input$qq_pthresh
+        pthresh = input$qq_pthresh,
+        as_line = input$qq_line
       )
 
       shiny::validate(
