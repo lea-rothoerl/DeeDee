@@ -8,8 +8,9 @@
 #' @param select1 index of first data-list element to be used (default = 1)
 #' @param select2 index of second data-list element to be used (default = 2)
 #' @param color_by indicates which set of values the output should be colored by
-#'                 (possible values = `pval1` (default),
-#'                 `pval2`)
+#'                 (possible values = `pval1` (default), `pval2`)
+#' @param as_line logical value specifying if the resulting plot should be a
+#'                line (TRUE) or points (FALSE, default)
 #'
 #' @return ggplot object (plottable with show()/print())
 #'
