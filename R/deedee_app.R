@@ -1084,9 +1084,8 @@ deedee_app <- function() {
       shiny::req(input$inp)
       ref <- match(input$qq_reference, names(mydata_use()))
       shiny::req(ref)
-      res <- deedee_qq(mydata_use(),
+      res <- deedee_qqmult(mydata_use(),
                        ref = ref,
-                       color_by = input$qq_color_by,
                        pthresh = input$qq_pthresh
       )
 
