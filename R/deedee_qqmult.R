@@ -1,8 +1,13 @@
 #' DeeDee QQ Plot with Multiple Contrasts
 #'
-#' @description TODO
+#' @description `deedee_qqmult` creates a plot containing Q-Q-lines comparing
+#' the statistical distribution of the logFC of the genes in each input datasets
+#' to a contrast chosen from the input data.
 #'
-#' @param data TODO
+#' @param data named list of results from deedee_prepare()
+#' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
+#' @param ref index of the contrast in data to be used as reference contrast
+#'            (default = 1)
 #'
 #' @return ggplot object (plottable with show()/print())
 #'
@@ -25,11 +30,11 @@
 #'   Salm_naive = Salm_naive, Salm_both = Salm_both
 #' )
 #'
-#' deedee_qqmult(TODO)
+#' deedee_qqmult(dd_list, pthresh = 0.05, ref = 1)
 #' @export
 #'
 
-deedee_qq <- function(data,
+deedee_qqmult <- function(data,
                       pthresh = 0.05,
                       ref = 1) {
 
@@ -41,21 +46,33 @@ deedee_qq <- function(data,
   checkmate::assert_number(pthresh, lower = 0, upper = 1)
   checkmate::assert_number(ref, lower = 1, upper = length(data))
 
-  # ---------------------------- data preparation -----------------------------
-  for (i in length(data)-1) {
-    deedee_qq(data = data,
-              select1 = ref,
-              select2 = i,
-              as_line = TRUE)
+  # ------------------- creation of the resulting qq plot ---------------------
+  output <- list()
+  nm <- c()
+
+  for (i in 1:length(data)) {
+    if (i != ref) {
+      output[[i]] <- data.frame(ggplot2::ggplot_build(deedee_qq(data = data,
+                                     select1 = ref,
+                                     select2 = i,
+                                     as_line = TRUE))$plot$data)
+      nm[[i]] <- names(data[i])
+    }
   }
 
-  res <- ggplot2::ggplot(qq_f, ggplot2::aes(x, y, col = -log10(get(color_by)))) +
-    ggplot2::geom_point() +
-    viridis::scale_color_viridis(option = "magma") +
-    ggplot2::xlab(names(data)[select1]) +
-    ggplot2::ylab(names(data)[select2]) +
-    ggplot2::labs(color = paste("-log10(", color_by, ")", sep = "")) +
-    ggplot2::theme_light()
+  names(output) <- nm
+
+  res <- ggplot2::ggplot(
+    dplyr::bind_rows(output, .id = "contrast"),
+    ggplot2::aes_string("x", "y", colour = "contrast")
+    ) +
+    ggplot2::geom_line() +
+    ggplot2::theme_light() +
+    viridis::scale_color_viridis(
+      option = "magma", discrete = TRUE,
+      begin = 0, end = 0.9
+    )
+
 
   # --------------------------------- return ----------------------------------
   return(res)
