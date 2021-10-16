@@ -11,13 +11,15 @@
 #' if (interactive()) {
 #'   deedee_app()
 #' }
-deedee_app <- function() {
+deedee_app <- function(deedee_obj = NULL) {
+
   # ----------------------------------------------------------------------------
   # --------------------------------- U I --------------------------------------
   # ----------------------------------------------------------------------------
 
   deedee_ui <- shiny::navbarPage("DeeDee",
     theme = shinythemes::shinytheme("flatly"),
+
 
     # ----------------------------- data input ---------------------------------
     shiny::tabPanel(
@@ -65,7 +67,6 @@ deedee_app <- function() {
       # shiny::downloadButton("vignette",
       #                "Download DeeDee Package vignette (.html)")
     ),
-
 
 
     # ------------------------------- scatter ----------------------------------
@@ -488,7 +489,8 @@ deedee_app <- function() {
             }
           }
           # .xlsx input
-        } else if (ext[[i]] == "xlsx") {
+        }
+        else if (ext[[i]] == "xlsx") {
           sheets <- readxl::excel_sheets(input$inp[[i, "datapath"]])
           if (length(sheets) > 1) {
             res[[i]] <- lapply(sheets,
@@ -518,14 +520,16 @@ deedee_app <- function() {
             ))[1]
           }
           # .txt input
-        } else if (ext[[i]] == "txt") {
+        }
+        else if (ext[[i]] == "txt") {
           temp <- utils::read.table(input$inp[[i, "datapath"]])
           res[[i]] <- list(temp)
           names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
             split = ".",
             fixed = TRUE
           ))[1]
-        } else {
+        }
+        else {
           return(NULL)
         }
       }
@@ -1244,5 +1248,6 @@ deedee_app <- function() {
 
 
   # ------------------------------ run application -------------------------------
+  shiny::shinyOptions(deedee_obj = deedee_obj)
   shiny::shinyApp(ui = deedee_ui, server = deedee_server)
 }
