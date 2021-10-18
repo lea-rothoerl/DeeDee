@@ -561,7 +561,7 @@ deedee_app <- function(deedee_obj = NULL) {
     })
 
     output$datasets <- shiny::renderUI({
-      shiny::req(input$inp)
+      shiny::req(isTruthy(input$inp) || isTruthy(deedee_obj))
       shiny::checkboxGroupInput("select_datasets",
         "Select datasets to be used",
         choices = names(mydata()),
