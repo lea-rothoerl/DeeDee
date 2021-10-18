@@ -412,125 +412,139 @@ deedee_app <- function(deedee_obj = NULL) {
     })
 
     mydata <- shiny::reactive({
-      shiny::req(input$inp)
 
-      ext <- vector(mode = "numeric", length = length(input$inp[, 1]))
+      shiny::req(isTruthy(input$inp) || isTruthy(deedee_obj))
+
+      ext <- c()
       res <- list()
 
-      # reading out input files
-      for (i in 1:length(input$inp[, 1])) {
-        ext[i] <- tools::file_ext(input$inp[i, "datapath"])
-        shiny::validate(shiny::need(
-          ext[[i]] == "rds" ||
-            ext[[i]] == "RDS" ||
-            ext[[i]] == "xlsx" ||
-            ext[[i]] == "txt",
-          "Please upload only .RDS, .xlsx or .txt files"
-        ))
+      if (!is.null(deedee_obj)) {
+        ext[1] <- "arg"
+        res[[1]] <- deedee_obj
+      }
 
-        # .RDS input
-        if (ext[[i]] == "rds" || ext[[i]] == "RDS") {
-          res[[i]] <- readRDS(input$inp[[i, "datapath"]])
-          if (class(res[[i]]) == "DESeqResults") {
-            res[[i]] <- deedee_prepare(res[[i]], "DESeq2")
-            res[[i]] <- list(res[[i]])
-            names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
-              split = ".",
-              fixed = TRUE
-            ))[1]
-          } else if (class(res[[i]]) == "DGEExact") {
-            res[[i]] <- deedee_prepare(res[[i]], "edgeR")
-            res[[i]] <- list(res[[i]])
-            names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
-              split = ".",
-              fixed = TRUE
-            ))[1]
-          } else if (class(res[[i]]) == "list") {
-            for (j in length(res[[i]])) {
-              if (checkmate::test_subset(
-                names(res[[i]][[j]]),
-                c("logFC", "pval")
-              ) == FALSE) {
-                return(NULL)
-              }
-            }
-          } else if (class(res[[i]]) == "data.frame") {
-            if (length(res[[i]]) == 2) {
-              if (checkmate::test_subset(
-                names(res[[i]]),
-                c("logFC", "pval")
-              ) == FALSE) {
-                return(NULL)
-              }
+      k = 0
+
+      # reading out input files
+      if (length(input$inp[, 1] > 0)) {
+        for (i in (length(ext)+1):(length(input$inp[, 1])+length(ext))) {
+          k <- k + 1
+          ext[i] <- tools::file_ext(input$inp[k, "datapath"])
+          shiny::validate(shiny::need(
+            ext[[i]] == "rds" ||
+              ext[[i]] == "RDS" ||
+              ext[[i]] == "xlsx" ||
+              ext[[i]] == "txt",
+            "Please upload only .RDS, .xlsx or .txt files"
+          ))
+
+          # .RDS input
+          if (ext[[i]] == "rds" || ext[[i]] == "RDS") {
+            res[[i]] <- readRDS(input$inp[[k, "datapath"]])
+            if (class(res[[i]]) == "DESeqResults") {
+              res[[i]] <- deedee_prepare(res[[i]], "DESeq2")
               res[[i]] <- list(res[[i]])
-              names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
+              names(res[[i]]) <- unlist(strsplit(input$inp[k, "name"],
                 split = ".",
                 fixed = TRUE
               ))[1]
-            } else if (length(res[[i]]) == 6) {
-              if (checkmate::test_subset(names(res[[i]]), c(
-                "logFC",
-                "AveExpr",
-                "t",
-                "P.Value",
-                "adj.P.Val",
-                "B"
-              )) == FALSE) {
-                return(NULL)
-              }
-              res[[i]] <- deedee_prepare(res[[i]], "limma")
+            }
+            else if (class(res[[i]]) == "DGEExact") {
+              res[[i]] <- deedee_prepare(res[[i]], "edgeR")
               res[[i]] <- list(res[[i]])
-              names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
+              names(res[[i]]) <- unlist(strsplit(input$inp[k, "name"],
                 split = ".",
                 fixed = TRUE
               ))[1]
-            } else {
-              return(NULL)
             }
+            else if (class(res[[i]]) == "list") {
+              for (j in length(res[[i]])) {
+                if (checkmate::test_subset(
+                  names(res[[i]][[j]]),
+                  c("logFC", "pval")
+                ) == FALSE) {
+                  return(NULL)
+                }
+              }
+            }
+            else if (class(res[[i]]) == "data.frame") {
+              if (length(res[[i]]) == 2) {
+                if (checkmate::test_subset(
+                  names(res[[i]]),
+                  c("logFC", "pval")
+                ) == FALSE) {
+                  return(NULL)
+                }
+                res[[i]] <- list(res[[i]])
+                names(res[[i]]) <- unlist(strsplit(input$inp[k, "name"],
+                  split = ".",
+                  fixed = TRUE
+                ))[1]
+              } else if (length(res[[i]]) == 6) {
+                if (checkmate::test_subset(names(res[[i]]), c(
+                  "logFC",
+                  "AveExpr",
+                  "t",
+                  "P.Value",
+                  "adj.P.Val",
+                  "B"
+                )) == FALSE) {
+                  return(NULL)
+                }
+                res[[i]] <- deedee_prepare(res[[i]], "limma")
+                res[[i]] <- list(res[[i]])
+                names(res[[i]]) <- unlist(strsplit(input$inp[k, "name"],
+                  split = ".",
+                  fixed = TRUE
+                ))[1]
+              } else {
+                return(NULL)
+              }
+            }
+            # .xlsx input
           }
-          # .xlsx input
-        }
-        else if (ext[[i]] == "xlsx") {
-          sheets <- readxl::excel_sheets(input$inp[[i, "datapath"]])
-          if (length(sheets) > 1) {
-            res[[i]] <- lapply(sheets,
-              readxl::read_excel,
-              path = input$inp[[i, "datapath"]]
-            )
-            names(res[[i]]) <- sheets
-            for (j in 1:length(sheets)) {
-              res[[i]][[sheets[j]]] <- as.data.frame(res[[i]][[sheets[j]]])
-              res[[i]][[sheets[j]]] <- tibble::column_to_rownames(
-                res[[i]][[sheets[j]]], "rowname"
+          else if (ext[[i]] == "xlsx") {
+            sheets <- readxl::excel_sheets(input$inp[[k, "datapath"]])
+            if (length(sheets) > 1) {
+              res[[i]] <- lapply(sheets,
+                readxl::read_excel,
+                path = input$inp[[k, "datapath"]]
               )
-              if (checkmate::test_subset(
-                names(res[[i]][[j]]) == FALSE,
-                c("logFC", "pval")
-              )) {
-                return(NULL)
+              names(res[[i]]) <- sheets
+              for (j in 1:length(sheets)) {
+                res[[i]][[sheets[j]]] <- as.data.frame(res[[i]][[sheets[j]]])
+                res[[i]][[sheets[j]]] <- tibble::column_to_rownames(
+                  res[[i]][[sheets[j]]], "rowname"
+                )
+                if (checkmate::test_subset(
+                  names(res[[i]][[j]]) == FALSE,
+                  c("logFC", "pval")
+                )) {
+                  return(NULL)
+                }
               }
+            } else {
+              res[[i]] <- readxl::read_excel(path = input$inp[[k, "datapath"]])
+              res[[i]] <- tibble::column_to_rownames(res[[i]], "rowname")
+              res[[i]] <- list(res[[i]])
+              names(res[[i]]) <- unlist(strsplit(input$inp[k, "name"],
+                split = ".",
+                fixed = TRUE
+              ))[1]
             }
-          } else {
-            res[[i]] <- readxl::read_excel(path = input$inp[[i, "datapath"]])
-            res[[i]] <- tibble::column_to_rownames(res[[i]], "rowname")
-            res[[i]] <- list(res[[i]])
-            names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
+            # .txt input
+          }
+          else if (ext[[i]] == "txt") {
+            temp <- utils::read.table(input$inp[[k, "datapath"]])
+            res[[i]] <- list(temp)
+            names(res[[i]]) <- unlist(strsplit(input$inp[k, "name"],
               split = ".",
               fixed = TRUE
             ))[1]
           }
-          # .txt input
-        }
-        else if (ext[[i]] == "txt") {
-          temp <- utils::read.table(input$inp[[i, "datapath"]])
-          res[[i]] <- list(temp)
-          names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
-            split = ".",
-            fixed = TRUE
-          ))[1]
-        }
-        else {
-          return(NULL)
+          else {
+            return(NULL)
+          }
         }
       }
 
@@ -579,7 +593,7 @@ deedee_app <- function(deedee_obj = NULL) {
         "Faulty input data provided."
       ))
 
-      shiny::req(input$inp)
+      shiny::req(isTruthy(input$inp) || isTruthy(deedee_obj))
 
       ext <- c()
       filename <- c()
@@ -589,60 +603,77 @@ deedee_app <- function(deedee_obj = NULL) {
       genes <- c()
       count <- 0
 
-      for (i in 1:length(input$inp[, 1])) {
-        ext[i] <- tools::file_ext(input$inp[i, "datapath"])
-
-        if (ext[[i]] == "rds" || ext[[i]] == "RDS") {
-          res[[i]] <- readRDS(input$inp[[i, "datapath"]])
-        } else if (ext[[i]] == "xlsx") {
-          sheets <- readxl::excel_sheets(input$inp[[i, "datapath"]])
-          res[[i]] <- lapply(sheets,
-            readxl::read_excel,
-            path = input$inp[[i, "datapath"]]
-          )
-          names(res[[i]]) <- sheets
-          for (j in 1:length(sheets)) {
-            res[[i]][[sheets[j]]] <- as.data.frame(res[[i]][[sheets[j]]])
-            res[[i]][[sheets[j]]] <- tibble::column_to_rownames(
-              res[[i]][[sheets[j]]], "rowname"
-            )
-          }
-        } else if (ext[[i]] == "txt") {
-          temp <- utils::read.table(input$inp[[i, "datapath"]])
-          res[[i]] <- list(temp)
-          names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
-            split = ".",
-            fixed = TRUE
-          ))[1]
-        }
-
-        if (class(res[[i]]) == "DESeqResults" ||
-          class(res[[i]]) == "DGEExact" ||
-          length(names(res[[i]])) == 6) {
+      if (!is.null(deedee_obj)) {
+        for (j in 1:length(deedee_obj)) {
           count <- count + 1
-          type[count] <- class(res[[i]])
-          filename[count] <- input$inp[i, "name"]
-          contrast[count] <- unlist(strsplit(filename[count],
-            split = ".",
-            fixed = TRUE
-          ))[1]
-          genes[count] <- length(mydata()
-          [[contrast[count]]][["logFC"]])
-        } else {
-          if (class(res[[i]]) == "data.frame") {
-            res[[i]] <- list(res[[i]])
+          type[count] <- "DeeDee object"
+          filename[count] <- "input as argument"
+          contrast[count] <- names(deedee_obj)[j]
+          genes[count] <- length(deedee_obj[j]
+                                 [[contrast[count]]][["logFC"]])
+        }
+      }
+
+      # reading out input files
+      if (length(input$inp[, 1] > 0)) {
+        for (i in 1:(length(input$inp[, 1]))) {
+          ext[i] <- tools::file_ext(input$inp[i, "datapath"])
+
+          if (ext[[i]] == "rds" || ext[[i]] == "RDS") {
+            res[[i]] <- readRDS(input$inp[[i, "datapath"]])
+          }
+          else if (ext[[i]] == "xlsx") {
+            sheets <- readxl::excel_sheets(input$inp[[i, "datapath"]])
+            res[[i]] <- lapply(sheets,
+              readxl::read_excel,
+              path = input$inp[[i, "datapath"]]
+            )
+            names(res[[i]]) <- sheets
+            for (j in 1:length(sheets)) {
+              res[[i]][[sheets[j]]] <- as.data.frame(res[[i]][[sheets[j]]])
+              res[[i]][[sheets[j]]] <- tibble::column_to_rownames(
+                res[[i]][[sheets[j]]], "rowname"
+              )
+            }
+          }
+          else if (ext[[i]] == "txt") {
+            temp <- utils::read.table(input$inp[[i, "datapath"]])
+            res[[i]] <- list(temp)
             names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
               split = ".",
               fixed = TRUE
             ))[1]
           }
-          for (j in 1:length(res[[i]])) {
+
+          if (class(res[[i]]) == "DESeqResults" ||
+            class(res[[i]]) == "DGEExact" ||
+            length(names(res[[i]])) == 6) {
             count <- count + 1
-            type[count] <- "DeeDee object"
+            type[count] <- class(res[[i]])
             filename[count] <- input$inp[i, "name"]
-            contrast[count] <- names(res[[i]])[j]
-            genes[count] <- length(res[[i]][j]
+            contrast[count] <- unlist(strsplit(filename[count],
+              split = ".",
+              fixed = TRUE
+            ))[1]
+            genes[count] <- length(mydata()
             [[contrast[count]]][["logFC"]])
+          }
+          else {
+            if (class(res[[i]]) == "data.frame") {
+              res[[i]] <- list(res[[i]])
+              names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
+                split = ".",
+                fixed = TRUE
+              ))[1]
+            }
+            for (j in 1:length(res[[i]])) {
+              count <- count + 1
+              type[count] <- "DeeDee object"
+              filename[count] <- input$inp[i, "name"]
+              contrast[count] <- names(res[[i]])[j]
+              genes[count] <- length(res[[i]][j]
+              [[contrast[count]]][["logFC"]])
+            }
           }
         }
       }
