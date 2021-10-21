@@ -35,8 +35,8 @@
 #'
 
 deedee_qqmult <- function(data,
-                      pthresh = 0.05,
-                      ref = 1) {
+                          pthresh = 0.05,
+                          ref = 1) {
 
   # ----------------------------- argument check ------------------------------
   checkmate::assert_list(data, type = "data.frame", min.len = 2)
@@ -52,10 +52,12 @@ deedee_qqmult <- function(data,
 
   for (i in 1:length(data)) {
     if (i != ref) {
-      output[[i]] <- data.frame(ggplot2::ggplot_build(deedee_qq(data = data,
-                                     select1 = ref,
-                                     select2 = i,
-                                     as_line = TRUE))$plot$data)
+      output[[i]] <- data.frame(ggplot2::ggplot_build(deedee_qq(
+        data = data,
+        select1 = ref,
+        select2 = i,
+        as_line = TRUE
+      ))$plot$data)
       nm[[i]] <- names(data[i])
     }
   }
@@ -65,7 +67,7 @@ deedee_qqmult <- function(data,
   res <- ggplot2::ggplot(
     dplyr::bind_rows(output, .id = "contrast"),
     ggplot2::aes_string("x", "y", colour = "contrast")
-    ) +
+  ) +
     ggplot2::geom_line() +
     ggplot2::theme_light() +
     viridis::scale_color_viridis(

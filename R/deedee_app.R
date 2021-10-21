@@ -31,7 +31,6 @@
 #' if (interactive()) {
 #'   deedee_app(dd_list)
 #' }
-
 deedee_app <- function(deedee_obj = NULL) {
 
   # ----------------------------------------------------------------------------
@@ -307,9 +306,7 @@ deedee_app <- function(deedee_obj = NULL) {
       shiny::fluidRow(
         shiny::column(
           4,
-
           shiny::checkboxInput("qq_multiple", "Multiple", value = FALSE),
-
           shiny::conditionalPanel(
             condition = "!input.qq_multiple",
             shiny::uiOutput("qq_choices1"),
@@ -323,12 +320,10 @@ deedee_app <- function(deedee_obj = NULL) {
             ),
             shiny::checkboxInput("qq_line", "As line", value = FALSE)
           ),
-
           shiny::conditionalPanel(
             condition = "input.qq_multiple",
             shiny::uiOutput("qq_ref"),
           ),
-
           shiny::numericInput("qq_pthresh", "P-value threshold",
             value = 0.05, min = 0.01, max = 1, step = 0.01
           )
@@ -336,8 +331,8 @@ deedee_app <- function(deedee_obj = NULL) {
         shiny::column(
           8,
           shiny::conditionalPanel(
-           condition = "!input.qq_multiple",
-           shinycssloaders::withSpinner(
+            condition = "!input.qq_multiple",
+            shinycssloaders::withSpinner(
               shiny::plotOutput("qq",
                 brush = "qq_brush"
               )
@@ -350,25 +345,24 @@ deedee_app <- function(deedee_obj = NULL) {
             )
           )
         )
-        ),
-
-        shinyBS::bsCollapse(
-          shinyBS::bsCollapsePanel("INFO",
-            shiny::includeMarkdown(system.file("extdata",
-              "qq.md",
-              package = "DeeDee"
-            )),
-            style = "primary"
-          )
-        ),
-        shiny::conditionalPanel(
-          condition = "!input.qq_multiple",
-          shiny::downloadButton(
-            "qq_brush_download",
-            "Download brushed genes (.xlsx)"
-          ),
-          shiny::tableOutput("qq_brush_info")
+      ),
+      shinyBS::bsCollapse(
+        shinyBS::bsCollapsePanel("INFO",
+          shiny::includeMarkdown(system.file("extdata",
+            "qq.md",
+            package = "DeeDee"
+          )),
+          style = "primary"
         )
+      ),
+      shiny::conditionalPanel(
+        condition = "!input.qq_multiple",
+        shiny::downloadButton(
+          "qq_brush_download",
+          "Download brushed genes (.xlsx)"
+        ),
+        shiny::tableOutput("qq_brush_info")
+      )
     ),
 
 
@@ -433,8 +427,7 @@ deedee_app <- function(deedee_obj = NULL) {
     })
 
     mydata <- shiny::reactive({
-
-      shiny::req(isTruthy(input$inp) || isTruthy(deedee_obj))
+      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
 
       ext <- c()
       res <- list()
@@ -444,11 +437,11 @@ deedee_app <- function(deedee_obj = NULL) {
         res[[1]] <- deedee_obj
       }
 
-      k = 0
+      k <- 0
 
       # reading out input files
       if (length(input$inp[, 1] > 0)) {
-        for (i in (length(ext)+1):(length(input$inp[, 1])+length(ext))) {
+        for (i in (length(ext) + 1):(length(input$inp[, 1]) + length(ext))) {
           k <- k + 1
           ext[i] <- tools::file_ext(input$inp[k, "datapath"])
           shiny::validate(shiny::need(
@@ -469,16 +462,14 @@ deedee_app <- function(deedee_obj = NULL) {
                 split = ".",
                 fixed = TRUE
               ))[1]
-            }
-            else if (class(res[[i]]) == "DGEExact") {
+            } else if (class(res[[i]]) == "DGEExact") {
               res[[i]] <- deedee_prepare(res[[i]], "edgeR")
               res[[i]] <- list(res[[i]])
               names(res[[i]]) <- unlist(strsplit(input$inp[k, "name"],
                 split = ".",
                 fixed = TRUE
               ))[1]
-            }
-            else if (class(res[[i]]) == "list") {
+            } else if (class(res[[i]]) == "list") {
               for (j in length(res[[i]])) {
                 if (checkmate::test_subset(
                   names(res[[i]][[j]]),
@@ -487,8 +478,7 @@ deedee_app <- function(deedee_obj = NULL) {
                   return(NULL)
                 }
               }
-            }
-            else if (class(res[[i]]) == "data.frame") {
+            } else if (class(res[[i]]) == "data.frame") {
               if (length(res[[i]]) == 2) {
                 if (checkmate::test_subset(
                   names(res[[i]]),
@@ -523,8 +513,7 @@ deedee_app <- function(deedee_obj = NULL) {
               }
             }
             # .xlsx input
-          }
-          else if (ext[[i]] == "xlsx") {
+          } else if (ext[[i]] == "xlsx") {
             sheets <- readxl::excel_sheets(input$inp[[k, "datapath"]])
             if (length(sheets) > 1) {
               res[[i]] <- lapply(sheets,
@@ -554,16 +543,14 @@ deedee_app <- function(deedee_obj = NULL) {
               ))[1]
             }
             # .txt input
-          }
-          else if (ext[[i]] == "txt") {
+          } else if (ext[[i]] == "txt") {
             temp <- utils::read.table(input$inp[[k, "datapath"]])
             res[[i]] <- list(temp)
             names(res[[i]]) <- unlist(strsplit(input$inp[k, "name"],
               split = ".",
               fixed = TRUE
             ))[1]
-          }
-          else {
+          } else {
             return(NULL)
           }
         }
@@ -582,7 +569,7 @@ deedee_app <- function(deedee_obj = NULL) {
     })
 
     output$datasets <- shiny::renderUI({
-      shiny::req(isTruthy(input$inp) || isTruthy(deedee_obj))
+      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       shiny::checkboxGroupInput("select_datasets",
         "Select datasets to be used",
         choices = names(mydata()),
@@ -614,7 +601,7 @@ deedee_app <- function(deedee_obj = NULL) {
         "Faulty input data provided."
       ))
 
-      shiny::req(isTruthy(input$inp) || isTruthy(deedee_obj))
+      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
 
       ext <- c()
       filename <- c()
@@ -631,7 +618,7 @@ deedee_app <- function(deedee_obj = NULL) {
           filename[count] <- "input as argument"
           contrast[count] <- names(deedee_obj)[j]
           genes[count] <- length(deedee_obj[j]
-                                 [[contrast[count]]][["logFC"]])
+          [[contrast[count]]][["logFC"]])
         }
       }
 
@@ -642,8 +629,7 @@ deedee_app <- function(deedee_obj = NULL) {
 
           if (ext[[i]] == "rds" || ext[[i]] == "RDS") {
             res[[i]] <- readRDS(input$inp[[i, "datapath"]])
-          }
-          else if (ext[[i]] == "xlsx") {
+          } else if (ext[[i]] == "xlsx") {
             sheets <- readxl::excel_sheets(input$inp[[i, "datapath"]])
             res[[i]] <- lapply(sheets,
               readxl::read_excel,
@@ -656,8 +642,7 @@ deedee_app <- function(deedee_obj = NULL) {
                 res[[i]][[sheets[j]]], "rowname"
               )
             }
-          }
-          else if (ext[[i]] == "txt") {
+          } else if (ext[[i]] == "txt") {
             temp <- utils::read.table(input$inp[[i, "datapath"]])
             res[[i]] <- list(temp)
             names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
@@ -678,8 +663,7 @@ deedee_app <- function(deedee_obj = NULL) {
             ))[1]
             genes[count] <- length(mydata()
             [[contrast[count]]][["logFC"]])
-          }
-          else {
+          } else {
             if (class(res[[i]]) == "data.frame") {
               res[[i]] <- list(res[[i]])
               names(res[[i]]) <- unlist(strsplit(input$inp[i, "name"],
@@ -1070,8 +1054,9 @@ deedee_app <- function(deedee_obj = NULL) {
     output$qq_ref <- shiny::renderUI({
       shiny::req(input$inp)
       shiny::selectInput("qq_reference",
-                         "Reference",
-                         choices = names(mydata_use()))
+        "Reference",
+        choices = names(mydata_use())
+      )
     })
 
     output$qq <- shiny::renderPlot({
@@ -1141,8 +1126,8 @@ deedee_app <- function(deedee_obj = NULL) {
       ref <- match(input$qq_reference, names(mydata_use()))
       shiny::req(ref)
       res <- deedee_qqmult(mydata_use(),
-                       ref = ref,
-                       pthresh = input$qq_pthresh
+        ref = ref,
+        pthresh = input$qq_pthresh
       )
 
       shiny::validate(

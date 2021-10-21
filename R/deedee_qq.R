@@ -109,8 +109,7 @@ deedee_qq <- function(data,
       ggplot2::ylab(names(data)[select2]) +
       ggplot2::labs(color = paste("-log10(", color_by, ")", sep = "")) +
       ggplot2::theme_light()
-  }
-  else {
+  } else {
     res <- ggplot2::ggplot(qq_f, ggplot2::aes(x, y, col = -log10(get(color_by)))) +
       ggplot2::geom_line() +
       viridis::scale_color_viridis(option = "magma") +
