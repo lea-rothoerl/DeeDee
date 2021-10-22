@@ -67,6 +67,7 @@ deedee_heatmap <- function(data,
   checkmate::assert_choice(dist, choices1)
   choices2 <- c("single", "complete", "average", "centroid")
   checkmate::assert_choice(clust, choices2)
+  checkmate::assert_logical(show_na)
 
   # ---------------------------- data preparation -----------------------------
   for (i in 1:length(data)) {
