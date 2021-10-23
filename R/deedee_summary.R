@@ -17,14 +17,14 @@ deedee_summary <- function(deedee_list,
                            cat_mode = "up") {
 
   # ----------------------------- argument check ------------------------------
-  checkmate::assert_list(data, type = "data.frame", min.len = 2)
-  for (i in 1:length(data)) {
-    checkmate::assert_data_frame(data[[i]], type = "numeric")
+  checkmate::assert_list(deedee_list, type = "data.frame", min.len = 2)
+  for (i in 1:length(deedee_list)) {
+    checkmate::assert_data_frame(deedee_list[[i]], type = "numeric")
   }
   checkmate::assert_number(pthresh, lower = 0, upper = 1)
 
-  checkmate::assert_number(scatter_select1, lower = 1, upper = length(data))
-  checkmate::assert_number(scatter_select2, lower = 1, upper = length(data))
+  checkmate::assert_number(scatter_select1, lower = 1, upper = length(deedee_list))
+  checkmate::assert_number(scatter_select2, lower = 1, upper = length(deedee_list))
   choices <- c("pval1", "pval2")
   checkmate::assert_choice(scatter_color_by, choices)
 
@@ -43,13 +43,54 @@ deedee_summary <- function(deedee_list,
   checkmate::assert_choice(upset_mode, choices)
   checkmate::assert_number(upset_min_setsize, lower = 0)
 
-  checkmate::assert_number(qqmult_ref, lower = 1, upper = length(data))
+  checkmate::assert_number(qqmult_ref, lower = 1, upper = length(deedee_list))
 
-  checkmate::assert_number(cat_ref, lower = 1, upper = length(data))
+  checkmate::assert_number(cat_ref, lower = 1, upper = length(deedee_list))
   checkmate::assert_number(cat_maxrank, lower = 1)
   choices <- c("up", "down", "both")
   checkmate::assert_choice(cat_mode, choices)
 
+  # -------------------------- calling the functions ---------------------------
+  sc <- DeeDee::deedee_scatter(data = deedee_list,
+                         pthresh = pthresh,
+                         select1 = scatter_select1,
+                         select2 = scatter_select2,
+                         color_by = scatter_color_by)
 
+  hm <- DeeDee::deedee_heatmap(data = deedee_list,
+                         pthresh = pthresh,
+                         show_first = heatmap_show_first,
+                         show_gene_names = heatmap_show_gene_names,
+                         dist = heatmap_dist,
+                         clust = heatmap_clust,
+                         show_na = heatmap_show_na)
+
+  vn <- DeeDee::deedee_venn(data = deedee_list,
+                      pthresh = pthresh,
+                      mode = venn_mode)
+
+  us <- DeeDee::deedee_upset(data = deedee_list,
+                       pthresh = pthresh,
+                       mode = upset_mode,
+                       min_setsize = upset_min_setsize)
+
+  qq <- DeeDee::deedee_qqmult(data = deedee_list,
+                        pthresh = pthresh,
+                        ref = qqmult_ref)
+
+  ct <- DeeDee::deedee_cat(data = deedee_list,
+                     pthresh = pthresh,
+                     ref = cat_ref,
+                     maxrank = cat_maxrank,
+                     mode = cat_mode)
+
+  pdf("~/Desktop/deedee_summary.pdf")
+    print(sc)
+    print(hm)
+    print(vn)
+    print(us)
+    print(qq)
+    print(ct)
+  dev.off()
 
 }
