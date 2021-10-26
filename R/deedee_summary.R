@@ -84,13 +84,30 @@ deedee_summary <- function(deedee_list,
                      maxrank = cat_maxrank,
                      mode = cat_mode)
 
-  pdf("~/Desktop/deedee_summary.pdf")
+  # pdf("~/Desktop/deedee_summary.pdf")
     print(sc)
     print(hm)
     print(vn)
     print(us)
     print(qq)
     print(ct)
-  dev.off()
+  # dev.off()
+
+  template <- system.file("extdata",
+                          "summary_template.Rmd",
+                          package = "DeeDee")
+
+  output_rmd <- "~/Desktop/output.Rmd"
+
+  file.copy(from = template, to = output_rmd, overwrite = TRUE)
+
+  args <- list()
+  args$input <- output_rmd
+  args$output_format <- "html_document"
+  args$output_file <- "~/Desktop/output.html"
+
+  output_file <- rmarkdown::render("~/Desktop/output.Rmd",
+                                   params = args)
+  browseURL(output_file)
 
 }
