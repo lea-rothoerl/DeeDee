@@ -61,7 +61,9 @@
 #'   Salm_naive = Salm_naive, Salm_both = Salm_both
 #' )
 #'
+#' \dontrun{
 #' deedee_summary(dd_list)
+#' }
 #'
 
 deedee_summary <- function(deedee_list,
@@ -175,7 +177,7 @@ deedee_summary <- function(deedee_list,
 
   output_file <- rmarkdown::render("DeeDee_Summary.Rmd",
                                    params = args)
-  browseURL(output_file)
+  utils::browseURL(output_file)
 
   file.remove(output_rmd)
 
