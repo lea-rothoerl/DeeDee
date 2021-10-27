@@ -17,7 +17,7 @@ deedee_cat(data, ref = 1, maxrank = 1000, mode = "up", pthresh = 0.05)
 \item{mode}{sort by highest logFC (\code{up}, default), lowest logFC (\code{down}) or
 greatest deviation from zero (\code{both})}
 
-\item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05}
+\item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
 }
 \value{
 ggplot object (plottable with show()/print())
