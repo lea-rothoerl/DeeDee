@@ -60,12 +60,10 @@
 #'   IFNg_naive = IFNg_naive, IFNg_both = IFNg_both,
 #'   Salm_naive = Salm_naive, Salm_both = Salm_both
 #' )
-#'
 #' \dontrun{
 #' deedee_summary(dd_list)
 #' }
 #'
-
 deedee_summary <- function(deedee_list,
                            pthresh = 0.05,
                            scatter_select1 = 1,
@@ -153,18 +151,19 @@ deedee_summary <- function(deedee_list,
   #                    mode = cat_mode)
 
   # pdf("~/Desktop/deedee_summary.pdf")
-    # print(sc)
-    # print(hm)
-    # print(vn)
-    # print(us)
-    # print(qq)
-    # print(ct)
+  # print(sc)
+  # print(hm)
+  # print(vn)
+  # print(us)
+  # print(qq)
+  # print(ct)
   # dev.off()
 
   # ---------------------------- R Markdown output -----------------------------
   template <- system.file("extdata",
-                          "summary_template.Rmd",
-                          package = "DeeDee")
+    "summary_template.Rmd",
+    package = "DeeDee"
+  )
 
   output_rmd <- "DeeDee_Summary.Rmd"
 
@@ -176,11 +175,11 @@ deedee_summary <- function(deedee_list,
   args$output_file <- "DeeDee_Summary.html"
 
   output_file <- rmarkdown::render("DeeDee_Summary.Rmd",
-                                   params = args)
+    params = args
+  )
   utils::browseURL(output_file)
 
   file.remove(output_rmd)
 
   print("Your summary has been generated!")
-
 }

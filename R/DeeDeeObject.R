@@ -1,15 +1,12 @@
 DeeDeeObject <- setClass(
 
   "DeeDeeObject",
-
   slots = c(
     DeeDeeList = "list"
   ),
-
   prototype = list(
     DeeDeeList = NULL
   ),
-
   validity = function(object) {
     res <- object@DeeDeeList
     if (class(res) != "list") {
