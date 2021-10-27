@@ -1,3 +1,69 @@
+#' DeeDee Summary
+#'
+#' @param deedee_list named list of results from deedee_prepare()
+#' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
+#' @param scatter_select1 index of first data-list element to be used
+#'                        (default = 1)
+#' @param scatter_select2 index of second data-list element to be used
+#'                        (default = 2)
+#' @param scatter_color_by indicates which set of values the output should be
+#'                         colored by (possible values = `pval1` (default),
+#'                         `pval2`)
+#' @param heatmap_show_first indicating the number of genes depicted
+#'                           (default = 25)
+#' @param heatmap_show_gene_names boolean, show row names next to heatmap
+#'                                (default = FALSE)
+#' @param heatmap_dist select the distance measure (`euclidean`, `manhattan`,
+#'                     `pearson`, `spearman`)
+#' @param heatmap_clust select the clustering method (`single`, `complete`,
+#'                      `average`, `centroid`)
+#' @param heatmap_show_na boolean, include genes with NA values in heatmap
+#'                        (default = FALSE)
+#' @param venn_mode show all overlapping DE genes (`both`, default),
+#'                  only conjointly up-regulated (`up`)
+#'                  or only conjointly down-regulated (`down`) genes
+#' @param upset_mode show all overlapping DE genes (`both`),
+#'                   all overlapping genes colored by DE direction
+#'                   (`both_colored`, default),
+#'                   only conjointly up-regulated (`up`)
+#'                   or only conjointly down-regulated (`down`) genes
+#' @param upset_min_setsize the minimum size of intersections to be displayed in
+#'                          the UpSet plot (default = 10)
+#' @param qqmult_ref index of the contrast in data to be used as reference
+#'                   contrast (default = 1)
+#' @param cat_ref index of the contrast in data to be used as reference contrast
+#'                (default = 1)
+#' @param cat_maxrank highest rank that should be displayed (default = 1000)
+#' @param cat_mode sort by highest logFC (`up`, default), lowest logFC (`down`)
+#'                 or greatest deviation from zero (`both`)
+#'
+#' @return Creates a html document containing the results of running the DeeDee
+#'         functions on your input data and params. TODO where
+#'
+#' @export
+#'
+#' @examples
+#'
+#' data(DE_results_IFNg_naive, package = "DeeDee")
+#' IFNg_naive <- deedee_prepare(IFNg_naive, "DESeq2")
+#'
+#' data(DE_results_IFNg_both, package = "DeeDee")
+#' IFNg_both <- deedee_prepare(IFNg_both, "DESeq2")
+#'
+#' data(DE_results_Salm_naive, package = "DeeDee")
+#' Salm_naive <- deedee_prepare(Salm_naive, "DESeq2")
+#'
+#' data(DE_results_Salm_both, package = "DeeDee")
+#' Salm_both <- deedee_prepare(Salm_both, "DESeq2")
+#'
+#' dd_list <- list(
+#'   IFNg_naive = IFNg_naive, IFNg_both = IFNg_both,
+#'   Salm_naive = Salm_naive, Salm_both = Salm_both
+#' )
+#'
+#' deedee_summary(dd_list)
+#'
+
 deedee_summary <- function(deedee_list,
                            pthresh = 0.05,
                            scatter_select1 = 1,
@@ -51,63 +117,68 @@ deedee_summary <- function(deedee_list,
   checkmate::assert_choice(cat_mode, choices)
 
   # -------------------------- calling the functions ---------------------------
-  sc <- DeeDee::deedee_scatter(data = deedee_list,
-                         pthresh = pthresh,
-                         select1 = scatter_select1,
-                         select2 = scatter_select2,
-                         color_by = scatter_color_by)
-
-  hm <- DeeDee::deedee_heatmap(data = deedee_list,
-                         pthresh = pthresh,
-                         show_first = heatmap_show_first,
-                         show_gene_names = heatmap_show_gene_names,
-                         dist = heatmap_dist,
-                         clust = heatmap_clust,
-                         show_na = heatmap_show_na)
-
-  vn <- DeeDee::deedee_venn(data = deedee_list,
-                      pthresh = pthresh,
-                      mode = venn_mode)
-
-  us <- DeeDee::deedee_upset(data = deedee_list,
-                       pthresh = pthresh,
-                       mode = upset_mode,
-                       min_setsize = upset_min_setsize)
-
-  qq <- DeeDee::deedee_qqmult(data = deedee_list,
-                        pthresh = pthresh,
-                        ref = qqmult_ref)
-
-  ct <- DeeDee::deedee_cat(data = deedee_list,
-                     pthresh = pthresh,
-                     ref = cat_ref,
-                     maxrank = cat_maxrank,
-                     mode = cat_mode)
+  # sc <- DeeDee::deedee_scatter(data = deedee_list,
+  #                        pthresh = pthresh,
+  #                        select1 = scatter_select1,
+  #                        select2 = scatter_select2,
+  #                        color_by = scatter_color_by)
+  #
+  # hm <- DeeDee::deedee_heatmap(data = deedee_list,
+  #                        pthresh = pthresh,
+  #                        show_first = heatmap_show_first,
+  #                        show_gene_names = heatmap_show_gene_names,
+  #                        dist = heatmap_dist,
+  #                        clust = heatmap_clust,
+  #                        show_na = heatmap_show_na)
+  #
+  # vn <- DeeDee::deedee_venn(data = deedee_list,
+  #                     pthresh = pthresh,
+  #                     mode = venn_mode)
+  #
+  # us <- DeeDee::deedee_upset(data = deedee_list,
+  #                      pthresh = pthresh,
+  #                      mode = upset_mode,
+  #                      min_setsize = upset_min_setsize)
+  #
+  # qq <- DeeDee::deedee_qqmult(data = deedee_list,
+  #                       pthresh = pthresh,
+  #                       ref = qqmult_ref)
+  #
+  # ct <- DeeDee::deedee_cat(data = deedee_list,
+  #                    pthresh = pthresh,
+  #                    ref = cat_ref,
+  #                    maxrank = cat_maxrank,
+  #                    mode = cat_mode)
 
   # pdf("~/Desktop/deedee_summary.pdf")
-    print(sc)
-    print(hm)
-    print(vn)
-    print(us)
-    print(qq)
-    print(ct)
+    # print(sc)
+    # print(hm)
+    # print(vn)
+    # print(us)
+    # print(qq)
+    # print(ct)
   # dev.off()
 
+  # ---------------------------- R Markdown output -----------------------------
   template <- system.file("extdata",
                           "summary_template.Rmd",
                           package = "DeeDee")
 
-  output_rmd <- "~/Desktop/output.Rmd"
+  output_rmd <- "DeeDee_Summary.Rmd"
 
   file.copy(from = template, to = output_rmd, overwrite = TRUE)
 
   args <- list()
   args$input <- output_rmd
   args$output_format <- "html_document"
-  args$output_file <- "~/Desktop/output.html"
+  args$output_file <- "DeeDee_Summary.html"
 
-  output_file <- rmarkdown::render("~/Desktop/output.Rmd",
+  output_file <- rmarkdown::render("DeeDee_Summary.Rmd",
                                    params = args)
   browseURL(output_file)
+
+  file.remove(output_rmd)
+
+  print("Your summary has been generated!")
 
 }
