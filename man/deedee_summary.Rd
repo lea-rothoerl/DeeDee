@@ -6,6 +6,8 @@
 \usage{
 deedee_summary(
   deedee_list,
+  output_path = "DeeDee_Summary.html",
+  overwrite = FALSE,
   pthresh = 0.05,
   scatter_select1 = 1,
   scatter_select2 = 2,
@@ -26,6 +28,14 @@ deedee_summary(
 }
 \arguments{
 \item{deedee_list}{named list of results from deedee_prepare()}
+
+\item{output_path}{the path to save the resulting report in. must end with
+a filename.html (default = "DeeDee_Summary.html" in the
+working directory)}
+
+\item{overwrite}{logical value specifying if the output is supposed to
+overwrite a potential existing file at the location of
+output_path (default = FALSE)}
 
 \item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
 
@@ -103,7 +113,6 @@ dd_list <- list(
   IFNg_naive = IFNg_naive, IFNg_both = IFNg_both,
   Salm_naive = Salm_naive, Salm_both = Salm_both
 )
-
 \dontrun{
 deedee_summary(dd_list)
 }

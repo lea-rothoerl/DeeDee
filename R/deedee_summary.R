@@ -1,6 +1,12 @@
 #' DeeDee Summary
 #'
 #' @param deedee_list named list of results from deedee_prepare()
+#' @param output_path the path to save the resulting report in. must end with
+#'                    a filename.html (default = "DeeDee_Summary.html" in the
+#'                    working directory)
+#' @param overwrite logical value specifying if the output is supposed to
+#'                  overwrite a potential existing file at the location of
+#'                  output_path (default = FALSE)
 #' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
 #' @param scatter_select1 index of first data-list element to be used
 #'                        (default = 1)
@@ -65,6 +71,8 @@
 #' }
 #'
 deedee_summary <- function(deedee_list,
+                           output_path = "DeeDee_Summary.html",
+                           overwrite = FALSE,
                            pthresh = 0.05,
                            scatter_select1 = 1,
                            scatter_select2 = 2,
@@ -165,19 +173,30 @@ deedee_summary <- function(deedee_list,
     package = "DeeDee"
   )
 
-  output_rmd <- "DeeDee_Summary.Rmd"
+  if (file.exists(output_path)) {
+    if (!overwrite) {
+      stop(" Your declared output file already exists. ",
+           "Set overwrite = TRUE to proceed anyway.",
+           call. = FALSE
+      )
+    }
+  }
+
+  output_rmd <- unlist(strsplit(output_path,
+                                split = ".",
+                                fixed = TRUE))[1]
 
   file.copy(from = template, to = output_rmd, overwrite = TRUE)
 
   args <- list()
   args$input <- output_rmd
   args$output_format <- "html_document"
-  args$output_file <- "DeeDee_Summary.html"
+  args$output_path <- output_path
 
-  output_file <- rmarkdown::render("DeeDee_Summary.Rmd",
+  output_path <- rmarkdown::render(output_rmd,
     params = args
   )
-  utils::browseURL(output_file)
+  utils::browseURL(output_path)
 
   file.remove(output_rmd)
 
