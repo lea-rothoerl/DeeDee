@@ -97,6 +97,8 @@ deedee_summary <- function(deedee_list,
   }
   checkmate::assert_number(pthresh, lower = 0, upper = 1)
 
+  checkmate::assert_logical(overwrite)
+
   checkmate::assert_number(scatter_select1, lower = 1, upper = length(deedee_list))
   checkmate::assert_number(scatter_select2, lower = 1, upper = length(deedee_list))
   choices <- c("pval1", "pval2")
