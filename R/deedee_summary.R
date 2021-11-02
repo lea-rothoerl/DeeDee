@@ -124,49 +124,6 @@ deedee_summary <- function(deedee_list,
   choices <- c("up", "down", "both")
   checkmate::assert_choice(cat_mode, choices)
 
-  # -------------------------- calling the functions ---------------------------
-  # sc <- DeeDee::deedee_scatter(data = deedee_list,
-  #                        pthresh = pthresh,
-  #                        select1 = scatter_select1,
-  #                        select2 = scatter_select2,
-  #                        color_by = scatter_color_by)
-  #
-  # hm <- DeeDee::deedee_heatmap(data = deedee_list,
-  #                        pthresh = pthresh,
-  #                        show_first = heatmap_show_first,
-  #                        show_gene_names = heatmap_show_gene_names,
-  #                        dist = heatmap_dist,
-  #                        clust = heatmap_clust,
-  #                        show_na = heatmap_show_na)
-  #
-  # vn <- DeeDee::deedee_venn(data = deedee_list,
-  #                     pthresh = pthresh,
-  #                     mode = venn_mode)
-  #
-  # us <- DeeDee::deedee_upset(data = deedee_list,
-  #                      pthresh = pthresh,
-  #                      mode = upset_mode,
-  #                      min_setsize = upset_min_setsize)
-  #
-  # qq <- DeeDee::deedee_qqmult(data = deedee_list,
-  #                       pthresh = pthresh,
-  #                       ref = qqmult_ref)
-  #
-  # ct <- DeeDee::deedee_cat(data = deedee_list,
-  #                    pthresh = pthresh,
-  #                    ref = cat_ref,
-  #                    maxrank = cat_maxrank,
-  #                    mode = cat_mode)
-
-  # pdf("~/Desktop/deedee_summary.pdf")
-  # print(sc)
-  # print(hm)
-  # print(vn)
-  # print(us)
-  # print(qq)
-  # print(ct)
-  # dev.off()
-
   # ---------------------------- R Markdown output -----------------------------
   template <- system.file("extdata",
     "summary_template.Rmd",
