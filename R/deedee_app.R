@@ -411,6 +411,18 @@ deedee_app <- function(deedee_obj = NULL) {
     # ------------------------------- summary ----------------------------------
     shiny::tabPanel(
       "Summary",
+      shiny::numericInput("sum_pthresh", "P-value threshold",
+                          value = 0.05, min = 0.01, max = 1, step = 0.01
+      ),
+      shinyBS::bsCollapse(
+        shinyBS::bsCollapsePanel("INFO",
+                                 shiny::includeMarkdown(system.file("extdata",
+                                                                    "cat.md",
+                                                                    package = "DeeDee"
+                                 )),
+                                 style = "primary"
+        )
+      ),
       shinydashboard::tabBox(
         title = "",
         width = 12,
