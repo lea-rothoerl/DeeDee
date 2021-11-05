@@ -526,7 +526,9 @@ deedee_app <- function(deedee_obj = NULL) {
             min = 1
           ),
           shiny::uiOutput("sum_cat_choice")
-        )
+        ),
+        shiny::downloadButton("sum_download",
+                              "Download my Summary")
       )
     )
   )
@@ -1440,6 +1442,68 @@ deedee_app <- function(deedee_obj = NULL) {
         choices = names(mydata_use())
       )
     })
+
+    # summary <- reactive({
+    #
+    #     shiny::req(mydata_use())
+    #
+    #     outfile <- tempfile(fileext='.html')
+    #
+    #     deedee_summary(mydata_use(),
+    #                    output_path = outfile,
+    #                    overwrite = TRUE,
+    #                    pthresh = input$sum_pthresh,
+    #                    scatter_select1 = input$sum_scatter_select1,
+    #                    scatter_select2 = input$sum_scatter_select2,
+    #                    scatter_color_by = input$sum_scatter_color_by,
+    #                    heatmap_show_first = input$sum_heatmap_show_first,
+    #                    heatmap_show_gene_names = input$sum_heatmap_show_gene_names,
+    #                    heatmap_dist = input$sum_heatmap_dist,
+    #                    heatmap_clust = input$sum_heatmap_clust,
+    #                    heatmap_show_na = input$sum_heatmap_show_na,
+    #                    venn_mode = input$sum_venn_mode,
+    #                    upset_mode = input$sum_upset_mode,
+    #                    upset_min_setsize = input$sum_upset_min_setsize,
+    #                    qqmult_ref = input$sum_qqmult_ref,
+    #                    cat_ref = input$sum_cat_ref,
+    #                    cat_maxrank = input$sum_cat_maxrank,
+    #                    cat_mode = input$sum_cat_mode)
+    #
+    #     return(outfile)
+    # })
+
+    output$sum_download <- shiny::downloadHandler(
+      filename = "DeeDee_Summary.html",
+      content = function(file) {
+
+        shiny::req(mydata_use())
+
+        outfile <- tempfile(fileext='.html')
+
+        deedee_summary(mydata_use(),
+                       output_path = outfile,
+                       overwrite = TRUE,
+                       pthresh = input$sum_pthresh,
+                       scatter_select1 = input$sum_scatter_select1,
+                       scatter_select2 = input$sum_scatter_select2,
+                       scatter_color_by = input$sum_scatter_color_by,
+                       heatmap_show_first = input$sum_heatmap_show_first,
+                       heatmap_show_gene_names = input$sum_heatmap_show_gene_names,
+                       heatmap_dist = input$sum_heatmap_dist,
+                       heatmap_clust = input$sum_heatmap_clust,
+                       heatmap_show_na = input$sum_heatmap_show_na,
+                       venn_mode = input$sum_venn_mode,
+                       upset_mode = input$sum_upset_mode,
+                       upset_min_setsize = input$sum_upset_min_setsize,
+                       qqmult_ref = input$sum_qqmult_ref,
+                       cat_ref = input$sum_cat_ref,
+                       cat_maxrank = input$sum_cat_maxrank,
+                       cat_mode = input$sum_cat_mode)
+
+        file.copy(outfile, file)
+      }
+    )
+
   }
 
 
