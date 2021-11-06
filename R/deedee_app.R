@@ -411,18 +411,25 @@ deedee_app <- function(deedee_obj = NULL) {
     # ------------------------------- summary ----------------------------------
     shiny::tabPanel(
       "Summary",
+
       shiny::numericInput("sum_pthresh", "P-value threshold",
                           value = 0.05, min = 0.01, max = 1, step = 0.01
       ),
-      shinyBS::bsCollapse(
-        shinyBS::bsCollapsePanel("INFO",
-                                 shiny::includeMarkdown(system.file("extdata",
-                                                                    "cat.md",
-                                                                    package = "DeeDee"
-                                 )),
-                                 style = "primary"
-        )
+
+      shiny::downloadButton("sum_download",
+                            "Download my Summary"
       ),
+
+      # shinyBS::bsCollapse(
+      #   shinyBS::bsCollapsePanel("INFO",
+      #                            shiny::includeMarkdown(system.file("extdata",
+      #                                                               "cat.md",
+      #                                                               package = "DeeDee"
+      #                            )),
+      #                            style = "primary"
+      #   )
+      # ),
+
       shinydashboard::tabBox(
         title = "",
         width = 12,
@@ -450,7 +457,7 @@ deedee_app <- function(deedee_obj = NULL) {
             "Show gene names",
             value = FALSE
           ),
-          shiny::checkboxInput("sum_heatmap_showNA",
+          shiny::checkboxInput("sum_heatmap_show_na",
             "Show NA",
             value = FALSE
           ),
@@ -502,7 +509,7 @@ deedee_app <- function(deedee_obj = NULL) {
               TRUE
             )
           ),
-          shiny::numericInput("sum_upset_minset", "Minimum set size",
+          shiny::numericInput("sum_upset_min_setsize", "Minimum set size",
             value = 10, min = 0, step = 1
           )
         ),
@@ -526,9 +533,7 @@ deedee_app <- function(deedee_obj = NULL) {
             min = 1
           ),
           shiny::uiOutput("sum_cat_choice")
-        ),
-        shiny::downloadButton("sum_download",
-                              "Download my Summary")
+        )
       )
     )
   )
@@ -1428,7 +1433,7 @@ deedee_app <- function(deedee_obj = NULL) {
 
     output$sum_qq_ref <- shiny::renderUI({
       shiny::req(input$inp)
-      shiny::selectInput("sum_qq_reference",
+      shiny::selectInput("sum_qqmult_ref",
         "Reference",
         choices = names(mydata_use())
       )
@@ -1480,12 +1485,21 @@ deedee_app <- function(deedee_obj = NULL) {
 
         outfile <- tempfile(fileext='.html')
 
+        sc_sel1 <- match(input$sum_scatter_select1, names(mydata_use()))
+        sc_sel2 <- match(input$sum_scatter_select2, names(mydata_use()))
+
+        qq_ref <- match(input$sum_qqmult_ref, names(mydata_use()))
+
+        shiny::req(sc_sel1)
+        shiny::req(sc_sel2)
+        shiny::req(qq_ref)
+
         deedee_summary(mydata_use(),
                        output_path = outfile,
                        overwrite = TRUE,
                        pthresh = input$sum_pthresh,
-                       scatter_select1 = input$sum_scatter_select1,
-                       scatter_select2 = input$sum_scatter_select2,
+                       scatter_select1 = sc_sel1,
+                       scatter_select2 = sc_sel2,
                        scatter_color_by = input$sum_scatter_color_by,
                        heatmap_show_first = input$sum_heatmap_show_first,
                        heatmap_show_gene_names = input$sum_heatmap_show_gene_names,
@@ -1495,15 +1509,16 @@ deedee_app <- function(deedee_obj = NULL) {
                        venn_mode = input$sum_venn_mode,
                        upset_mode = input$sum_upset_mode,
                        upset_min_setsize = input$sum_upset_min_setsize,
-                       qqmult_ref = input$sum_qqmult_ref,
+                       qqmult_ref = qq_ref,
                        cat_ref = input$sum_cat_ref,
                        cat_maxrank = input$sum_cat_maxrank,
                        cat_mode = input$sum_cat_mode)
 
+        print("yes")
+
         file.copy(outfile, file)
       }
     )
-
   }
 
 
