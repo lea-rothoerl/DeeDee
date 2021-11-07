@@ -42,6 +42,10 @@
 #' @param cat_maxrank highest rank that should be displayed (default = 1000)
 #' @param cat_mode sort by highest logFC (`up`, default), lowest logFC (`down`)
 #'                 or greatest deviation from zero (`both`)
+#' @param silent logical, specifying if success message shall be suppressed
+#'               (default = FALSE)
+#' @param open_file logical, specifying if the output file is supposed to be
+#'                  opened after successful creation (default = TRUE)
 #'
 #' @return Creates a html document containing the results of running the DeeDee
 #'         functions on your input data and params. TODO where
@@ -88,7 +92,9 @@ deedee_summary <- function(deedee_list,
                            qqmult_ref = 1,
                            cat_ref = 1,
                            cat_maxrank = 1000,
-                           cat_mode = "up") {
+                           cat_mode = "up",
+                           silent = FALSE,
+                           open_file = TRUE) {
 
   # ----------------------------- argument check ------------------------------
   checkmate::assert_list(deedee_list, type = "data.frame", min.len = 2)
@@ -156,9 +162,13 @@ deedee_summary <- function(deedee_list,
   output_path <- rmarkdown::render(output_rmd,
     params = args
   )
-  utils::browseURL(output_path)
+  if (open_file == TRUE) {
+    utils::browseURL(output_path)
+  }
 
   file.remove(output_rmd)
 
-  print("Your summary has been generated!")
+  if (silent == FALSE) {
+    print("Your summary has been generated!")
+  }
 }
