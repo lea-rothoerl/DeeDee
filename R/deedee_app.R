@@ -1480,6 +1480,12 @@ deedee_app <- function(deedee_obj = NULL) {
         cat_ref <- 1
       }
 
+      if (input$sum_upset_mode == "both" && input$sum_upset_colored) {
+        ups_mode <- "both_colored"
+      } else {
+        ups_mode <- input$sum_upset_mode
+      }
+
       shiny::req(sc_sel1)
       shiny::req(sc_sel2)
       shiny::req(qq_ref)
@@ -1498,7 +1504,7 @@ deedee_app <- function(deedee_obj = NULL) {
         heatmap_clust = input$sum_heatmap_clust,
         heatmap_show_na = input$sum_heatmap_show_na,
         venn_mode = input$sum_venn_mode,
-        upset_mode = input$sum_upset_mode,
+        upset_mode = ups_mode,
         upset_min_setsize = input$sum_upset_min_setsize,
         qqmult_ref = qq_ref,
         cat_ref = cat_ref,
@@ -1523,7 +1529,7 @@ deedee_app <- function(deedee_obj = NULL) {
     output$show_html_summary <- shiny::renderUI({
       shiny::req(summary())
 
-      shinydashboard::includeHTML(summary())
+      shiny::includeHTML(summary())
     })
   }
 
