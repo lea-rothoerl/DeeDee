@@ -416,8 +416,22 @@ deedee_app <- function(deedee_obj = NULL) {
                           value = 0.05, min = 0.01, max = 1, step = 0.01
       ),
 
-      shiny::downloadButton("sum_download",
-                            "Download my Summary"
+      # shiny::downloadButton("sum_download",
+      #                       "Download my Summary"
+      # ),
+
+      shiny::actionButton("sum_button", "Create Summary"),
+
+      shinyBS::bsModal(
+        id = "sum_modal",
+        title = "DeeDee Summary",
+        trigger = "sum_button",
+        size = "large",
+        shinycssloaders::withSpinner(shiny::uiOutput("show_html_summary")),
+        shiny::downloadButton(
+          "sum_download_WIP",
+          "Download your DeeDee Summary (.html)"
+        )
       ),
 
       # shinyBS::bsCollapse(
@@ -1435,6 +1449,7 @@ deedee_app <- function(deedee_obj = NULL) {
       shiny::req(input$inp)
       shiny::selectInput("sum_qqmult_ref",
         "Reference",
+        selected = names(mydata_use())[1],
         choices = names(mydata_use())
       )
     })
@@ -1448,51 +1463,35 @@ deedee_app <- function(deedee_obj = NULL) {
       )
     })
 
-    # summary <- reactive({
-    #
-    #     shiny::req(mydata_use())
-    #
-    #     outfile <- tempfile(fileext='.html')
-    #
-    #     deedee_summary(mydata_use(),
-    #                    output_path = outfile,
-    #                    overwrite = TRUE,
-    #                    pthresh = input$sum_pthresh,
-    #                    scatter_select1 = input$sum_scatter_select1,
-    #                    scatter_select2 = input$sum_scatter_select2,
-    #                    scatter_color_by = input$sum_scatter_color_by,
-    #                    heatmap_show_first = input$sum_heatmap_show_first,
-    #                    heatmap_show_gene_names = input$sum_heatmap_show_gene_names,
-    #                    heatmap_dist = input$sum_heatmap_dist,
-    #                    heatmap_clust = input$sum_heatmap_clust,
-    #                    heatmap_show_na = input$sum_heatmap_show_na,
-    #                    venn_mode = input$sum_venn_mode,
-    #                    upset_mode = input$sum_upset_mode,
-    #                    upset_min_setsize = input$sum_upset_min_setsize,
-    #                    qqmult_ref = input$sum_qqmult_ref,
-    #                    cat_ref = input$sum_cat_ref,
-    #                    cat_maxrank = input$sum_cat_maxrank,
-    #                    cat_mode = input$sum_cat_mode)
-    #
-    #     return(outfile)
-    # })
-
-    output$sum_download <- shiny::downloadHandler(
-      filename = "DeeDee_Summary.html",
-      content = function(file) {
+    summary <- reactive({
 
         shiny::req(mydata_use())
 
         outfile <- tempfile(fileext='.html')
 
         sc_sel1 <- match(input$sum_scatter_select1, names(mydata_use()))
+        if (is.null(sc_sel1)) {
+          sc_sel1 <- 1
+        }
         sc_sel2 <- match(input$sum_scatter_select2, names(mydata_use()))
+        if (is.null(sc_sel2)) {
+          sc_sel2 <- 2
+        }
 
         qq_ref <- match(input$sum_qqmult_ref, names(mydata_use()))
+        if (length(qq_ref) == 0) {
+          qq_ref <- 1
+        }
+
+        cat_ref <- match(input$sum_cat_ref, names(mydata_use()))
+        if (length(cat_ref) == 0) {
+          cat_ref <- 1
+        }
 
         shiny::req(sc_sel1)
         shiny::req(sc_sel2)
         shiny::req(qq_ref)
+        shiny::req(cat_ref)
 
         deedee_summary(mydata_use(),
                        output_path = outfile,
@@ -1510,13 +1509,20 @@ deedee_app <- function(deedee_obj = NULL) {
                        upset_mode = input$sum_upset_mode,
                        upset_min_setsize = input$sum_upset_min_setsize,
                        qqmult_ref = qq_ref,
-                       cat_ref = input$sum_cat_ref,
+                       cat_ref = cat_ref,
                        cat_maxrank = input$sum_cat_maxrank,
-                       cat_mode = input$sum_cat_mode)
+                       cat_mode = input$sum_cat_mode,
+                       silent = TRUE,
+                       open_file = FALSE)
 
-        print("yes")
+        return(outfile)
+    })
 
-        file.copy(outfile, file)
+    output$show_html_summary <- shiny::renderUI({
+
+        shiny::req(summary())
+
+        includeHTML(summary())
       }
     )
   }
