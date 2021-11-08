@@ -140,17 +140,17 @@ deedee_summary <- function(deedee_list,
 
   if (file.exists(output_path)) {
     if (!overwrite) {
-      stop(" Your declared output file already exists. ",
+      stop("Your declared output file already exists. ",
         "Set overwrite = TRUE to proceed anyway.",
         call. = FALSE
       )
     }
   }
 
-  output_rmd <- unlist(strsplit(output_path,
+  output_rmd <- paste(unlist(strsplit(output_path,
     split = ".",
     fixed = TRUE
-  ))[1]
+  ))[1], ".Rmd", sep = "")
 
   file.copy(from = template, to = output_rmd, overwrite = TRUE)
 
