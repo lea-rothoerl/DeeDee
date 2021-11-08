@@ -23,7 +23,9 @@ deedee_summary(
   qqmult_ref = 1,
   cat_ref = 1,
   cat_maxrank = 1000,
-  cat_mode = "up"
+  cat_mode = "up",
+  silent = FALSE,
+  open_file = TRUE
 )
 }
 \arguments{
@@ -87,6 +89,12 @@ contrast (default = 1)}
 
 \item{cat_mode}{sort by highest logFC (\code{up}, default), lowest logFC (\code{down})
 or greatest deviation from zero (\code{both})}
+
+\item{silent}{logical, specifying if success message shall be suppressed
+(default = FALSE)}
+
+\item{open_file}{logical, specifying if the output file is supposed to be
+opened after successful creation (default = TRUE)}
 }
 \value{
 Creates a html document containing the results of running the DeeDee
