@@ -416,10 +416,6 @@ deedee_app <- function(deedee_obj = NULL) {
                           value = 0.05, min = 0.01, max = 1, step = 0.01
       ),
 
-      # shiny::downloadButton("sum_download",
-      #                       "Download my Summary"
-      # ),
-
       shiny::actionButton("sum_button", "Create Summary"),
 
       shinyBS::bsModal(
@@ -427,11 +423,11 @@ deedee_app <- function(deedee_obj = NULL) {
         title = "DeeDee Summary",
         trigger = "sum_button",
         size = "large",
-        shinycssloaders::withSpinner(shiny::uiOutput("show_html_summary")),
         shiny::downloadButton(
-          "sum_download_WIP",
+          "sum_download",
           "Download your DeeDee Summary (.html)"
-        )
+        ),
+        shinycssloaders::withSpinner(shiny::uiOutput("show_html_summary"))
       ),
 
       # shinyBS::bsCollapse(
@@ -1517,6 +1513,16 @@ deedee_app <- function(deedee_obj = NULL) {
 
         return(outfile)
     })
+
+    output$sum_download <- shiny::downloadHandler(
+      filename = "DeeDee_Summary.html",
+      content = function(file) {
+
+        shiny::req(summary())
+
+        file.copy(summary(), file)
+      }
+    )
 
     output$show_html_summary <- shiny::renderUI({
 
