@@ -46,6 +46,8 @@
 #'               (default = FALSE)
 #' @param open_file logical, specifying if the output file is supposed to be
 #'                  opened after successful creation (default = TRUE)
+#' @param keep_rmd logical, decides if the .Rmd file will be kept (TRUE, default)
+#'                 or deleted
 #'
 #' @return Creates a html document containing the results of running the DeeDee
 #'         functions on your input data and params. TODO where
@@ -94,7 +96,8 @@ deedee_summary <- function(deedee_list,
                            cat_maxrank = 1000,
                            cat_mode = "up",
                            silent = FALSE,
-                           open_file = TRUE) {
+                           open_file = TRUE,
+                           keep_rmd = FALSE) {
 
   # ----------------------------- argument check ------------------------------
   checkmate::assert_list(deedee_list, type = "data.frame", min.len = 2)
@@ -166,7 +169,9 @@ deedee_summary <- function(deedee_list,
     utils::browseURL(output_path)
   }
 
-  file.remove(output_rmd)
+  if (keep_rmd == FALSE) {
+    file.remove(output_rmd)
+  }
 
   if (silent == FALSE) {
     print("Your summary has been generated!")
