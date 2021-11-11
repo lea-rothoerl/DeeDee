@@ -1457,6 +1457,25 @@ deedee_app <- function(deedee_obj = NULL) {
     })
 
     summary <- reactive({
+      shiny::validate(
+        shiny::need(
+          input$inp,
+          "Please input at least two contrasts."
+        )
+      )
+      shiny::validate(
+        shiny::need(
+          length(mydata()) >= 2,
+          "Please upload at least two contrasts."
+        )
+      )
+      shiny::validate(
+        shiny::need(
+          length(mydata_use()) >= 2,
+          "Please select at least two contrasts."
+        )
+      )
+
       shiny::req(mydata_use())
 
       outfile <- tempfile(fileext = ".html")
@@ -1529,7 +1548,13 @@ deedee_app <- function(deedee_obj = NULL) {
     output$show_html_summary <- shiny::renderUI({
       shiny::req(summary())
 
-      shiny::includeHTML(summary())
+      out <- tempfile(fileext = ".html")
+
+      xml2::write_html(rvest::html_node(xml2::read_html(summary()), "body"),
+                       file = out)
+
+      includeHTML(path = out)
+
     })
   }
 
