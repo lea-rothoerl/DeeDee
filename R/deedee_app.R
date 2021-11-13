@@ -535,14 +535,13 @@ deedee_app <- function(deedee_obj = NULL) {
           )
         )
       ),
-
       shinyBS::bsCollapse(
         shinyBS::bsCollapsePanel("INFO",
-                                 shiny::includeMarkdown(system.file("extdata",
-                                                                    "summary.md",
-                                                                    package = "DeeDee"
-                                 )),
-                                 style = "primary"
+          shiny::includeMarkdown(system.file("extdata",
+            "summary.md",
+            package = "DeeDee"
+          )),
+          style = "primary"
         )
       )
     )
@@ -1554,10 +1553,10 @@ deedee_app <- function(deedee_obj = NULL) {
       out <- tempfile(fileext = ".html")
 
       xml2::write_html(rvest::html_node(xml2::read_html(summary()), "body"),
-                       file = out)
+        file = out
+      )
 
       shiny::includeHTML(path = out)
-
     })
   }
 
