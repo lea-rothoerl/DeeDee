@@ -420,126 +420,129 @@ deedee_app <- function(deedee_obj = NULL) {
         title = "DeeDee Summary",
         trigger = "sum_button",
         size = "large",
-        shiny::downloadButton(
-          "sum_download",
-          "Download your DeeDee Summary (.html)"
-        ),
-        shinycssloaders::withSpinner(shiny::uiOutput("show_html_summary"))
+        shiny::fluidPage(
+          shiny::downloadButton(
+            "sum_download",
+            "Download your DeeDee Summary (.html)"
+          ),
+          shinycssloaders::withSpinner(shiny::uiOutput("show_html_summary"))
+        )
       ),
-
-      # shinyBS::bsCollapse(
-      #   shinyBS::bsCollapsePanel("INFO",
-      #                            shiny::includeMarkdown(system.file("extdata",
-      #                                                               "cat.md",
-      #                                                               package = "DeeDee"
-      #                            )),
-      #                            style = "primary"
-      #   )
-      # ),
-
-      shinydashboard::tabBox(
-        title = "",
-        width = 12,
-        id = "sum_params", height = "250px",
-        shiny::tabPanel(
-          "Scatterplot",
-          shiny::uiOutput("sum_scatter_choices1"),
-          shiny::uiOutput("sum_scatter_choices2"),
-          shiny::selectInput("sum_scatter_color_by", "Color by",
-            choices = list(
-              "1st p-value" = "pval1",
-              "2nd p-value" = "pval2"
-            ),
-            selected = "pval1"
-          )
-        ),
-        shiny::tabPanel(
-          "Heatmap",
-          shiny::numericInput("sum_heatmap_show_first",
-            "Show first",
-            value = 25,
-            min = 1
-          ),
-          shiny::checkboxInput("sum_heatmap_show_gene_names",
-            "Show gene names",
-            value = FALSE
-          ),
-          shiny::checkboxInput("sum_heatmap_show_na",
-            "Show NA",
-            value = FALSE
-          ),
-          shiny::selectInput("sum_heatmap_dist", "Distance measure",
-            choices = list(
-              "Euclidean" = "euclidean",
-              "Manhattan" = "manhattan",
-              "Pearson" = "pearson",
-              "Spearman" = "spearman"
-            ),
-            selected = "euclidean"
-          ),
-          shiny::selectInput("sum_heatmap_clust", "Clustering method",
-            choices = list(
-              "Single" = "single",
-              "Complete" = "complete",
-              "Average" = "average",
-              "Centroid" = "centroid"
-            ),
-            selected = "average"
-          )
-        ),
-        shiny::tabPanel(
-          "Venn Diagram",
-          shiny::selectInput("sum_venn_mode", "Mode",
-            choices = list(
-              "Up" = "up",
-              "Down" = "down",
-              "Both" = "both"
-            ),
-            selected = "both"
-          )
-        ),
-        shiny::tabPanel(
-          "UpSet Plot",
-          shiny::selectInput("sum_upset_mode", "Mode",
-            choices = list(
-              "Up" = "up",
-              "Down" = "down",
-              "Both" = "both"
-            ),
-            selected = "both"
-          ),
-          shiny::conditionalPanel(
-            condition = "input.sum_upset_mode == 'both'",
-            shiny::checkboxInput(
-              "sum_upset_colored",
-              "Coloring",
-              TRUE
+      shiny::fluidRow(
+        shinydashboard::tabBox(
+          title = "",
+          width = 12,
+          id = "sum_params",
+          shiny::tabPanel(
+            "Scatterplot",
+            shiny::uiOutput("sum_scatter_choices1"),
+            shiny::uiOutput("sum_scatter_choices2"),
+            shiny::selectInput("sum_scatter_color_by", "Color by",
+              choices = list(
+                "1st p-value" = "pval1",
+                "2nd p-value" = "pval2"
+              ),
+              selected = "pval1"
             )
           ),
-          shiny::numericInput("sum_upset_min_setsize", "Minimum set size",
-            value = 10, min = 0, step = 1
-          )
-        ),
-        shiny::tabPanel(
-          "Quantile-Quantile Plot",
-          shiny::uiOutput("sum_qq_ref"),
-        ),
-        shiny::tabPanel(
-          "Concordance At the Top Plot",
-          shiny::selectInput("sum_cat_mode", "Mode",
-            choices = list(
-              "Up" = "up",
-              "Down" = "down",
-              "Both" = "both"
+          shiny::tabPanel(
+            "Heatmap",
+            shiny::numericInput("sum_heatmap_show_first",
+              "Show first",
+              value = 25,
+              min = 1
             ),
-            selected = "up"
+            shiny::checkboxInput("sum_heatmap_show_gene_names",
+              "Show gene names",
+              value = FALSE
+            ),
+            shiny::checkboxInput("sum_heatmap_show_na",
+              "Show NA",
+              value = FALSE
+            ),
+            shiny::selectInput("sum_heatmap_dist", "Distance measure",
+              choices = list(
+                "Euclidean" = "euclidean",
+                "Manhattan" = "manhattan",
+                "Pearson" = "pearson",
+                "Spearman" = "spearman"
+              ),
+              selected = "euclidean"
+            ),
+            shiny::selectInput("sum_heatmap_clust", "Clustering method",
+              choices = list(
+                "Single" = "single",
+                "Complete" = "complete",
+                "Average" = "average",
+                "Centroid" = "centroid"
+              ),
+              selected = "average"
+            )
           ),
-          shiny::numericInput("sum_cat_maxrank",
-            "Max rank",
-            value = 1000,
-            min = 1
+          shiny::tabPanel(
+            "Venn Diagram",
+            shiny::selectInput("sum_venn_mode", "Mode",
+              choices = list(
+                "Up" = "up",
+                "Down" = "down",
+                "Both" = "both"
+              ),
+              selected = "both"
+            )
           ),
-          shiny::uiOutput("sum_cat_choice")
+          shiny::tabPanel(
+            "UpSet Plot",
+            shiny::selectInput("sum_upset_mode", "Mode",
+              choices = list(
+                "Up" = "up",
+                "Down" = "down",
+                "Both" = "both"
+              ),
+              selected = "both"
+            ),
+            shiny::conditionalPanel(
+              condition = "input.sum_upset_mode == 'both'",
+              shiny::checkboxInput(
+                "sum_upset_colored",
+                "Coloring",
+                TRUE
+              )
+            ),
+            shiny::numericInput("sum_upset_min_setsize", "Minimum set size",
+              value = 10, min = 0, step = 1
+            )
+          ),
+          shiny::tabPanel(
+            "Quantile-Quantile Plot",
+            shiny::uiOutput("sum_qq_ref"),
+          ),
+          shiny::tabPanel(
+            "Concordance At the Top Plot",
+            shiny::selectInput("sum_cat_mode", "Mode",
+              choices = list(
+                "Up" = "up",
+                "Down" = "down",
+                "Both" = "both"
+              ),
+              selected = "up"
+            ),
+            shiny::numericInput("sum_cat_maxrank",
+              "Max rank",
+              value = 1000,
+              min = 1
+            ),
+            shiny::uiOutput("sum_cat_choice")
+          )
+        )
+      ),
+
+      shinyBS::bsCollapse(
+        shinyBS::bsCollapsePanel("INFO",
+                                 shiny::includeMarkdown(system.file("extdata",
+                                                                    "summary.md",
+                                                                    package = "DeeDee"
+                                 )),
+                                 style = "primary"
         )
       )
     )
@@ -1553,7 +1556,7 @@ deedee_app <- function(deedee_obj = NULL) {
       xml2::write_html(rvest::html_node(xml2::read_html(summary()), "body"),
                        file = out)
 
-      includeHTML(path = out)
+      shiny::includeHTML(path = out)
 
     })
   }
