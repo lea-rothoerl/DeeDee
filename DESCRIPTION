@@ -37,7 +37,9 @@ Imports:
     ggvenn,
     InteractiveComplexHeatmap,
     readxl, 
+    rvest,
     shiny, 
+    shinydashboard,
     shinythemes,
     shinycssloaders,
     shinyBS,
@@ -46,7 +48,8 @@ Imports:
     tools, 
     utils, 
     viridis,
-    writexl
+    writexl,
+    xml2
 Suggests: 
     macrophage,
     methods,
