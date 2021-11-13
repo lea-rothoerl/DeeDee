@@ -68,6 +68,8 @@ deedee_qqmult <- function(data,
     dplyr::bind_rows(output, .id = "contrast"),
     ggplot2::aes_string("x", "y", colour = "contrast")
   ) +
+    ggplot2::xlab(names(data)[ref]) +
+    ggplot2::ylab("see legend") +
     ggplot2::geom_line() +
     ggplot2::theme_light() +
     viridis::scale_color_viridis(
