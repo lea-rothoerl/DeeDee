@@ -49,7 +49,8 @@ deedee_app <- function(deedee_obj = NULL) {
           8,
           shiny::fileInput("inp", "Upload your DEA results or DeeDee objects",
             multiple = TRUE,
-            accept = c(".rds", ".txt", ".xlsx")
+            accept = c(".rds", ".txt", ".xlsx"),
+            placeholder = "No files selected"
           ),
           shiny::tableOutput("inp_infobox")
         ),
