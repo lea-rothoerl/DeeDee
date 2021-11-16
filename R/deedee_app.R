@@ -719,7 +719,7 @@ deedee_app <- function(deedee_obj = NULL) {
     })
 
     mydata_use <- shiny::reactive({
-      shiny::req(input$inp)
+      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       use <- input$select_datasets
       dat2 <- list()
       for (i in use) {
@@ -731,7 +731,7 @@ deedee_app <- function(deedee_obj = NULL) {
     output$inp_download <- shiny::downloadHandler(
       filename = "DeeDee_object.RDS",
       content = function(file) {
-        shiny::req(input$inp)
+        shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
         saveRDS(mydata_use(), file)
       }
     )
@@ -832,7 +832,7 @@ deedee_app <- function(deedee_obj = NULL) {
     # ------------------------------- scatter ----------------------------------
     # --- selectors ---
     output$scatter_choices1 <- shiny::renderUI({
-      shiny::req(input$inp)
+             shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       shiny::selectInput("scatter_select1",
         "1st data set",
         choices = names(mydata_use())
@@ -840,7 +840,7 @@ deedee_app <- function(deedee_obj = NULL) {
     })
 
     output$scatter_choices2 <- shiny::renderUI({
-      shiny::req(input$inp)
+             shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       shiny::selectInput("scatter_select2",
         "2nd data set",
         selected = names(mydata_use())[2],
@@ -852,12 +852,6 @@ deedee_app <- function(deedee_obj = NULL) {
     ranges <- shiny::reactiveValues(x = NULL, y = NULL)
 
     output$scatter <- shiny::renderPlot({
-      shiny::validate(
-        shiny::need(
-          input$inp,
-          "Please input at least two contrasts."
-        )
-      )
       shiny::validate(
         shiny::need(
           length(mydata()) >= 2,
@@ -965,7 +959,7 @@ deedee_app <- function(deedee_obj = NULL) {
 
     # --- enrich ---
     enrich <- shiny::reactive({
-      shiny::req(input$inp)
+             shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       shiny::validate(shiny::need(
         scatter_brushed(),
         "No brushed genes."
@@ -1024,12 +1018,6 @@ deedee_app <- function(deedee_obj = NULL) {
     output$heatmap_errors <- shiny::renderText({
       shiny::validate(
         shiny::need(
-          input$inp,
-          "Please input at least two contrasts."
-        )
-      )
-      shiny::validate(
-        shiny::need(
           length(mydata()) >= 2,
           "Please upload at least two contrasts."
         )
@@ -1050,7 +1038,7 @@ deedee_app <- function(deedee_obj = NULL) {
     })
 
     heatmap_output <- shiny::reactive({
-      shiny::req(input$inp)
+             shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       shiny::req(input$heatmap_show_first)
       shiny::req(mydata_use())
       res <- deedee_heatmap(mydata_use(),
@@ -1097,12 +1085,6 @@ deedee_app <- function(deedee_obj = NULL) {
     output$venn <- shiny::renderPlot({
       shiny::validate(
         shiny::need(
-          input$inp,
-          "Please input at least two contrasts."
-        )
-      )
-      shiny::validate(
-        shiny::need(
           length(mydata()) >= 2,
           "Please upload at least two contrasts."
         )
@@ -1114,7 +1096,7 @@ deedee_app <- function(deedee_obj = NULL) {
         )
       )
 
-      shiny::req(input$inp)
+             shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       res <- deedee_venn(mydata_use(),
         mode = input$venn_mode,
         pthresh = input$venn_pthresh
@@ -1135,12 +1117,6 @@ deedee_app <- function(deedee_obj = NULL) {
     output$upset <- shiny::renderPlot({
       shiny::validate(
         shiny::need(
-          input$inp,
-          "Please input at least two contrasts."
-        )
-      )
-      shiny::validate(
-        shiny::need(
           length(mydata()) >= 2,
           "Please upload at least two contrasts."
         )
@@ -1152,7 +1128,7 @@ deedee_app <- function(deedee_obj = NULL) {
         )
       )
 
-      shiny::req(input$inp)
+             shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       if (input$upset_mode == "both" && input$upset_colored) {
         mode <- "both_colored"
       } else {
@@ -1176,7 +1152,7 @@ deedee_app <- function(deedee_obj = NULL) {
 
     # --------------------------------- qq -------------------------------------
     output$qq_choices1 <- shiny::renderUI({
-      shiny::req(input$inp)
+             shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       shiny::selectInput("qq_select1",
         "1st data set",
         choices = names(mydata_use())
@@ -1184,7 +1160,7 @@ deedee_app <- function(deedee_obj = NULL) {
     })
 
     output$qq_choices2 <- shiny::renderUI({
-      shiny::req(input$inp)
+             shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       shiny::selectInput("qq_select2",
         "2nd data set",
         selected = names(mydata_use())[2],
@@ -1193,7 +1169,7 @@ deedee_app <- function(deedee_obj = NULL) {
     })
 
     output$qq_ref <- shiny::renderUI({
-      shiny::req(input$inp)
+             shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       shiny::selectInput("qq_reference",
         "Reference",
         choices = names(mydata_use())
@@ -1201,12 +1177,6 @@ deedee_app <- function(deedee_obj = NULL) {
     })
 
     output$qq <- shiny::renderPlot({
-      shiny::validate(
-        shiny::need(
-          input$inp,
-          "Please input at least two contrasts."
-        )
-      )
       shiny::validate(
         shiny::need(
           length(mydata()) >= 2,
@@ -1220,7 +1190,7 @@ deedee_app <- function(deedee_obj = NULL) {
         )
       )
 
-      shiny::req(input$inp)
+      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       sel1 <- match(input$qq_select1, names(mydata_use()))
       sel2 <- match(input$qq_select2, names(mydata_use()))
       shiny::req(sel1)
@@ -1246,12 +1216,6 @@ deedee_app <- function(deedee_obj = NULL) {
     output$qq_mult <- shiny::renderPlot({
       shiny::validate(
         shiny::need(
-          input$inp,
-          "Please input at least two contrasts."
-        )
-      )
-      shiny::validate(
-        shiny::need(
           length(mydata()) >= 2,
           "Please upload at least two contrasts."
         )
@@ -1263,7 +1227,7 @@ deedee_app <- function(deedee_obj = NULL) {
         )
       )
 
-      shiny::req(input$inp)
+      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       ref <- match(input$qq_reference, names(mydata_use()))
       shiny::req(ref)
       res <- deedee_qqmult(mydata_use(),
@@ -1373,7 +1337,7 @@ deedee_app <- function(deedee_obj = NULL) {
 
     # --------------------------------- cat ------------------------------------
     output$cat_choice <- shiny::renderUI({
-      shiny::req(input$inp)
+      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       shiny::selectInput("cat_ref",
         "Reference contrast",
         selected = names(mydata_use())[1],
@@ -1382,12 +1346,6 @@ deedee_app <- function(deedee_obj = NULL) {
     })
 
     output$cat <- shiny::renderPlot({
-      shiny::validate(
-        shiny::need(
-          input$inp,
-          "Please input at least two contrasts."
-        )
-      )
       shiny::validate(
         shiny::need(
           length(mydata()) >= 2,
@@ -1401,7 +1359,7 @@ deedee_app <- function(deedee_obj = NULL) {
         )
       )
 
-      shiny::req(input$inp)
+      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       shiny::req(input$cat_maxrank)
       shiny::req(input$cat_ref)
 
@@ -1425,7 +1383,7 @@ deedee_app <- function(deedee_obj = NULL) {
 
     # ------------------------------- summary ----------------------------------
     output$sum_scatter_choices1 <- shiny::renderUI({
-      shiny::req(input$inp)
+      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       shiny::selectInput("sum_scatter_select1",
         "1st data set",
         choices = names(mydata_use())
@@ -1433,7 +1391,7 @@ deedee_app <- function(deedee_obj = NULL) {
     })
 
     output$sum_scatter_choices2 <- shiny::renderUI({
-      shiny::req(input$inp)
+      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       shiny::selectInput("sum_scatter_select2",
         "2nd data set",
         selected = names(mydata_use())[2],
@@ -1442,7 +1400,7 @@ deedee_app <- function(deedee_obj = NULL) {
     })
 
     output$sum_qq_ref <- shiny::renderUI({
-      shiny::req(input$inp)
+      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       shiny::selectInput("sum_qqmult_ref",
         "Reference",
         selected = names(mydata_use())[1],
@@ -1451,7 +1409,7 @@ deedee_app <- function(deedee_obj = NULL) {
     })
 
     output$sum_cat_choice <- shiny::renderUI({
-      shiny::req(input$inp)
+      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       shiny::selectInput("sum_cat_ref",
         "Reference contrast",
         selected = names(mydata_use())[1],
@@ -1460,12 +1418,6 @@ deedee_app <- function(deedee_obj = NULL) {
     })
 
     summary <- reactive({
-      shiny::validate(
-        shiny::need(
-          input$inp,
-          "Please input at least two contrasts."
-        )
-      )
       shiny::validate(
         shiny::need(
           length(mydata()) >= 2,
