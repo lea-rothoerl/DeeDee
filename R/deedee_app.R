@@ -567,6 +567,17 @@ deedee_app <- function(deedee_obj = NULL) {
       )
     })
 
+    temp <-reactiveValues(mydata_old = NULL, counter = 0)
+
+    shiny::observeEvent(input$inp, {
+      if (temp$counter > 0) {
+        isolate({
+          temp$mydata_old <- mydata()
+        })
+      }
+      temp$counter <- temp$counter + 1
+    })
+
     mydata <- shiny::reactive({
       shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
 
@@ -705,6 +716,14 @@ deedee_app <- function(deedee_obj = NULL) {
           dat[[names(res[[i]])[[j]]]] <- res[[i]][[j]]
         }
       }
+
+      View(temp$mydata_old)
+
+      if (!is.null(temp$mydata_old)) {
+        dat <- c(temp$mydata_old, dat)
+      }
+
+      View(dat)
 
       return(dat)
     })
@@ -1015,70 +1034,70 @@ deedee_app <- function(deedee_obj = NULL) {
     )
 
     # ------------------------------- heatmap ----------------------------------
-    output$heatmap_errors <- shiny::renderText({
-      shiny::validate(
-        shiny::need(
-          length(mydata()) >= 2,
-          "Please upload at least two contrasts."
-        )
-      )
-      shiny::validate(
-        shiny::need(
-          length(mydata_use()) >= 2,
-          "Please select at least two contrasts."
-        )
-      )
-      shiny::validate(
-        shiny::need(
-          !is.null(heatmap_output()),
-          "No common genes in input datasets."
-        )
-      )
-      ""
-    })
-
-    heatmap_output <- shiny::reactive({
-             shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
-      shiny::req(input$heatmap_show_first)
-      shiny::req(mydata_use())
-      res <- deedee_heatmap(mydata_use(),
-        show_first = input$heatmap_show_first,
-        show_gene_names = input$heatmap_show_gene_names,
-        dist = input$heatmap_dist,
-        clust = input$heatmap_clust,
-        pthresh = input$heatmap_pthresh,
-        show_na = input$heatmap_showNA
-      )
-      shiny::validate(
-        shiny::need(!is.null(res), "No common genes in input datasets.")
-      )
-
-      res <- ComplexHeatmap::draw(res)
-
-      return(res)
-    })
-
-    listen <- shiny::reactive({
-      list(
-        input$heatmap_show_first,
-        input$heatmap_show_gene_names,
-        input$heatmap_dist,
-        input$heatmap_clust,
-        input$heatmap_pthresh,
-        input$heatmap_showNA,
-        mydata_use()
-      )
-    })
-
-    shiny::observeEvent(listen(), {
-      shiny::req(length(mydata_use()) >= 2)
-      InteractiveComplexHeatmap::makeInteractiveComplexHeatmap(
-        input,
-        output,
-        session,
-        heatmap_output()
-      )
-    })
+    # output$heatmap_errors <- shiny::renderText({
+    #   shiny::validate(
+    #     shiny::need(
+    #       length(mydata()) >= 2,
+    #       "Please upload at least two contrasts."
+    #     )
+    #   )
+    #   shiny::validate(
+    #     shiny::need(
+    #       length(mydata_use()) >= 2,
+    #       "Please select at least two contrasts."
+    #     )
+    #   )
+    #   shiny::validate(
+    #     shiny::need(
+    #       !is.null(heatmap_output()),
+    #       "No common genes in input datasets."
+    #     )
+    #   )
+    #   ""
+    # })
+    #
+    # heatmap_output <- shiny::reactive({
+    #          shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
+    #   shiny::req(input$heatmap_show_first)
+    #   shiny::req(mydata_use())
+    #   res <- deedee_heatmap(mydata_use(),
+    #     show_first = input$heatmap_show_first,
+    #     show_gene_names = input$heatmap_show_gene_names,
+    #     dist = input$heatmap_dist,
+    #     clust = input$heatmap_clust,
+    #     pthresh = input$heatmap_pthresh,
+    #     show_na = input$heatmap_showNA
+    #   )
+    #   shiny::validate(
+    #     shiny::need(!is.null(res), "No common genes in input datasets.")
+    #   )
+    #
+    #   res <- ComplexHeatmap::draw(res)
+    #
+    #   return(res)
+    # })
+    #
+    # listen <- shiny::reactive({
+    #   list(
+    #     input$heatmap_show_first,
+    #     input$heatmap_show_gene_names,
+    #     input$heatmap_dist,
+    #     input$heatmap_clust,
+    #     input$heatmap_pthresh,
+    #     input$heatmap_showNA,
+    #     mydata_use()
+    #   )
+    # })
+    #
+    # shiny::observeEvent(listen(), {
+    #   shiny::req(length(mydata_use()) >= 2)
+    #   InteractiveComplexHeatmap::makeInteractiveComplexHeatmap(
+    #     input,
+    #     output,
+    #     session,
+    #     heatmap_output()
+    #   )
+    # })
 
 
     # -------------------------------- venn ------------------------------------
