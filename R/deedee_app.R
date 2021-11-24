@@ -37,7 +37,7 @@ deedee_app <- function(deedee_obj = NULL) {
   # --------------------------------- U I --------------------------------------
   # ----------------------------------------------------------------------------
 
-  deedee_ui <- shiny::navbarPage("DeeDee",
+  deedee_ui <- shiny::navbarPage("DeeDee", id = "tabs",
     theme = shinythemes::shinytheme("flatly"),
 
 
@@ -153,7 +153,7 @@ deedee_app <- function(deedee_obj = NULL) {
 
     # ------------------------------- heatmap ----------------------------------
     shiny::tabPanel(
-      "Heatmap",
+      "Heatmap", id = "heatmap",
       shiny::fluidRow(
         shiny::column(
           4,
@@ -1054,8 +1054,6 @@ deedee_app <- function(deedee_obj = NULL) {
       ""
     })
 
-
-
     heatmap_output <- shiny::reactive({
              shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       shiny::req(input$heatmap_show_first)
@@ -1089,7 +1087,28 @@ deedee_app <- function(deedee_obj = NULL) {
       )
     })
 
+    global <- reactiveValues(notify = FALSE)
+
     shiny::observeEvent(listen(), {
+      global$notify <- TRUE
+    })
+
+    shiny::observeEvent(input$tabs, {
+      if (input$tabs == "Heatmap") {
+        if (global$notify == TRUE) {
+          showNotification("Something changed. Click 'Create heatmap' to reload.",
+                           duration = NULL,
+                           type = "warning",
+                           id = "heatmap_warning")
+        }
+      }
+      else {
+        removeNotification("heatmap_warning")
+      }
+    })
+
+    shiny::observeEvent(listen(), {
+      req(input$tabs == "Heatmap")
       showNotification("Something changed. Click 'Create heatmap' to reload.",
                        duration = NULL,
                        type = "warning",
@@ -1098,6 +1117,7 @@ deedee_app <- function(deedee_obj = NULL) {
 
     shiny::observeEvent(input$heatmap_action, {
       shiny::req(length(mydata_use()) >= 2)
+      global$notify <- FALSE
       InteractiveComplexHeatmap::makeInteractiveComplexHeatmap(
         input,
         output,
