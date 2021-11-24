@@ -567,16 +567,15 @@ deedee_app <- function(deedee_obj = NULL) {
       )
     })
 
-    temp <-reactiveValues(mydata_old = NULL, counter = 0)
-
-    shiny::observeEvent(input$inp, {
-      if (temp$counter > 0) {
-        isolate({
-          temp$mydata_old <- mydata()
-        })
-      }
-      temp$counter <- temp$counter + 1
-    })
+    # temp <-reactiveValues(trigger = FALSE, mydata_cur = NULL)
+    #
+    # session$onFlushed(once = TRUE, function() {
+    #   isolate({
+    #     if (temp$trigger == TRUE) {
+    #       temp$mydata_cur <- mydata()
+    #     }
+    #   })
+    # })
 
     mydata <- shiny::reactive({
       shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
@@ -717,13 +716,11 @@ deedee_app <- function(deedee_obj = NULL) {
         }
       }
 
-      View(temp$mydata_old)
-
-      if (!is.null(temp$mydata_old)) {
-        dat <- c(temp$mydata_old, dat)
-      }
-
-      View(dat)
+      # if (!is.null(temp$mydata_cur)) {
+      #   dat <- c(temp$mydata_cur, dat)
+      # }
+      #
+      # temp$trigger <- TRUE
 
       return(dat)
     })
