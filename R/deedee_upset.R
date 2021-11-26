@@ -4,7 +4,6 @@
 #' differentially expressed genes in the input datasets.
 #'
 #' @param data named list of results from deedee_prepare()
-#' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
 #' @param mode show all overlapping DE genes (`both`),
 #'             all overlapping genes colored by DE direction (`both_colored`,
 #'             default),
@@ -12,6 +11,7 @@
 #'             or only conjointly down-regulated (`down`) genes
 #' @param min_setsize the minimum size of intersections to be displayed in the
 #'                    UpSet plot (default = 10)
+#' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
 #'
 #' @return upset element (plottable with show()/print())
 #'
@@ -39,9 +39,9 @@
 #'
 
 deedee_upset <- function(data,
-                         pthresh = 0.05,
                          mode = "both_colored",
-                         min_setsize = 10) {
+                         min_setsize = 10,
+                         pthresh = 0.05) {
 
   # ----------------------------- argument check ------------------------------
   checkmate::assert_list(data, type = "data.frame", min.len = 2)

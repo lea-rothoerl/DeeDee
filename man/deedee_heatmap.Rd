@@ -6,18 +6,16 @@
 \usage{
 deedee_heatmap(
   data,
-  pthresh = 0.05,
   show_first = 25,
   show_gene_names = FALSE,
   dist = "euclidean",
   clust = "average",
-  show_na = FALSE
+  show_na = FALSE,
+  pthresh = 0.05
 )
 }
 \arguments{
 \item{data}{named list of results from deedee_prepare()}
-
-\item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
 
 \item{show_first}{indicating the number of genes depicted (default = 25)}
 
@@ -32,6 +30,8 @@ deedee_heatmap(
 
 \item{show_na}{boolean, include genes with NA values in heatmap
 (default = FALSE)}
+
+\item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
 }
 \value{
 Heatmap object (plottable with show()/print()). The resulting heatmap

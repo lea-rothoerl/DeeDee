@@ -4,12 +4,10 @@
 \alias{deedee_upset}
 \title{DeeDee UpSet Plot}
 \usage{
-deedee_upset(data, pthresh = 0.05, mode = "both_colored", min_setsize = 10)
+deedee_upset(data, mode = "both_colored", min_setsize = 10, pthresh = 0.05)
 }
 \arguments{
 \item{data}{named list of results from deedee_prepare()}
-
-\item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
 
 \item{mode}{show all overlapping DE genes (\code{both}),
 all overlapping genes colored by DE direction (\code{both_colored},
@@ -19,6 +17,8 @@ or only conjointly down-regulated (\code{down}) genes}
 
 \item{min_setsize}{the minimum size of intersections to be displayed in the
 UpSet plot (default = 10)}
+
+\item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
 }
 \value{
 upset element (plottable with show()/print())

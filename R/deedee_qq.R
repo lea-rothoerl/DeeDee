@@ -1,16 +1,17 @@
 #' DeeDee QQ Plot
 #'
 #' @description `deedee_qq` creates a Q-Q-plot comparing the statistical
-#' distribution of the logFC of the genes in two input datasets.
+#' distribution of the logFC of the genes in two input datasets. To compare more
+#' than two contrasts against a reference, have a look at `deedee_qqmult`.
 #'
 #' @param data named list of results from deedee_prepare()
-#' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
 #' @param select1 index of first data-list element to be used (default = 1)
 #' @param select2 index of second data-list element to be used (default = 2)
 #' @param color_by indicates which set of values the output should be colored by
 #'                 (possible values = `pval1` (default), `pval2`)
 #' @param as_line logical value specifying if the resulting plot should be a
 #'                line (TRUE) or points (FALSE, default)
+#' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
 #'
 #' @return ggplot object (plottable with show()/print())
 #'
@@ -38,11 +39,11 @@
 #'
 
 deedee_qq <- function(data,
-                      pthresh = 0.05,
                       select1 = 1,
                       select2 = 2,
                       color_by = "pval1",
-                      as_line = FALSE) {
+                      as_line = FALSE,
+                      pthresh = 0.05) {
 
   # ----------------------------- argument check ------------------------------
   checkmate::assert_list(data, type = "data.frame", min.len = 2)

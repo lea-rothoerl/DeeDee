@@ -6,16 +6,14 @@
 \usage{
 deedee_scatter(
   data,
-  pthresh = 0.05,
   select1 = 1,
   select2 = 2,
-  color_by = "pval1"
+  color_by = "pval1",
+  pthresh = 0.05
 )
 }
 \arguments{
 \item{data}{named list of results from deedee_prepare()}
-
-\item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
 
 \item{select1}{index of first data-list element to be used (default = 1)}
 
@@ -23,6 +21,8 @@ deedee_scatter(
 
 \item{color_by}{indicates which set of values the output should be colored by
 (possible values = \code{pval1} (default), \code{pval2})}
+
+\item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
 }
 \value{
 ggplot object (plottable with show()/print())

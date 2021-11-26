@@ -4,10 +4,10 @@
 #' differentially expressed genes in the input datasets.
 #'
 #' @param data named list of results from deedee_prepare()
-#' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
 #' @param mode show all overlapping DE genes (`both`, default),
 #'             only conjointly up-regulated (`up`)
 #'             or only conjointly down-regulated (`down`) genes
+#' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
 #'
 #' @return ggplot object (plottable with show()/print())
 #'
@@ -35,8 +35,8 @@
 #'
 
 deedee_venn <- function(data,
-                        pthresh = 0.05,
-                        mode = "both") {
+                        mode = "both",
+                        pthresh = 0.05) {
 
   # ----------------------------- argument check ------------------------------
   checkmate::assert_list(data, type = "data.frame", min.len = 2) # , max.len = 4)

@@ -4,16 +4,16 @@
 \alias{deedee_venn}
 \title{DeeDee Venn Diagram}
 \usage{
-deedee_venn(data, pthresh = 0.05, mode = "both")
+deedee_venn(data, mode = "both", pthresh = 0.05)
 }
 \arguments{
 \item{data}{named list of results from deedee_prepare()}
 
-\item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
-
 \item{mode}{show all overlapping DE genes (\code{both}, default),
 only conjointly up-regulated (\code{up})
 or only conjointly down-regulated (\code{down}) genes}
+
+\item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
 }
 \value{
 ggplot object (plottable with show()/print())

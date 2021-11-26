@@ -37,7 +37,8 @@ deedee_app <- function(deedee_obj = NULL) {
   # --------------------------------- U I --------------------------------------
   # ----------------------------------------------------------------------------
 
-  deedee_ui <- shiny::navbarPage("DeeDee", id = "tabs",
+  deedee_ui <- shiny::navbarPage("DeeDee",
+    id = "tabs",
     theme = shinythemes::shinytheme("flatly"),
 
 
@@ -153,7 +154,8 @@ deedee_app <- function(deedee_obj = NULL) {
 
     # ------------------------------- heatmap ----------------------------------
     shiny::tabPanel(
-      "Heatmap", id = "heatmap",
+      "Heatmap",
+      id = "heatmap",
       shiny::fluidRow(
         shiny::column(
           4,
@@ -849,7 +851,7 @@ deedee_app <- function(deedee_obj = NULL) {
     # ------------------------------- scatter ----------------------------------
     # --- selectors ---
     output$scatter_choices1 <- shiny::renderUI({
-             shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
+      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       shiny::selectInput("scatter_select1",
         "1st data set",
         choices = names(mydata_use())
@@ -857,7 +859,7 @@ deedee_app <- function(deedee_obj = NULL) {
     })
 
     output$scatter_choices2 <- shiny::renderUI({
-             shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
+      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       shiny::selectInput("scatter_select2",
         "2nd data set",
         selected = names(mydata_use())[2],
@@ -976,7 +978,7 @@ deedee_app <- function(deedee_obj = NULL) {
 
     # --- enrich ---
     enrich <- shiny::reactive({
-             shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
+      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       shiny::validate(shiny::need(
         scatter_brushed(),
         "No brushed genes."
@@ -1055,7 +1057,7 @@ deedee_app <- function(deedee_obj = NULL) {
     })
 
     heatmap_output <- shiny::reactive({
-             shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
+      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       shiny::req(input$heatmap_show_first)
       shiny::req(mydata_use())
       res <- deedee_heatmap(mydata_use(),
@@ -1096,23 +1098,24 @@ deedee_app <- function(deedee_obj = NULL) {
     shiny::observeEvent(input$tabs, {
       if (input$tabs == "Heatmap") {
         if (global$notify == TRUE) {
-          showNotification("Something changed. Click 'Create heatmap' to reload.",
-                           duration = NULL,
-                           type = "warning",
-                           id = "heatmap_warning")
+          shiny::showNotification("Something changed. Click 'Create heatmap' to reload.",
+            duration = NULL,
+            type = "warning",
+            id = "heatmap_warning"
+          )
         }
-      }
-      else {
-        removeNotification("heatmap_warning")
+      } else {
+        shiny::removeNotification("heatmap_warning")
       }
     })
 
     shiny::observeEvent(listen(), {
       req(input$tabs == "Heatmap")
-      showNotification("Something changed. Click 'Create heatmap' to reload.",
-                       duration = NULL,
-                       type = "warning",
-                       id = "heatmap_warning")
+      shiny::showNotification("Something changed. Click 'Create heatmap' to reload.",
+        duration = NULL,
+        type = "warning",
+        id = "heatmap_warning"
+      )
     })
 
     shiny::observeEvent(input$heatmap_action, {
@@ -1124,7 +1127,7 @@ deedee_app <- function(deedee_obj = NULL) {
         session,
         heatmap_output()
       )
-      removeNotification("heatmap_warning")
+      shiny::removeNotification("heatmap_warning")
     })
 
 
@@ -1143,7 +1146,7 @@ deedee_app <- function(deedee_obj = NULL) {
         )
       )
 
-             shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
+      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       res <- deedee_venn(mydata_use(),
         mode = input$venn_mode,
         pthresh = input$venn_pthresh
@@ -1175,7 +1178,7 @@ deedee_app <- function(deedee_obj = NULL) {
         )
       )
 
-             shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
+      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       if (input$upset_mode == "both" && input$upset_colored) {
         mode <- "both_colored"
       } else {
@@ -1199,7 +1202,7 @@ deedee_app <- function(deedee_obj = NULL) {
 
     # --------------------------------- qq -------------------------------------
     output$qq_choices1 <- shiny::renderUI({
-             shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
+      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       shiny::selectInput("qq_select1",
         "1st data set",
         choices = names(mydata_use())
@@ -1207,7 +1210,7 @@ deedee_app <- function(deedee_obj = NULL) {
     })
 
     output$qq_choices2 <- shiny::renderUI({
-             shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
+      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       shiny::selectInput("qq_select2",
         "2nd data set",
         selected = names(mydata_use())[2],
@@ -1216,7 +1219,7 @@ deedee_app <- function(deedee_obj = NULL) {
     })
 
     output$qq_ref <- shiny::renderUI({
-             shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
+      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       shiny::selectInput("qq_reference",
         "Reference",
         choices = names(mydata_use())

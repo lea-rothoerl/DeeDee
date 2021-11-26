@@ -4,15 +4,15 @@
 \alias{deedee_qqmult}
 \title{DeeDee QQ Plot with Multiple Contrasts}
 \usage{
-deedee_qqmult(data, pthresh = 0.05, ref = 1)
+deedee_qqmult(data, ref = 1, pthresh = 0.05)
 }
 \arguments{
 \item{data}{named list of results from deedee_prepare()}
 
-\item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
-
 \item{ref}{index of the contrast in data to be used as reference contrast
 (default = 1)}
+
+\item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
 }
 \value{
 ggplot object (plottable with show()/print())
@@ -20,7 +20,8 @@ ggplot object (plottable with show()/print())
 \description{
 \code{deedee_qqmult} creates a plot containing Q-Q-lines comparing
 the statistical distribution of the logFC of the genes in each input datasets
-to a contrast chosen from the input data.
+to a contrast chosen from the input data. For a Q-Q plot comparing two
+contrasts in a p-value-colored manner, have a look at \code{deedee_qq}.
 }
 \examples{
 

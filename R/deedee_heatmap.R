@@ -5,7 +5,6 @@
 #' datasets.
 #'
 #' @param data named list of results from deedee_prepare()
-#' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
 #' @param show_first indicating the number of genes depicted (default = 25)
 #' @param show_gene_names boolean, show row names next to heatmap
 #'                        (default = FALSE)
@@ -15,6 +14,7 @@
 #'              `centroid`)
 #' @param show_na boolean, include genes with NA values in heatmap
 #'                (default = FALSE)
+#' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
 #'
 #' @return Heatmap object (plottable with show()/print()). The resulting heatmap
 #' (`res`) can be opened in a Shiny App with interactive functionality by
@@ -48,12 +48,12 @@
 #'
 
 deedee_heatmap <- function(data,
-                           pthresh = 0.05,
                            show_first = 25,
                            show_gene_names = FALSE,
                            dist = "euclidean",
                            clust = "average",
-                           show_na = FALSE) {
+                           show_na = FALSE,
+                           pthresh = 0.05) {
 
   # ----------------------------- argument check ------------------------------
   checkmate::assert_list(data, type = "data.frame", min.len = 2)

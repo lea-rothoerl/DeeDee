@@ -2,12 +2,13 @@
 #'
 #' @description `deedee_qqmult` creates a plot containing Q-Q-lines comparing
 #' the statistical distribution of the logFC of the genes in each input datasets
-#' to a contrast chosen from the input data.
+#' to a contrast chosen from the input data. For a Q-Q plot comparing two
+#' contrasts in a p-value-colored manner, have a look at `deedee_qq`.
 #'
 #' @param data named list of results from deedee_prepare()
-#' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
 #' @param ref index of the contrast in data to be used as reference contrast
 #'            (default = 1)
+#' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
 #'
 #' @return ggplot object (plottable with show()/print())
 #'
@@ -35,8 +36,8 @@
 #'
 
 deedee_qqmult <- function(data,
-                          pthresh = 0.05,
-                          ref = 1) {
+                          ref = 1,
+                          pthresh = 0.05) {
 
   # ----------------------------- argument check ------------------------------
   checkmate::assert_list(data, type = "data.frame", min.len = 2)

@@ -4,11 +4,11 @@
 #' datasets based on their logFC values.
 #'
 #' @param data named list of results from deedee_prepare()
-#' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
 #' @param select1 index of first data-list element to be used (default = 1)
 #' @param select2 index of second data-list element to be used (default = 2)
 #' @param color_by indicates which set of values the output should be colored by
 #'                 (possible values = `pval1` (default), `pval2`)
+#' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
 #'
 #' @return ggplot object (plottable with show()/print())
 #'
@@ -41,10 +41,10 @@
 #'
 
 deedee_scatter <- function(data,
-                           pthresh = 0.05,
                            select1 = 1,
                            select2 = 2,
-                           color_by = "pval1") {
+                           color_by = "pval1",
+                           pthresh = 0.05) {
 
   # ----------------------------- argument check ------------------------------
   checkmate::assert_list(data, type = "data.frame", min.len = 2)

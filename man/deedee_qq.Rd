@@ -6,17 +6,15 @@
 \usage{
 deedee_qq(
   data,
-  pthresh = 0.05,
   select1 = 1,
   select2 = 2,
   color_by = "pval1",
-  as_line = FALSE
+  as_line = FALSE,
+  pthresh = 0.05
 )
 }
 \arguments{
 \item{data}{named list of results from deedee_prepare()}
-
-\item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
 
 \item{select1}{index of first data-list element to be used (default = 1)}
 
@@ -27,13 +25,16 @@ deedee_qq(
 
 \item{as_line}{logical value specifying if the resulting plot should be a
 line (TRUE) or points (FALSE, default)}
+
+\item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
 }
 \value{
 ggplot object (plottable with show()/print())
 }
 \description{
 \code{deedee_qq} creates a Q-Q-plot comparing the statistical
-distribution of the logFC of the genes in two input datasets.
+distribution of the logFC of the genes in two input datasets. To compare more
+than two contrasts against a reference, have a look at \code{deedee_qqmult}.
 }
 \examples{
 
