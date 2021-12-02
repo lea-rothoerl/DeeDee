@@ -570,16 +570,6 @@ deedee_app <- function(deedee_obj = NULL) {
       )
     })
 
-    # temp <-reactiveValues(trigger = FALSE, mydata_cur = NULL)
-    #
-    # session$onFlushed(once = TRUE, function() {
-    #   isolate({
-    #     if (temp$trigger == TRUE) {
-    #       temp$mydata_cur <- mydata()
-    #     }
-    #   })
-    # })
-
     mydata <- shiny::reactive({
       shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
 
@@ -719,21 +709,17 @@ deedee_app <- function(deedee_obj = NULL) {
         }
       }
 
-      # if (!is.null(temp$mydata_cur)) {
-      #   dat <- c(temp$mydata_cur, dat)
-      # }
-      #
-      # temp$trigger <- TRUE
+      obj <- DeeDeeObject(DeeDeeList = dat)
 
-      return(dat)
+      return(obj)
     })
 
     output$datasets <- shiny::renderUI({
       shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
       shiny::checkboxGroupInput("select_datasets",
         "Select datasets to be used",
-        choices = names(mydata()),
-        selected = names(mydata())
+        choices = names(mydata()@DeeDeeList),
+        selected = names(mydata()@DeeDeeList)
       )
     })
 
@@ -742,7 +728,7 @@ deedee_app <- function(deedee_obj = NULL) {
       use <- input$select_datasets
       dat2 <- list()
       for (i in use) {
-        dat2[i] <- mydata()[i]
+        dat2[i] <- mydata()@DeeDeeList[i]
       }
       return(dat2)
     })
@@ -757,7 +743,7 @@ deedee_app <- function(deedee_obj = NULL) {
 
     output$inp_infobox <- shiny::renderTable({
       shiny::validate(shiny::need(
-        !is.null(mydata()),
+        !is.null(mydata()@DeeDeeList),
         "Faulty input data provided."
       ))
 
@@ -821,7 +807,7 @@ deedee_app <- function(deedee_obj = NULL) {
               split = ".",
               fixed = TRUE
             ))[1]
-            genes[count] <- length(mydata()
+            genes[count] <- length(mydata()@DeeDeeList
             [[contrast[count]]][["logFC"]])
           } else {
             if (class(res[[i]]) == "data.frame") {
@@ -873,7 +859,7 @@ deedee_app <- function(deedee_obj = NULL) {
     output$scatter <- shiny::renderPlot({
       shiny::validate(
         shiny::need(
-          length(mydata()) >= 2,
+          length(mydata()@DeeDeeList) >= 2,
           "Please upload at least two contrasts."
         )
       )
@@ -1037,7 +1023,7 @@ deedee_app <- function(deedee_obj = NULL) {
     output$heatmap_errors <- shiny::renderText({
       shiny::validate(
         shiny::need(
-          length(mydata()) >= 2,
+          length(mydata()@DeeDeeList) >= 2,
           "Please upload at least two contrasts."
         )
       )
@@ -1135,7 +1121,7 @@ deedee_app <- function(deedee_obj = NULL) {
     output$venn <- shiny::renderPlot({
       shiny::validate(
         shiny::need(
-          length(mydata()) >= 2,
+          length(mydata()@DeeDeeList) >= 2,
           "Please upload at least two contrasts."
         )
       )
@@ -1167,7 +1153,7 @@ deedee_app <- function(deedee_obj = NULL) {
     output$upset <- shiny::renderPlot({
       shiny::validate(
         shiny::need(
-          length(mydata()) >= 2,
+          length(mydata()@DeeDeeList) >= 2,
           "Please upload at least two contrasts."
         )
       )
@@ -1229,7 +1215,7 @@ deedee_app <- function(deedee_obj = NULL) {
     output$qq <- shiny::renderPlot({
       shiny::validate(
         shiny::need(
-          length(mydata()) >= 2,
+          length(mydata()@DeeDeeList) >= 2,
           "Please upload at least two contrasts."
         )
       )
@@ -1266,7 +1252,7 @@ deedee_app <- function(deedee_obj = NULL) {
     output$qq_mult <- shiny::renderPlot({
       shiny::validate(
         shiny::need(
-          length(mydata()) >= 2,
+          length(mydata()@DeeDeeList) >= 2,
           "Please upload at least two contrasts."
         )
       )
@@ -1297,12 +1283,12 @@ deedee_app <- function(deedee_obj = NULL) {
 
     qq_brushed <- shiny::reactive({
       shiny::req(input$qq_brush)
-      x <- mydata()[[input$qq_select1]]$logFC
-      y <- mydata()[[input$qq_select2]]$logFC
-      pval1 <- mydata()[[input$qq_select2]]$pval
-      pval2 <- mydata()[[input$qq_select2]]$pval
-      names(x) <- row.names(mydata()[[input$qq_select2]])
-      names(y) <- row.names(mydata()[[input$qq_select2]])
+      x <- mydata()@DeeDeeList[[input$qq_select1]]$logFC
+      y <- mydata()@DeeDeeList[[input$qq_select2]]$logFC
+      pval1 <- mydata()@DeeDeeList[[input$qq_select2]]$pval
+      pval2 <- mydata()@DeeDeeList[[input$qq_select2]]$pval
+      names(x) <- row.names(mydata()@DeeDeeList[[input$qq_select2]])
+      names(y) <- row.names(mydata()@DeeDeeList[[input$qq_select2]])
 
       sx_idx <- order(x)
       sy_idx <- order(y)
@@ -1398,7 +1384,7 @@ deedee_app <- function(deedee_obj = NULL) {
     output$cat <- shiny::renderPlot({
       shiny::validate(
         shiny::need(
-          length(mydata()) >= 2,
+          length(mydata()@DeeDeeList) >= 2,
           "Please upload at least two contrasts."
         )
       )
@@ -1470,7 +1456,7 @@ deedee_app <- function(deedee_obj = NULL) {
     summary <- reactive({
       shiny::validate(
         shiny::need(
-          length(mydata()) >= 2,
+          length(mydata()@DeeDeeList) >= 2,
           "Please upload at least two contrasts."
         )
       )
