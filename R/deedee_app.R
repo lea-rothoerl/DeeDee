@@ -577,8 +577,14 @@ deedee_app <- function(deedee_obj = NULL) {
       res <- list()
 
       if (!is.null(deedee_obj)) {
-        ext[1] <- "arg"
-        res[[1]] <- deedee_obj
+        if (class(deedee_obj) == "DeeDeeObject") {
+          ext[1] <- "arg"
+          # df <- data.frame(filename, type, contrast, genes)
+          res[[1]] <- deedee_obj@DeeDeeList
+        }
+        else {
+          stop("Your argument input is not of type 'DeeDeeObject'. Please check your input and re-open the application.")
+        }
       }
 
       k <- 0
@@ -758,12 +764,12 @@ deedee_app <- function(deedee_obj = NULL) {
       count <- 0
 
       if (!is.null(deedee_obj)) {
-        for (j in 1:length(deedee_obj)) {
+        for (j in 1:length(deedee_obj@DeeDeeList)) {
           count <- count + 1
           type[count] <- "DeeDee object"
           filename[count] <- "input as argument"
-          contrast[count] <- names(deedee_obj)[j]
-          genes[count] <- length(deedee_obj[j]
+          contrast[count] <- names(deedee_obj@DeeDeeList)[j]
+          genes[count] <- length(deedee_obj@DeeDeeList[j]
           [[contrast[count]]][["logFC"]])
         }
       }
