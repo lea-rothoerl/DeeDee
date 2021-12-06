@@ -4,7 +4,7 @@
 #' the functionalities of all other DeeDee functions with a user-friendly
 #' graphical user interface.
 #'
-#' @param deedee_obj A list of DeeDee tables to be analyzed.
+#' @param deedee_obj An object of the class DeeDeeObject to be analyzed.
 #'
 #' @return A shiny app
 #' @export
@@ -743,7 +743,8 @@ deedee_app <- function(deedee_obj = NULL) {
       filename = "DeeDee_object.RDS",
       content = function(file) {
         shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
-        saveRDS(mydata_use(), file)
+        dl <- DeeDeeObject(DeeDeeList = mydata_use())
+        saveRDS(dl, file)
       }
     )
 
