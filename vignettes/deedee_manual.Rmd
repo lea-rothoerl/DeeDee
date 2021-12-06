@@ -127,7 +127,7 @@ Because the heatmap is produced with the [InteractiveComplexHeatmap](https://bio
 The function `deedee_venn()` creates a Venn diagram depicting the overlaps of differentially expressed genes in the input datasets. To keep the Venn diagram easy on the eye, the `data` list may contain no more than four datasets. To compare more DEAs in a similar, set-based manner, please make use of [`deedee_upSet()`](#deedee-upset-plot). The parameter `mode` can be set to `up`, `down`, or `both` (default), specifying if only up-regulated, down-regulated or both DE genes will be counted. 
 
 ```{r, echo = TRUE, warning = FALSE, message = FALSE}
-deedee_venn(data = DeeDee_obj, mode = "both", pthresh = 0.05)
+# deedee_venn(data = DeeDee_obj, mode = "both", pthresh = 0.05)
 ```
 
 

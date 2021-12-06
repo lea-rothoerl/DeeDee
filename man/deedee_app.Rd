@@ -7,7 +7,7 @@
 deedee_app(deedee_obj = NULL)
 }
 \arguments{
-\item{deedee_obj}{A list of DeeDee tables to be analyzed.}
+\item{deedee_obj}{An object of the class DeeDeeObject to be analyzed.}
 }
 \value{
 A shiny app
