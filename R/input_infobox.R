@@ -1,6 +1,7 @@
 
 input_infobox <- function(deedee_obj,
-                          sets) {
+                          sets,
+                          md) {
 
   ext <- c()
   filename <- c()
@@ -61,7 +62,7 @@ input_infobox <- function(deedee_obj,
                                            split = ".",
                                            fixed = TRUE
         ))[1]
-        genes[count] <- length(mydata()@DeeDeeList
+        genes[count] <- length(md@DeeDeeList
                                [[contrast[count]]][["logFC"]])
       } else {
         if (class(res[[i]]) == "data.frame") {

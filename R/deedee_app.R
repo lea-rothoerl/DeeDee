@@ -679,8 +679,9 @@ deedee_app <- function(deedee_obj = NULL) {
 
       shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
 
-      input_infobox(deedee_obj,
-                    input$inp)
+      input_infobox(deedee_obj = deedee_obj,
+                    sets = input$inp,
+                    md = mydata())
     })
 
 
@@ -800,18 +801,6 @@ deedee_app <- function(deedee_obj = NULL) {
       }
     )
 
-    # shiny::observeEvent(input$scatter_dblclick, {
-    #     brush <- input$scatter_brush
-    #     if (!is.null(brush)) {
-    #         ranges$x <- c(brush$xmin, brush$xmax)
-    #         ranges$y <- c(brush$ymin, brush$ymax)
-    #
-    #     } else {
-    #         ranges$x <- NULL
-    #         ranges$y <- NULL
-    #     }
-    # })
-
     # --- enrich ---
     enrich <- shiny::reactive({
       shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
@@ -834,10 +823,7 @@ deedee_app <- function(deedee_obj = NULL) {
         class(res) == "enrichResult",
         "Not working."
       ))
-      # temp <- as.data.frame(res)
-      # if (dim(temp)[1] == 0) {
-      #     return(NULL)
-      # }
+
       return(res)
     })
 
