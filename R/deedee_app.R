@@ -605,93 +605,16 @@ deedee_app <- function(deedee_obj = NULL) {
           # .RDS input
           if (ext[[i]] == "rds" || ext[[i]] == "RDS") {
             res[[i]] <- readRDS(input$inp[[k, "datapath"]])
-            if (class(res[[i]]) == "DESeqResults") {
-              res[[i]] <- deedee_prepare(res[[i]], "DESeq2")
-              res[[i]] <- list(res[[i]])
-              names(res[[i]]) <- unlist(strsplit(input$inp[k, "name"],
-                split = ".",
-                fixed = TRUE
-              ))[1]
-            } else if (class(res[[i]]) == "DGEExact") {
-              res[[i]] <- deedee_prepare(res[[i]], "edgeR")
-              res[[i]] <- list(res[[i]])
-              names(res[[i]]) <- unlist(strsplit(input$inp[k, "name"],
-                split = ".",
-                fixed = TRUE
-              ))[1]
-            } else if (class(res[[i]]) == "list") {
-              for (j in length(res[[i]])) {
-                if (checkmate::test_subset(
-                  names(res[[i]][[j]]),
-                  c("logFC", "pval")
-                ) == FALSE) {
-                  return(NULL)
-                }
-              }
-            } else if (class(res[[i]]) == "data.frame") {
-              if (length(res[[i]]) == 2) {
-                if (checkmate::test_subset(
-                  names(res[[i]]),
-                  c("logFC", "pval")
-                ) == FALSE) {
-                  return(NULL)
-                }
-                res[[i]] <- list(res[[i]])
-                names(res[[i]]) <- unlist(strsplit(input$inp[k, "name"],
-                  split = ".",
-                  fixed = TRUE
-                ))[1]
-              } else if (length(res[[i]]) == 6) {
-                if (checkmate::test_subset(names(res[[i]]), c(
-                  "logFC",
-                  "AveExpr",
-                  "t",
-                  "P.Value",
-                  "adj.P.Val",
-                  "B"
-                )) == FALSE) {
-                  return(NULL)
-                }
-                res[[i]] <- deedee_prepare(res[[i]], "limma")
-                res[[i]] <- list(res[[i]])
-                names(res[[i]]) <- unlist(strsplit(input$inp[k, "name"],
-                  split = ".",
-                  fixed = TRUE
-                ))[1]
-              } else {
-                return(NULL)
-              }
-            }
-            # .xlsx input
+            res[[i]] <- rds_input(obj = res[[i]],
+                                  nm = input$inp[[k, "name"]])
+
+          # .xlsx input
           } else if (ext[[i]] == "xlsx") {
             sheets <- readxl::excel_sheets(input$inp[[k, "datapath"]])
-            if (length(sheets) > 1) {
-              res[[i]] <- lapply(sheets,
-                readxl::read_excel,
-                path = input$inp[[k, "datapath"]]
-              )
-              names(res[[i]]) <- sheets
-              for (j in 1:length(sheets)) {
-                res[[i]][[sheets[j]]] <- as.data.frame(res[[i]][[sheets[j]]])
-                res[[i]][[sheets[j]]] <- tibble::column_to_rownames(
-                  res[[i]][[sheets[j]]], "rowname"
-                )
-                if (checkmate::test_subset(
-                  names(res[[i]][[j]]) == FALSE,
-                  c("logFC", "pval")
-                )) {
-                  return(NULL)
-                }
-              }
-            } else {
-              res[[i]] <- readxl::read_excel(path = input$inp[[k, "datapath"]])
-              res[[i]] <- tibble::column_to_rownames(res[[i]], "rowname")
-              res[[i]] <- list(res[[i]])
-              names(res[[i]]) <- unlist(strsplit(input$inp[k, "name"],
-                split = ".",
-                fixed = TRUE
-              ))[1]
-            }
+            res[[i]] <- xlsx_input(obj = sheets,
+                                   path= input$inp[[k, "datapath"]],
+                                   nm = input$inp[k, "name"])
+
             # .txt input
           } else if (ext[[i]] == "txt") {
             temp <- utils::read.table(input$inp[[k, "datapath"]])
@@ -806,7 +729,8 @@ deedee_app <- function(deedee_obj = NULL) {
 
           if (class(res[[i]]) == "DESeqResults" ||
             class(res[[i]]) == "DGEExact" ||
-            length(names(res[[i]])) == 6) {
+            length(names(res[[i]])) == 6 ||
+            class(res[[i]]) == "DeeDeeObject") {
             count <- count + 1
             type[count] <- class(res[[i]])
             filename[count] <- input$inp[i, "name"]
