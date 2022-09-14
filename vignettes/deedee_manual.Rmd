@@ -12,8 +12,6 @@ output:
     theme: cosmo
     code_folding: show
     code_download: yes
-  pdf_document:
-    toc: yes
 vignette: |
   %\VignetteIndexEntry{The DeeDee User's Guide} 
   %\VignetteEncoding{UTF-8}   
