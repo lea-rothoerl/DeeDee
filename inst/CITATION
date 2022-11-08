@@ -7,10 +7,10 @@ citEntry(
     as.person("Lea Rothörl"),
     as.person("Federico Marini")),
   journal = "TODO",
-  year    = TODO,
-  volume  = TODO,
-  number  = TODO,
-  pages   = TODO,
+  year    = "TODO",
+  volume  = "TODO",
+  number  = "TODO",
+  pages   = "TODO",
   doi     = "https://doi.org/TODO",
   textVersion = paste0(
     "TODO"
