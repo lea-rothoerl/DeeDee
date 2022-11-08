@@ -81,3 +81,29 @@ NULL
 #' @name Salm_both
 #' @docType data
 NULL
+
+
+
+
+#' dd_list_original
+#'
+#' A list of `deedee_prepare`d DE results.
+#'
+#' @details documented creation in ... script
+#'
+#' @name dd_list_original
+#' @docType data
+NULL
+
+
+
+#' del
+#'
+#' A named list of DE results, in their original format
+#' to be used
+#'
+#' @details documented creation in ... script
+#'
+#' @name del
+#' @docType data
+NULL
