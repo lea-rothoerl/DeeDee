@@ -99,6 +99,59 @@ de_list_checker <- function(del) {
 }
 
 
+.importDE_DESeq2 <- function(x) {
+  # checks TODO:
+  # correct object format
+  # contain the right columns
+  # contain the feature ids
+  # p value respect the 0-1 interval
+
+}
+
+
+deedee_import <- function(x) {
+
+  # legacy code:
+
+  # # ----------------------------- argument check ------------------------------
+  # choices <- c("DESeq2", "edgeR", "limma")
+  # checkmate::assertChoice(input_type, choices)
+  #
+  # if (input_type == "DESeq2") {
+  #   checkmate::assertClass(data, "DESeqResults")
+  #   logFC <- data$log2FoldChange
+  #   pval <- data$padj
+  #   input <- data.frame(logFC, pval)
+  #   rownames(input) <- data@rownames
+  # } else if (input_type == "edgeR") {
+  #   checkmate::assertClass(data, "DGEExact")
+  #   logFC <- data[["table"]][["logFC"]]
+  #   pval <- data[["table"]][["PValue"]]
+  #   input <- data.frame(logFC, pval)
+  #   rownames(input) <- data[["genes"]][["genes"]]
+  # } else if (input_type == "limma") {
+  #   checkmate::assertDataFrame(data, types = "numeric")
+  #   logFC <- data$logFC
+  #   pval <- data$adj.P.Val
+  #   input <- data.frame(logFC, pval)
+  #   rownames(input) <- rownames(data)
+  # }
+  # return(input)
+}
+
+
+.importDE_edgeR <- function(x) {
+
+}
+
+.importDE_limma <- function(x) {
+
+}
+
+.importDE_custom <- function(x) {
+
+}
+
 
 
 #' dde : the deedee exp object
