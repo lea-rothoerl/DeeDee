@@ -49,10 +49,13 @@ Imports:
     utils, 
     viridis,
     writexl,
-    xml2
+    xml2,
+    SummarizedExperiment,
+    methods,
+    S4Vectors,
+    rlang
 Suggests: 
     macrophage,
-    methods,
     rmarkdown,
     knitr,
     org.Hs.eg.db,
