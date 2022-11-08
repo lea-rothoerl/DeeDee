@@ -33,10 +33,16 @@
 #' @importFrom shinycssloaders withSpinner
 #' @importFrom shinythemes shinytheme
 #' @importFrom stats approx complete.cases
+#' @importClassesFrom SummarizedExperiment RangedSummarizedExperiment
+#' @importFrom SummarizedExperiment rowData rowData<- mcols
+#' rowData rowData<-
 #' @importFrom tibble column_to_rownames rownames_to_column
 #' @importFrom tools file_ext
-#' @importFrom utils read.table
+#' @importFrom utils read.table data packageVersion
 #' @importFrom viridis scale_color_viridis viridis
+#' @importFrom S4Vectors metadata metadata<-
+#' @importFrom rlang .data
+#' @import methods
 #'
 #' @name DeeDee-pkg
 #' @docType package
