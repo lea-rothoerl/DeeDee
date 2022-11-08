@@ -23,7 +23,8 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-  echo = TRUE
+  echo = TRUE,
+  eval = FALSE
 )
 ```
 
