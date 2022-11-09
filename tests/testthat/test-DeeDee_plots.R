@@ -3,6 +3,9 @@ dde <- DeeDeeExperiment(
   de_results = del
 )
 
+# needed for bad handling of namespace by ggvenn
+library("dplyr")
+
 test_that("plotting & plotting", {
   p_scatter <- ddedde_scatter(dde)
   expect_is(p_scatter, "gg")
