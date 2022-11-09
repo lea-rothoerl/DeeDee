@@ -107,10 +107,10 @@ Salm_both
 
 # for the original object/implementation:
 # dd_list_original <- list(
-#   IFNg_naive = DeeDee::deedee_prepare(IFNg_naive, "DESeq2"),
-#   IFNg_both = DeeDee::deedee_prepare(IFNg_both, "DESeq2"),
-#   Salm_naive = DeeDee::deedee_prepare(Salm_naive, "DESeq2"),
-#   Salm_both = DeeDee::deedee_prepare(Salm_both, "DESeq2")
+#   IFNg_naive = DeeDeeLegacy::deedee_prepare(IFNg_naive, "DESeq2"),
+#   IFNg_both = DeeDeeLegacy::deedee_prepare(IFNg_both, "DESeq2"),
+#   Salm_naive = DeeDeeLegacy::deedee_prepare(Salm_naive, "DESeq2"),
+#   Salm_both = DeeDeeLegacy::deedee_prepare(Salm_both, "DESeq2")
 # )
 
 # save(dd_list_original, file = "data/dd_list_original.RData", compress = "xz")

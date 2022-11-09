@@ -6,14 +6,14 @@ rds_input <- function(obj,
     obj <- obj@DeeDeeList
   }
   if (is(obj, "DESeqResults")) {
-    obj <- deedee_prepare(obj, "DESeq2")
+    obj <- DeeDeeLegacy::deedee_prepare(obj, "DESeq2")
     obj <- list(obj)
     names(obj) <- unlist(strsplit(nm,
                                   split = ".",
                                   fixed = TRUE
     ))[1]
   } else if (is(obj, "DGEExact")) {
-    obj <- deedee_prepare(obj, "edgeR")
+    obj <- DeeDeeLegacy::deedee_prepare(obj, "edgeR")
     obj <- list(obj)
     names(obj) <- unlist(strsplit(nm,
                                   split = ".",
@@ -52,7 +52,7 @@ rds_input <- function(obj,
       )) == FALSE) {
         return(NULL)
       }
-      obj <- deedee_prepare(obj, "limma")
+      obj <- DeeDeeLegacy::deedee_prepare(obj, "limma")
       obj <- list(obj)
       names(obj) <- unlist(strsplit(nm,
                                     split = ".",
