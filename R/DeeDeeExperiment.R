@@ -270,7 +270,27 @@ add_dea <- function(dde, dea) {
 #' @examples
 #' # todo
 remove_dea <- function(dde, dea_name) {
+  # dde must be a DeeDeeExp
 
+  # dea must be char vector
+  deas <- names(dea(dde))
+
+  deas_to_remove <- intersect(dea_name, deas)
+  # warning() if nothing to remove
+
+  for (i in deas_to_remove) {
+    cols_to_remove <- c(paste0(i, c("_log2FoldChange", "_pvalue", "_padj")))
+    rowData(dde) <- rowData(dde)[, !(colnames(rowData(dde)) %in% cols_to_remove)]
+  }
+
+  # update the deslot
+  dea(dde)[[deas_to_remove]] <- NULL
+
+  # here check some validity?
+  validObject(dde)
+
+  # return the object
+  return(dde)
 }
 
 
