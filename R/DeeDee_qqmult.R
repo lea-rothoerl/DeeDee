@@ -62,7 +62,7 @@ ddedde_qqmult <- function(dde,
 
   res <- ggplot2::ggplot(
     dplyr::bind_rows(output, .id = "contrast"),
-    ggplot2::aes_string("x", "y", colour = "contrast")
+    ggplot2::aes(.data$x, .data$y, colour = .data$contrast)
   ) +
     ggplot2::xlab(names(dea_list)[ref]) +
     ggplot2::ylab("Contrasts") +
