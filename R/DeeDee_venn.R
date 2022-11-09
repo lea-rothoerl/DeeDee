@@ -24,7 +24,7 @@
 #' )
 #' dde <- DeeDeeExperiment(
 #'   se_macrophage_noassays,
-#'   del
+#'   de_results = del
 #' )
 #' dde
 ddedde_venn <- function(dde,

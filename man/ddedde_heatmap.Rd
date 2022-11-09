@@ -58,7 +58,7 @@ se_macrophage_noassays <- SummarizedExperiment(
 )
 dde <- DeeDeeExperiment(
   se_macrophage_noassays,
-  del
+  de_results = del
 )
 dde
 }
