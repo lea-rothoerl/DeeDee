@@ -6,7 +6,8 @@
 #'
 #' dde <- DeeDeeExperiment(se_macrophage, de_results = del)
 #'
-#' @param se ssss
+#' @param ... Arguments passed to the \code{\link{SummarizedExperiment}}
+#'constructor to fill the slots of the base class.
 #' @param de_results ssss
 #'
 #' @return tODO
@@ -14,13 +15,32 @@
 #'
 #' @examples
 #' # todo
-DeeDeeExperiment <- function(se, de_results) {
+DeeDeeExperiment <- function(...,
+                             de_results = NULL) {
+
+  se <- SummarizedExperiment(...)
+
   if (!is(se, "RangedSummarizedExperiment")) {
     if (is(se, "SummarizedExperiment")) {
       se <- as(se, "RangedSummarizedExperiment")
     } else {
       stop("'se' must be a RangedSummarizedExperiment object")
     }
+  }
+
+  # TODO: if no SE is really provided, instantiate some rownames, at least directly
+  # from the rownames of the result objects
+
+  if (is.null(de_results)) {
+    object <- new("DeeDeeExperiment",
+                  se,
+                  dea = list()
+    )
+
+    # stash the package version
+    metadata(object)[["version"]] <- packageVersion("DeeDee")
+
+    return(object)
   }
 
   # TODO: does not have to relate to an SE which has all the slots and all
@@ -177,7 +197,7 @@ deedee_import <- function(x) {
 #' )
 #' dde <- DeeDeeExperiment(
 #'   se_macrophage_noassays,
-#'   del
+#'   de_results = del
 #' )
 #' dde
 #'
