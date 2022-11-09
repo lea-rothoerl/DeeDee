@@ -30,7 +30,7 @@
 #'
 #' if (interactive()) {
 #'   # deedee_app(dd_list)
-#'   # ddedde_app(deedee_obj = DeeDeeObject(DeeDeeList = dd_list_original))
+#'   # ddedde_app(deedee_obj = DeeDeeLegacy::DeeDeeObject(DeeDeeList = dd_list_original))
 #' }
 ddedde_app <- function(deedee_obj = NULL) {
 
@@ -81,7 +81,7 @@ ddedde_app <- function(deedee_obj = NULL) {
       ),
       shinyBS::bsCollapse(
         shinyBS::bsCollapsePanel(
-          title = "INFO",
+          title = "INFO - input",
           shiny::includeMarkdown(
             system.file("extdata", "input.md", package = "DeeDee")
           ),
@@ -136,7 +136,7 @@ ddedde_app <- function(deedee_obj = NULL) {
       ),
       shinyBS::bsCollapse(
         shinyBS::bsCollapsePanel(
-          title = "INFO",
+          title = "INFO - scatter plot",
           shiny::includeMarkdown(
             system.file("extdata", "scatter.md", package = "DeeDee")
           ),
@@ -231,7 +231,7 @@ ddedde_app <- function(deedee_obj = NULL) {
       ),
       shinyBS::bsCollapse(
         shinyBS::bsCollapsePanel(
-          title = "INFO",
+          title = "INFO - heatmap",
           shiny::includeMarkdown(
             system.file("extdata", "heatmap.md",package = "DeeDee")
           ),
@@ -271,7 +271,7 @@ ddedde_app <- function(deedee_obj = NULL) {
       ),
       shinyBS::bsCollapse(
         shinyBS::bsCollapsePanel(
-          title = "INFO",
+          title = "INFO - venn",
           shiny::includeMarkdown(
             system.file("extdata", "venn.md", package = "DeeDee")
           ),
@@ -325,7 +325,7 @@ ddedde_app <- function(deedee_obj = NULL) {
       ),
       shinyBS::bsCollapse(
         shinyBS::bsCollapsePanel(
-          title = "INFO",
+          title = "INFO - upset",
           shiny::includeMarkdown(
             system.file("extdata", "upset.md", package = "DeeDee")
           ),
@@ -395,7 +395,7 @@ ddedde_app <- function(deedee_obj = NULL) {
       ),
       shinyBS::bsCollapse(
         shinyBS::bsCollapsePanel(
-          title = "INFO",
+          title = "INFO - qq plot",
           shiny::includeMarkdown(
             system.file("extdata", "qq.md", package = "DeeDee")
           ),
@@ -451,7 +451,7 @@ ddedde_app <- function(deedee_obj = NULL) {
       ),
       shinyBS::bsCollapse(
         shinyBS::bsCollapsePanel(
-          title = "INFO",
+          title = "INFO - cat plot",
           shiny::includeMarkdown(
             system.file("extdata", "cat.md", package = "DeeDee")
           ),
@@ -614,7 +614,7 @@ ddedde_app <- function(deedee_obj = NULL) {
       ),
       shinyBS::bsCollapse(
         shinyBS::bsCollapsePanel(
-          title = "INFO",
+          title = "INFO - summary",
           shiny::includeMarkdown(
             system.file("extdata", "summary.md", package = "DeeDee")
           ),
@@ -637,7 +637,7 @@ ddedde_app <- function(deedee_obj = NULL) {
       anno <- input$in_organism
       require(anno, character.only = TRUE)
       shiny::selectInput(
-        inputId = "key_type",
+        inputId = "in_key_type",
         label = "Key type of gene IDs",
         choices = keytypes(get(anno))
       )
@@ -713,7 +713,7 @@ ddedde_app <- function(deedee_obj = NULL) {
         }
       }
 
-      obj <- DeeDeeObject(DeeDeeList = dat)
+      obj <- DeeDeeLegacy::DeeDeeObject(DeeDeeList = dat)
 
       return(obj)
     })
@@ -748,7 +748,7 @@ ddedde_app <- function(deedee_obj = NULL) {
         shiny::req(
           shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
         )
-        dl <- DeeDeeObject(DeeDeeList = mydata_use())
+        dl <- DeeDeeLegacy::DeeDeeObject(DeeDeeList = mydata_use())
         saveRDS(dl, file)
       }
     )
@@ -921,7 +921,7 @@ ddedde_app <- function(deedee_obj = NULL) {
         geneList = scatter_brushed(),
         universe = data,
         orgDB = input$in_organism,
-        key_type = input$key_type
+        key_type = input$in_key_type
       )
       shiny::validate(
         shiny::need(
