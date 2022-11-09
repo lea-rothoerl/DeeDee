@@ -2,3 +2,6 @@
 
 #' @export
 setGeneric("dea", function(x, ...) standardGeneric("dea"))
+
+#' @export
+setGeneric("dea<-", function(x, value) standardGeneric("dea<-"))

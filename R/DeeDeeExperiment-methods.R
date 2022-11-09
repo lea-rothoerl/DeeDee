@@ -1,26 +1,40 @@
-#' @name DeeDeeExperiment-dea
+#' @name DeeDeeExperiment-methods
 #'
-#' @title Methods for deedee exps
+#' @title Methods for DeeDeeExperiment objects
 #'
 #' @aliases
 #' dea
+#' dea<-
+#'
 #'
 #' @description
 #' Todo
 #'
-#' @param x deex
+#' @param x A \code{\link{DeeDeeExperiment}} object
+#' @param value Replacement value for replacement methods.
 #'
 #' @return Return value varies depending on method, as described below.
 NULL
 
 
-#' @rdname DeeDeeExperiment-dea
+#' @rdname DeeDeeExperiment-methods
 #' @export
 setMethod("dea",
           signature = "DeeDeeExperiment",
           definition = function(x) {
             x@dea
           })
+
+#' @rdname DeeDeeExperiment-methods
+#' @export
+setReplaceMethod("dea",
+                 c("DeeDeeExperiment", "list"),
+                 definition = function(x, value) {
+                   x@dea <- value
+                   validObject(x)
+                   x
+                 })
+
 
 
 #' @name DeeDeeExperiment-misc
