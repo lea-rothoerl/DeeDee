@@ -268,7 +268,23 @@ add_dea <- function(dde, dea) {
 #' @export
 #'
 #' @examples
-#' # todo
+#' data("de_named_list", package = "DeeDee")
+#' library("SummarizedExperiment")
+#'
+#' rd_macrophage <- DataFrame(
+#'   gene_id = rownames(del$ifng_vs_naive))
+#' rownames(rd_macrophage) <- rownames(del$ifng_vs_naive)
+#' se_macrophage_noassays <- SummarizedExperiment(
+#'   assays = SimpleList(),
+#'   rowData = rd_macrophage
+#' )
+#' dde <- DeeDeeExperiment(
+#'   se_macrophage_noassays,
+#'   de_results = del
+#' )
+#' dde
+#'
+#' dde_new <- remove_dea(dde, "ifng_vs_naive")
 remove_dea <- function(dde, dea_name) {
   # dde must be a DeeDeeExp
 
