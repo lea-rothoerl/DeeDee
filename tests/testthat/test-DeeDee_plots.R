@@ -3,7 +3,7 @@ dde <- DeeDeeExperiment(
   de_results = del
 )
 
-test_that("plotting & plotting" {
+test_that("plotting & plotting", {
   p_scatter <- ddedde_scatter(dde)
   expect_is(p_scatter, "gg")
 
