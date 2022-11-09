@@ -2,24 +2,24 @@
 rds_input <- function(obj,
                       nm) {
 
-  if (class(obj) == "DeeDeeObject") {
+  if (is(obj, "DeeDeeObject")) {
     obj <- obj@DeeDeeList
   }
-  if (class(obj) == "DESeqResults") {
+  if (is(obj, "DESeqResults")) {
     obj <- deedee_prepare(obj, "DESeq2")
     obj <- list(obj)
     names(obj) <- unlist(strsplit(nm,
                                   split = ".",
                                   fixed = TRUE
     ))[1]
-  } else if (class(obj) == "DGEExact") {
+  } else if (is(obj, "DGEExact")) {
     obj <- deedee_prepare(obj, "edgeR")
     obj <- list(obj)
     names(obj) <- unlist(strsplit(nm,
                                   split = ".",
                                   fixed = TRUE
     ))[1]
-  } else if (class(obj) == "list") {
+  } else if (is(obj, "list")) {
     for (j in length(obj)) {
       if (checkmate::test_subset(
         names(obj[[j]]),
@@ -28,7 +28,7 @@ rds_input <- function(obj,
         return(NULL)
       }
     }
-  } else if (class(obj) == "data.frame") {
+  } else if (is(obj, "data.frame")) {
     if (length(obj) == 2) {
       if (checkmate::test_subset(
         names(obj),
@@ -191,10 +191,10 @@ input_infobox <- function(deedee_obj,
         ))[1]
       }
 
-      if (class(res[[i]]) == "DESeqResults" ||
-          class(res[[i]]) == "DGEExact" ||
+      if (is(res[[i]], "DESeqResults") ||
+          is(res[[i]], "DGEExact") ||
           length(names(res[[i]])) == 6 ||
-          class(res[[i]]) == "DeeDeeObject") {
+          is(res[[i]]), "DeeDeeObject") {
         count <- count + 1
         type[count] <- class(res[[i]])
         filename[count] <- sets[i, "name"]
@@ -205,7 +205,7 @@ input_infobox <- function(deedee_obj,
         genes[count] <- length(md@DeeDeeList
                                [[contrast[count]]][["logFC"]])
       } else {
-        if (class(res[[i]]) == "data.frame") {
+        if (is.data.frame(res[[i]])) {
           res[[i]] <- list(res[[i]])
           names(res[[i]]) <- unlist(strsplit(sets[i, "name"],
                                              split = ".",
