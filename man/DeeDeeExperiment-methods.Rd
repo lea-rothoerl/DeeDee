@@ -4,22 +4,74 @@
 \alias{DeeDeeExperiment-methods}
 \alias{dea}
 \alias{dea<-}
+\alias{add_dea}
+\alias{remove_dea}
+\alias{get_dea_df}
+\alias{get_dea_list}
 \alias{dea,DeeDeeExperiment-method}
 \alias{dea<-,DeeDeeExperiment,list-method}
+\alias{add_dea,DeeDeeExperiment,list-method}
+\alias{remove_dea,DeeDeeExperiment,character-method}
+\alias{get_dea_df,DeeDeeExperiment,character-method}
+\alias{get_dea_list,DeeDeeExperiment-method}
 \title{Methods for DeeDeeExperiment objects}
 \usage{
 \S4method{dea}{DeeDeeExperiment}(x)
 
 \S4method{dea}{DeeDeeExperiment,list}(x) <- value
+
+\S4method{add_dea}{DeeDeeExperiment,list}(x, dea)
+
+\S4method{remove_dea}{DeeDeeExperiment,character}(x, dea_name)
+
+\S4method{get_dea_df}{DeeDeeExperiment,character}(x, dea_name)
+
+\S4method{get_dea_list}{DeeDeeExperiment}(x)
 }
 \arguments{
 \item{x}{A \code{\link{DeeDeeExperiment}} object}
 
 \item{value}{Replacement value for replacement methods.}
+
+\item{dea}{todo}
+
+\item{dea_name}{todo}
 }
 \value{
 Return value varies depending on method, as described below.
 }
 \description{
 Todo
+}
+\examples{
+data("de_named_list", package = "DeeDee")
+library("SummarizedExperiment")
+
+rd_macrophage <- DataFrame(
+  gene_id = rownames(del$ifng_vs_naive))
+rownames(rd_macrophage) <- rownames(del$ifng_vs_naive)
+se_macrophage_noassays <- SummarizedExperiment(
+  assays = SimpleList(),
+  rowData = rd_macrophage
+)
+
+# creating a `DeeDeeExperiment`
+dde <- DeeDeeExperiment(
+  se_macrophage_noassays,
+  de_results = del
+)
+dde
+
+new_del <- list(
+  ifng2 = del$ifng_vs_naive,
+  ifngsalmo2 = del$ifngsalmo_vs_naive
+)
+
+# add a new (set of) DE result(s)
+dde_new <- add_dea(dde, new_del)
+dde_new
+
+# removing DEAs
+dde_removed <- remove_dea(dde, "ifng_vs_naive")
+dde_removed
 }
