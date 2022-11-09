@@ -30,7 +30,7 @@
 #'
 #' if (interactive()) {
 #'   # deedee_app(dd_list)
-#'   # ddedde_app(dde)
+#'   # ddedde_app(deedee_obj = DeeDeeObject(DeeDeeList = dd_list_original))
 #' }
 ddedde_app <- function(deedee_obj = NULL) {
 
