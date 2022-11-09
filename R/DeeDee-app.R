@@ -628,6 +628,7 @@ ddedde_app <- function(deedee_obj = NULL) {
 
 
   # server definition ----------------------------------------------------------
+  # nocov start
   deedee_server <- function(input, output, session) {
 
     # server - data input ------------------------------------------------------
@@ -1543,7 +1544,7 @@ ddedde_app <- function(deedee_obj = NULL) {
       shiny::includeHTML(path = out)
     })
   }
-
+  # nocov end
 
   # launch app -----------------------------------------------------------------
   # shiny::shinyOptions(deedee_obj = deedee_obj)
