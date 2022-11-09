@@ -34,22 +34,19 @@
 #' }
 ddedde_app <- function(dde = NULL) {
 
-  # ----------------------------------------------------------------------------
-  # --------------------------------- U I --------------------------------------
-  # ----------------------------------------------------------------------------
 
+  # UI definition -----------------------------------------------------------
   deedee_ui <- shiny::navbarPage(
     title = "DeeDee",
     id = "tabs",
     theme = shinythemes::shinytheme("flatly"),
 
-
-    # ----------------------------- data input ---------------------------------
+    # data input --------------------------------------------------------------
     shiny::tabPanel(
       "Input",
       shiny::fluidRow(
         shiny::column(
-          8,
+          width = 8,
           shiny::fileInput("inp", "Upload your DEA results or DeeDee objects",
                            multiple = TRUE,
                            accept = c(".rds", ".txt", ".xlsx"),
@@ -58,7 +55,7 @@ ddedde_app <- function(dde = NULL) {
           shiny::tableOutput("inp_infobox")
         ),
         shiny::column(
-          4,
+          width = 4,
           shiny::selectInput("organism", "Organism",
                              choices = list(
                                "Human" = "org.Hs.eg.db",
@@ -98,7 +95,7 @@ ddedde_app <- function(dde = NULL) {
       "Scatterplot",
       shiny::fluidRow(
         shiny::column(
-          4,
+          width = 4,
           shiny::uiOutput("scatter_choices1"),
           shiny::uiOutput("scatter_choices2"),
           shiny::selectInput("scatter_color_by", "Color by",
@@ -114,7 +111,7 @@ ddedde_app <- function(dde = NULL) {
           shiny::actionButton("ora_button", "Over-representation analysis")
         ),
         shiny::column(
-          8,
+          width = 8,
           shinycssloaders::withSpinner(
             shiny::plotOutput("scatter",
                               # dblclick = "scatter_dblclick",
@@ -160,7 +157,7 @@ ddedde_app <- function(dde = NULL) {
       id = "heatmap",
       shiny::fluidRow(
         shiny::column(
-          4,
+          width = 4,
           shiny::numericInput("heatmap_show_first",
                               "Show first",
                               value = 25,
@@ -198,7 +195,7 @@ ddedde_app <- function(dde = NULL) {
           shiny::actionButton("heatmap_action", "Create heatmap")
         ),
         shiny::column(
-          8,
+          width = 8,
           shiny::textOutput("heatmap_errors"),
           shiny::conditionalPanel(
             "output.heatmap_errors == ''",
@@ -226,7 +223,7 @@ ddedde_app <- function(dde = NULL) {
       "Venn Diagram",
       shiny::fluidRow(
         shiny::column(
-          4,
+          width = 4,
           shiny::selectInput("venn_mode", "Mode",
                              choices = list(
                                "Up" = "up",
@@ -240,7 +237,7 @@ ddedde_app <- function(dde = NULL) {
           )
         ),
         shiny::column(
-          8,
+          width = 8,
           shinycssloaders::withSpinner(
             shiny::plotOutput("venn")
           )
@@ -263,7 +260,7 @@ ddedde_app <- function(dde = NULL) {
       "UpSet Plot",
       shiny::fluidRow(
         shiny::column(
-          4,
+          width = 4,
           shiny::selectInput("upset_mode", "Mode",
                              choices = list(
                                "Up" = "up",
@@ -288,7 +285,7 @@ ddedde_app <- function(dde = NULL) {
           )
         ),
         shiny::column(
-          8,
+          width = 8,
           shinycssloaders::withSpinner(
             shiny::plotOutput("upset")
           )
@@ -311,7 +308,7 @@ ddedde_app <- function(dde = NULL) {
       "Quantile-Quantile Plot",
       shiny::fluidRow(
         shiny::column(
-          4,
+          width = 4,
           shiny::checkboxInput("qq_multiple", "Multiple", value = FALSE),
           shiny::conditionalPanel(
             condition = "!input.qq_multiple",
@@ -335,7 +332,7 @@ ddedde_app <- function(dde = NULL) {
           )
         ),
         shiny::column(
-          8,
+          width = 8,
           shiny::conditionalPanel(
             condition = "!input.qq_multiple",
             shinycssloaders::withSpinner(
@@ -377,7 +374,7 @@ ddedde_app <- function(dde = NULL) {
       "Concordance At the Top Plot",
       shiny::fluidRow(
         shiny::column(
-          4,
+          width = 4,
           shiny::selectInput("cat_mode", "Mode",
                              choices = list(
                                "Up" = "up",
@@ -397,7 +394,7 @@ ddedde_app <- function(dde = NULL) {
           )
         ),
         shiny::column(
-          8,
+          width = 8,
           shinycssloaders::withSpinner(
             shiny::plotOutput("cat")
           )
