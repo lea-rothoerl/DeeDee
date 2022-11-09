@@ -35,20 +35,20 @@
 ddedde_app <- function(deedee_obj = NULL) {
 
 
-  # UI definition -----------------------------------------------------------
+  # ui definition -----------------------------------------------------------
   deedee_ui <- shiny::navbarPage(
     title = "DeeDee",
     id = "tabs",
     theme = shinythemes::shinytheme("flatly"),
 
-    # data input --------------------------------------------------------------
+    # ui - data input ----------------------------------------------------------
     shiny::tabPanel(
       title = "Input",
       shiny::fluidRow(
         shiny::column(
           width = 8,
           shiny::fileInput(
-            inputId = "inp",
+            inputId = "upload_de",
             label = "Upload your DEA results or DeeDee objects",
             multiple = TRUE,
             accept = c(".rds", ".txt", ".xlsx"),
@@ -59,7 +59,7 @@ ddedde_app <- function(deedee_obj = NULL) {
         shiny::column(
           width = 4,
           shiny::selectInput(
-            inputId = "organism",
+            inputId = "in_organism",
             label = "Organism",
             choices = list(
               "Human" = "org.Hs.eg.db",
@@ -68,12 +68,12 @@ ddedde_app <- function(deedee_obj = NULL) {
               "Rat" = "org.Rn.eg.db"
             )
           ),
-          shiny::uiOutput("key_inp"),
-          shiny::uiOutput("datasets"),
+          shiny::uiOutput("ui_key_inp"),
+          shiny::uiOutput("ui_datasets"),
           shiny::conditionalPanel(
             "output.inp_infobox",
             shiny::downloadButton(
-              "inp_download",
+              "btn_inp_download",
               "Download DeeDee object (.RDS)"
             )
           )
@@ -93,16 +93,16 @@ ddedde_app <- function(deedee_obj = NULL) {
       #                "Download DeeDee Package vignette (.html)")
     ),
 
-    # ------------------------------- scatter ----------------------------------
+    # ui - scatter -------------------------------------------------------------
     shiny::tabPanel(
       title = "Scatterplot",
       shiny::fluidRow(
         shiny::column(
           width = 4,
-          shiny::uiOutput("scatter_choices1"),
-          shiny::uiOutput("scatter_choices2"),
+          shiny::uiOutput("ui_scatter_choices1"),
+          shiny::uiOutput("ui_scatter_choices2"),
           shiny::selectInput(
-            inputId = "scatter_color_by",
+            inputId = "in_scatter_color_by",
             label = "Color by",
             choices = list(
               "1st p-value" = "pval1",
@@ -111,12 +111,12 @@ ddedde_app <- function(deedee_obj = NULL) {
             selected = "pval1"
           ),
           shiny::numericInput(
-            inputId = "scatter_pthresh",
+            inputId = "in_scatter_pthresh",
             label = "P-value threshold",
             value = 0.05, min = 0.01, max = 1, step = 0.01
           ),
           shiny::actionButton(
-            inputId = "ora_button",
+            inputId = "btn_ora_button",
             label = "Over-representation analysis"
           )
         ),
@@ -124,7 +124,7 @@ ddedde_app <- function(deedee_obj = NULL) {
           width = 8,
           shinycssloaders::withSpinner(
             shiny::plotOutput(
-              outputId = "scatter",
+              outputId = "plot_deedee_scatter",
               # dblclick = "scatter_dblclick",
               brush = shiny::brushOpts(
                 id = "scatter_brush",
@@ -146,25 +146,25 @@ ddedde_app <- function(deedee_obj = NULL) {
       shinyBS::bsModal(
         id = "modalExample",
         title = "Gene Ontology over-representation analysis",
-        trigger = "ora_button",
+        trigger = "btn_ora_button",
         size = "large",
         shinycssloaders::withSpinner(
           shiny::plotOutput("scatter_ora")
         ),
         shiny::downloadButton(
-          outputId = "ora_download",
+          outputId = "btn_ora_download",
           label = "Download enrichment result object (.RDS)"
         )
       ),
       shiny::downloadButton(
-        outputId = "scatter_brush_download",
+        outputId = "btn_scatter_brush_download",
         label = "Download brushed genes (.xlsx)"
       ),
       shiny::tableOutput("scatter_brush_info")
     ),
 
 
-    # ------------------------------- heatmap ----------------------------------
+    # ui - heatmap -------------------------------------------------------------
     shiny::tabPanel(
       title = "Heatmap",
       id = "heatmap",
@@ -172,23 +172,23 @@ ddedde_app <- function(deedee_obj = NULL) {
         shiny::column(
           width = 4,
           shiny::numericInput(
-            inputId = "heatmap_show_first",
+            inputId = "in_heatmap_show_first",
             label = "Show first",
             value = 25,
             min = 1
           ),
           shiny::checkboxInput(
-            inputId = "heatmap_show_gene_names",
+            inputId = "in_heatmap_show_gene_names",
             label = "Show gene names",
             value = FALSE
           ),
           shiny::checkboxInput(
-            inputId = "heatmap_showNA",
+            inputId = "in_heatmap_showNA",
             label = "Show NA",
             value = FALSE
           ),
           shiny::selectInput(
-            inputId = "heatmap_dist",
+            inputId = "in_heatmap_dist",
             label = "Distance measure",
             choices = list(
               "Euclidean" = "euclidean",
@@ -199,7 +199,7 @@ ddedde_app <- function(deedee_obj = NULL) {
             selected = "euclidean"
           ),
           shiny::selectInput(
-            inputId = "heatmap_clust",
+            inputId = "in_heatmap_clust",
             label = "Clustering method",
             choices = list(
               "Single" = "single",
@@ -210,12 +210,12 @@ ddedde_app <- function(deedee_obj = NULL) {
             selected = "average"
           ),
           shiny::numericInput(
-            inputId = "heatmap_pthresh",
+            inputId = "in_heatmap_pthresh",
             label = "P-value threshold",
             value = 0.05, min = 0.01, max = 1, step = 0.01
           ),
           shiny::actionButton(
-            inputId = "heatmap_action",
+            inputId = "btn_heatmap_action",
             label = "Create heatmap")
         ),
         shiny::column(
@@ -240,14 +240,14 @@ ddedde_app <- function(deedee_obj = NULL) {
       )
     ),
 
-    # -------------------------------- venn ------------------------------------
+    # ui - venn ----------------------------------------------------------------
     shiny::tabPanel(
       title = "Venn Diagram",
       shiny::fluidRow(
         shiny::column(
           width = 4,
           shiny::selectInput(
-            inputId = "venn_mode",
+            inputId = "in_venn_mode",
             label = "Mode",
             choices = list(
               "Up" = "up",
@@ -257,7 +257,7 @@ ddedde_app <- function(deedee_obj = NULL) {
             selected = "both"
           ),
           shiny::numericInput(
-            inputId = "venn_pthresh",
+            inputId = "in_venn_pthresh",
             label = "P-value threshold",
             value = 0.05, min = 0.01, max = 1, step = 0.01
           )
@@ -265,7 +265,7 @@ ddedde_app <- function(deedee_obj = NULL) {
         shiny::column(
           width = 8,
           shinycssloaders::withSpinner(
-            shiny::plotOutput("venn")
+            shiny::plotOutput("plot_deedee_venn")
           )
         )
       ),
@@ -281,14 +281,14 @@ ddedde_app <- function(deedee_obj = NULL) {
     ),
 
 
-    # -------------------------------- upSet -----------------------------------
+    # ui - upset ---------------------------------------------------------------
     shiny::tabPanel(
       title = "UpSet Plot",
       shiny::fluidRow(
         shiny::column(
           width = 4,
           shiny::selectInput(
-            inputId = "upset_mode",
+            inputId = "in_upset_mode",
             label = "Mode",
             choices = list(
               "Up" = "up",
@@ -298,20 +298,20 @@ ddedde_app <- function(deedee_obj = NULL) {
             selected = "both"
           ),
           shiny::conditionalPanel(
-            condition = "input.upset_mode == 'both'",
+            condition = "input.in_upset_mode == 'both'",
             shiny::checkboxInput(
-              inputId = "upset_colored",
+              inputId = "in_upset_colored",
               label = "Coloring",
               value = TRUE
             )
           ),
           shiny::numericInput(
-            inputId = "upset_minset",
+            inputId = "in_upset_minset",
             label = "Minimum set size",
             value = 10, min = 0, step = 1
           ),
           shiny::numericInput(
-            inputId = "upset_pthresh",
+            inputId = "in_upset_pthresh",
             label = "P-value threshold",
             value = 0.05, min = 0.01, max = 1, step = 0.01
           )
@@ -319,7 +319,7 @@ ddedde_app <- function(deedee_obj = NULL) {
         shiny::column(
           width = 8,
           shinycssloaders::withSpinner(
-            shiny::plotOutput("upset")
+            shiny::plotOutput("plot_deedee_upset")
           )
         )
       ),
@@ -335,23 +335,23 @@ ddedde_app <- function(deedee_obj = NULL) {
     ),
 
 
-    # --------------------------------- qq -------------------------------------
+    # ui - qq ------------------------------------------------------------------
     shiny::tabPanel(
       title = "Quantile-Quantile Plot",
       shiny::fluidRow(
         shiny::column(
           width = 4,
           shiny::checkboxInput(
-            inputId = "qq_multiple",
+            inputId = "in_qq_multiple",
             label = "Multiple",
             value = FALSE
           ),
           shiny::conditionalPanel(
-            condition = "!input.qq_multiple",
-            shiny::uiOutput("qq_choices1"),
-            shiny::uiOutput("qq_choices2"),
+            condition = "!input.in_qq_multiple",
+            shiny::uiOutput("ui_qq_choices1"),
+            shiny::uiOutput("ui_qq_choices2"),
             shiny::selectInput(
-              inputId = "qq_color_by",
+              inputId = "in_qq_color_by",
               label = "Color by",
               choices = list(
                 "1st p-value" = "pval1",
@@ -359,14 +359,17 @@ ddedde_app <- function(deedee_obj = NULL) {
               ),
               selected = "pval1"
             ),
-            shiny::checkboxInput("qq_line", "As line", value = FALSE)
+            shiny::checkboxInput(
+              inputId = "in_qq_line",
+              "As line",
+              value = FALSE)
           ),
           shiny::conditionalPanel(
-            condition = "input.qq_multiple",
-            shiny::uiOutput("qq_ref"),
+            condition = "input.in_qq_multiple",
+            shiny::uiOutput("ui_qq_ref"),
           ),
           shiny::numericInput(
-            inputId = "qq_pthresh",
+            inputId = "in_qq_pthresh",
             label = "P-value threshold",
             value = 0.05, min = 0.01, max = 1, step = 0.01
           )
@@ -374,17 +377,18 @@ ddedde_app <- function(deedee_obj = NULL) {
         shiny::column(
           width = 8,
           shiny::conditionalPanel(
-            condition = "!input.qq_multiple",
+            condition = "!input.in_qq_multiple",
             shinycssloaders::withSpinner(
-              shiny::plotOutput("qq",
-                                brush = "qq_brush"
+              shiny::plotOutput(
+                outputId = "plot_deedee_qq",
+                brush = "qq_brush"
               )
             )
           ),
           shiny::conditionalPanel(
-            condition = "input.qq_multiple",
+            condition = "input.in_qq_multiple",
             shinycssloaders::withSpinner(
-              shiny::plotOutput("qq_mult")
+              shiny::plotOutput("plot_deedee_qq_mult")
             )
           )
         )
@@ -399,9 +403,9 @@ ddedde_app <- function(deedee_obj = NULL) {
         )
       ),
       shiny::conditionalPanel(
-        condition = "!input.qq_multiple",
+        condition = "!input.in_qq_multiple",
         shiny::downloadButton(
-          outputId = "qq_brush_download",
+          outputId = "btn_qq_brush_download",
           label = "Download brushed genes (.xlsx)"
         ),
         shiny::tableOutput("qq_brush_info")
@@ -409,14 +413,14 @@ ddedde_app <- function(deedee_obj = NULL) {
     ),
 
 
-    # --------------------------------- cat ------------------------------------
+    # ui - cat -----------------------------------------------------------------
     shiny::tabPanel(
       title = "Concordance At the Top Plot",
       shiny::fluidRow(
         shiny::column(
           width = 4,
           shiny::selectInput(
-            inputId = "cat_mode",
+            inputId = "in_cat_mode",
             label = "Mode",
             choices = list(
               "Up" = "up",
@@ -426,14 +430,14 @@ ddedde_app <- function(deedee_obj = NULL) {
             selected = "up"
           ),
           shiny::numericInput(
-            inputId = "cat_maxrank",
+            inputId = "in_cat_maxrank",
             label = "Max rank",
             value = 1000,
             min = 1
           ),
-          shiny::uiOutput("cat_choice"),
+          shiny::uiOutput("ui_cat_choice"),
           shiny::numericInput(
-            inputId = "cat_pthresh",
+            inputId = "in_cat_pthresh",
             label = "P-value threshold",
             value = 0.05, min = 0.01, max = 1, step = 0.01
           )
@@ -441,7 +445,7 @@ ddedde_app <- function(deedee_obj = NULL) {
         shiny::column(
           width = 8,
           shinycssloaders::withSpinner(
-            shiny::plotOutput("cat")
+            shiny::plotOutput("plot_deedee_cat")
           )
         )
       ),
@@ -456,7 +460,7 @@ ddedde_app <- function(deedee_obj = NULL) {
       )
     ),
 
-    # ------------------------------- summary ----------------------------------
+    # ui - summary -------------------------------------------------------------
     shiny::tabPanel(
       title = "Summary",
       shiny::numericInput(
@@ -479,7 +483,7 @@ ddedde_app <- function(deedee_obj = NULL) {
             label = "Download your DeeDee Summary (.html)"
           ),
           shinycssloaders::withSpinner(
-            shiny::uiOutput("show_html_summary")
+            shiny::uiOutput("ui_show_html_summary")
           )
         )
       ),
@@ -490,8 +494,8 @@ ddedde_app <- function(deedee_obj = NULL) {
           id = "sum_params",
           shiny::tabPanel(
             "Scatterplot",
-            shiny::uiOutput("sum_scatter_choices1"),
-            shiny::uiOutput("sum_scatter_choices2"),
+            shiny::uiOutput("ui_sum_scatter_choices1"),
+            shiny::uiOutput("ui_sum_scatter_choices2"),
             shiny::selectInput(
               inputId = "sum_scatter_color_by",
               label = "Color by",
@@ -584,7 +588,7 @@ ddedde_app <- function(deedee_obj = NULL) {
           ),
           shiny::tabPanel(
             title = "Quantile-Quantile Plot",
-            shiny::uiOutput("sum_qq_ref"),
+            shiny::uiOutput("ui_sum_qq_ref"),
           ),
           shiny::tabPanel(
             title = "Concordance At the Top Plot",
@@ -604,7 +608,7 @@ ddedde_app <- function(deedee_obj = NULL) {
               value = 1000,
               min = 1
             ),
-            shiny::uiOutput("sum_cat_choice")
+            shiny::uiOutput("ui_sum_cat_choice")
           )
         )
       ),
@@ -623,13 +627,13 @@ ddedde_app <- function(deedee_obj = NULL) {
 
 
 
-  # server definition -------------------------------------------------------
+  # server definition ----------------------------------------------------------
   deedee_server <- function(input, output, session) {
 
-    # ----------------------------- data input ---------------------------------
-    output$key_inp <- shiny::renderUI({
-      shiny::req(input$organism)
-      anno <- input$organism
+    # server - data input ------------------------------------------------------
+    output$ui_key_inp <- shiny::renderUI({
+      shiny::req(input$in_organism)
+      anno <- input$in_organism
       require(anno, character.only = TRUE)
       shiny::selectInput(
         inputId = "key_type",
@@ -639,7 +643,9 @@ ddedde_app <- function(deedee_obj = NULL) {
     })
 
     mydata <- shiny::reactive({
-      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
+      shiny::req(
+        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      )
 
       ext <- c()
       res <- list()
@@ -658,10 +664,10 @@ ddedde_app <- function(deedee_obj = NULL) {
       k <- 0
 
       # reading out input files
-      if (length(input$inp[, 1] > 0)) {
-        for (i in (length(ext) + 1):(length(input$inp[, 1]) + length(ext))) {
+      if (length(input$upload_de[, 1] > 0)) {
+        for (i in (length(ext) + 1):(length(input$upload_de[, 1]) + length(ext))) {
           k <- k + 1
-          ext[i] <- tools::file_ext(input$inp[k, "datapath"])
+          ext[i] <- tools::file_ext(input$upload_de[k, "datapath"])
           shiny::validate(
             shiny::need(
               ext[[i]] == "rds" ||
@@ -674,23 +680,23 @@ ddedde_app <- function(deedee_obj = NULL) {
 
           # .RDS input
           if (ext[[i]] == "rds" || ext[[i]] == "RDS") {
-            res[[i]] <- readRDS(input$inp[[k, "datapath"]])
+            res[[i]] <- readRDS(input$upload_de[[k, "datapath"]])
             res[[i]] <- rds_input(obj = res[[i]],
-                                  nm = input$inp[[k, "name"]])
+                                  nm = input$upload_de[[k, "name"]])
 
             # .xlsx input
           } else if (ext[[i]] == "xlsx") {
-            sheets <- readxl::excel_sheets(input$inp[[k, "datapath"]])
+            sheets <- readxl::excel_sheets(input$upload_de[[k, "datapath"]])
             res[[i]] <- xlsx_input(obj = sheets,
-                                   path= input$inp[[k, "datapath"]],
-                                   nm = input$inp[k, "name"])
+                                   path= input$upload_de[[k, "datapath"]],
+                                   nm = input$upload_de[k, "name"])
 
             # .txt input
           } else if (ext[[i]] == "txt") {
-            temp <- utils::read.table(input$inp[[k, "datapath"]])
+            temp <- utils::read.table(input$upload_de[[k, "datapath"]])
             res[[i]] <- list(temp)
             names(res[[i]]) <-
-              unlist(strsplit(input$inp[k, "name"], split = ".", fixed = TRUE))[1]
+              unlist(strsplit(input$upload_de[k, "name"], split = ".", fixed = TRUE))[1]
           } else {
             return(NULL)
           }
@@ -711,9 +717,9 @@ ddedde_app <- function(deedee_obj = NULL) {
       return(obj)
     })
 
-    output$datasets <- shiny::renderUI({
+    output$ui_datasets <- shiny::renderUI({
       shiny::req(
-        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
       )
       shiny::checkboxGroupInput(
         inputId = "select_datasets",
@@ -724,7 +730,9 @@ ddedde_app <- function(deedee_obj = NULL) {
     })
 
     mydata_use <- shiny::reactive({
-      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
+      shiny::req(
+        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      )
       use <- input$select_datasets
       dat2 <- list()
       for (i in use) {
@@ -733,10 +741,12 @@ ddedde_app <- function(deedee_obj = NULL) {
       return(dat2)
     })
 
-    output$inp_download <- shiny::downloadHandler(
+    output$btn_inp_download <- shiny::downloadHandler(
       filename = "DeeDee_object.RDS",
       content = function(file) {
-        shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
+        shiny::req(
+          shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+        )
         dl <- DeeDeeObject(DeeDeeList = mydata_use())
         saveRDS(dl, file)
       }
@@ -748,31 +758,37 @@ ddedde_app <- function(deedee_obj = NULL) {
         "Faulty input data provided."
       ))
 
-      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
+      shiny::req(
+        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      )
 
       input_infobox(
         deedee_obj = deedee_obj,
-        sets = input$inp,
+        sets = input$upload_de,
         md = mydata()
       )
     })
 
 
-    # ------------------------------- scatter ----------------------------------
+    # server - scatter ---------------------------------------------------------
     # --- selectors ---
-    output$scatter_choices1 <- shiny::renderUI({
-      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
+    output$ui_scatter_choices1 <- shiny::renderUI({
+      shiny::req(
+        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      )
       shiny::selectInput(
-        inputId = "scatter_select1",
+        inputId = "in_scatter_select1",
         label = "1st data set",
         choices = names(mydata_use())
       )
     })
 
-    output$scatter_choices2 <- shiny::renderUI({
-      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
+    output$ui_scatter_choices2 <- shiny::renderUI({
+      shiny::req(
+        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      )
       shiny::selectInput(
-        inputId = "scatter_select2",
+        inputId = "in_scatter_select2",
         label = "2nd data set",
         selected = names(mydata_use())[2],
         choices = names(mydata_use())
@@ -785,7 +801,7 @@ ddedde_app <- function(deedee_obj = NULL) {
       y = NULL
     )
 
-    output$scatter <- shiny::renderPlot({
+    output$plot_deedee_scatter <- shiny::renderPlot({
       shiny::validate(
         shiny::need(
           length(mydata()@DeeDeeList) >= 2,
@@ -799,16 +815,16 @@ ddedde_app <- function(deedee_obj = NULL) {
         )
       )
 
-      sel1 <- match(input$scatter_select1, names(mydata_use()))
-      sel2 <- match(input$scatter_select2, names(mydata_use()))
+      sel1 <- match(input$in_scatter_select1, names(mydata_use()))
+      sel2 <- match(input$in_scatter_select2, names(mydata_use()))
       shiny::req(sel1)
       shiny::req(sel2)
       res <- deedee_scatter(
         mydata_use(),
         select1 = sel1,
         select2 = sel2,
-        color_by = input$scatter_color_by,
-        pthresh = input$scatter_pthresh
+        color_by = input$in_scatter_color_by,
+        pthresh = input$in_scatter_pthresh
       )
 
       shiny::validate(
@@ -825,29 +841,29 @@ ddedde_app <- function(deedee_obj = NULL) {
     # --- brushing ---
     # scatter_download_button <- shiny::renderUI(
     #     conditionalPanel("output.scatter_brushed()",
-    #     downloadButton("scatter_brush_download",
+    #     downloadButton("btn_scatter_brush_download",
     #                    "Download brushed genes (.txt)")))
 
     scatter_brushed <- shiny::reactive({
       shiny::req(input$scatter_brush)
       df <- data.frame(
-        x = mydata_use()[[input$scatter_select1]],
-        y = mydata_use()[[input$scatter_select2]]
+        x = mydata_use()[[input$in_scatter_select1]],
+        y = mydata_use()[[input$in_scatter_select2]]
       )
 
       df <- subset(df, x.pval < 0.05 & y.pval < 0.05)
 
       names(df) <- c(
-        paste(input$scatter_select1, ".logFC", sep = ""),
-        paste(input$scatter_select1, ".pval", sep = ""),
-        paste(input$scatter_select2, ".logFC", sep = ""),
-        paste(input$scatter_select2, ".pval", sep = "")
+        paste(input$in_scatter_select1, ".logFC", sep = ""),
+        paste(input$in_scatter_select1, ".pval", sep = ""),
+        paste(input$in_scatter_select2, ".logFC", sep = ""),
+        paste(input$in_scatter_select2, ".pval", sep = "")
       )
       shiny::brushedPoints(
         df,
         input$scatter_brush,
-        xvar = paste(input$scatter_select1, ".logFC", sep = ""),
-        yvar = paste(input$scatter_select2, ".logFC", sep = "")
+        xvar = paste(input$in_scatter_select1, ".logFC", sep = ""),
+        yvar = paste(input$in_scatter_select2, ".logFC", sep = "")
       )
     })
 
@@ -859,7 +875,7 @@ ddedde_app <- function(deedee_obj = NULL) {
       rownames = TRUE
     )
 
-    output$scatter_brush_download <- shiny::downloadHandler(
+    output$btn_scatter_brush_download <- shiny::downloadHandler(
       filename = "scatter_brushed_genes.xlsx",
       content = function(file) {
         shiny::req(input$scatter_brush)
@@ -885,7 +901,7 @@ ddedde_app <- function(deedee_obj = NULL) {
     # --- enrich ---
     enrich <- shiny::reactive({
       shiny::req(
-        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
       )
       shiny::validate(
         shiny::need(
@@ -894,8 +910,8 @@ ddedde_app <- function(deedee_obj = NULL) {
         )
       )
 
-      sel1 <- match(input$scatter_select1, names(mydata_use()))
-      sel2 <- match(input$scatter_select2, names(mydata_use()))
+      sel1 <- match(input$in_scatter_select1, names(mydata_use()))
+      sel2 <- match(input$in_scatter_select2, names(mydata_use()))
       shiny::req(sel1)
       shiny::req(sel2)
       data <- list(mydata_use()[[sel1]], mydata_use()[[sel2]])
@@ -903,7 +919,7 @@ ddedde_app <- function(deedee_obj = NULL) {
       res <- ora(
         geneList = scatter_brushed(),
         universe = data,
-        orgDB = input$organism,
+        orgDB = input$in_organism,
         key_type = input$key_type
       )
       shiny::validate(
@@ -943,7 +959,7 @@ ddedde_app <- function(deedee_obj = NULL) {
       print(plt)
     })
 
-    output$ora_download <- shiny::downloadHandler(
+    output$btn_ora_download <- shiny::downloadHandler(
       filename = "enrichment_results.RDS",
       content = function(file) {
         shiny::req(!is.null(enrich()))
@@ -951,7 +967,7 @@ ddedde_app <- function(deedee_obj = NULL) {
       }
     )
 
-    # ------------------------------- heatmap ----------------------------------
+    # server - heatmap ---------------------------------------------------------
     output$heatmap_errors <- shiny::renderText({
       shiny::validate(
         shiny::need(
@@ -976,18 +992,18 @@ ddedde_app <- function(deedee_obj = NULL) {
 
     heatmap_output <- shiny::reactive({
       shiny::req(
-        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
       )
-      shiny::req(input$heatmap_show_first)
+      shiny::req(input$in_heatmap_show_first)
       shiny::req(mydata_use())
       res <- deedee_heatmap(
         mydata_use(),
-        show_first = input$heatmap_show_first,
-        show_gene_names = input$heatmap_show_gene_names,
-        dist = input$heatmap_dist,
-        clust = input$heatmap_clust,
-        pthresh = input$heatmap_pthresh,
-        show_na = input$heatmap_showNA
+        show_first = input$in_heatmap_show_first,
+        show_gene_names = input$in_heatmap_show_gene_names,
+        dist = input$in_heatmap_dist,
+        clust = input$in_heatmap_clust,
+        pthresh = input$in_heatmap_pthresh,
+        show_na = input$in_heatmap_showNA
       )
       shiny::validate(
         shiny::need(!is.null(res), "No common genes in input datasets.")
@@ -1000,12 +1016,12 @@ ddedde_app <- function(deedee_obj = NULL) {
 
     listen <- shiny::reactive({
       list(
-        input$heatmap_show_first,
-        input$heatmap_show_gene_names,
-        input$heatmap_dist,
-        input$heatmap_clust,
-        input$heatmap_pthresh,
-        input$heatmap_showNA,
+        input$in_heatmap_show_first,
+        input$in_heatmap_show_gene_names,
+        input$in_heatmap_dist,
+        input$in_heatmap_clust,
+        input$in_heatmap_pthresh,
+        input$in_heatmap_showNA,
         mydata_use()
       )
     })
@@ -1041,7 +1057,7 @@ ddedde_app <- function(deedee_obj = NULL) {
       )
     })
 
-    shiny::observeEvent(input$heatmap_action, {
+    shiny::observeEvent(input$btn_heatmap_action, {
       shiny::req(length(mydata_use()) >= 2)
       global$notify <- FALSE
       InteractiveComplexHeatmap::makeInteractiveComplexHeatmap(
@@ -1054,8 +1070,8 @@ ddedde_app <- function(deedee_obj = NULL) {
     })
 
 
-    # -------------------------------- venn ------------------------------------
-    output$venn <- shiny::renderPlot({
+    # server - venn ------------------------------------------------------------
+    output$plot_deedee_venn <- shiny::renderPlot({
       shiny::validate(
         shiny::need(
           length(mydata()@DeeDeeList) >= 2,
@@ -1069,10 +1085,13 @@ ddedde_app <- function(deedee_obj = NULL) {
         )
       )
 
-      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
-      res <- deedee_venn(mydata_use(),
-                         mode = input$venn_mode,
-                         pthresh = input$venn_pthresh
+      shiny::req(
+        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      )
+      res <- deedee_venn(
+        mydata_use(),
+        mode = input$in_venn_mode,
+        pthresh = input$in_venn_pthresh
       )
 
       shiny::validate(
@@ -1086,8 +1105,8 @@ ddedde_app <- function(deedee_obj = NULL) {
     })
 
 
-    # -------------------------------- upset -----------------------------------
-    output$upset <- shiny::renderPlot({
+    # server - upset -----------------------------------------------------------
+    output$plot_deedee_upset <- shiny::renderPlot({
       shiny::validate(
         shiny::need(
           length(mydata()@DeeDeeList) >= 2,
@@ -1101,16 +1120,20 @@ ddedde_app <- function(deedee_obj = NULL) {
         )
       )
 
-      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
-      if (input$upset_mode == "both" && input$upset_colored) {
+      shiny::req(
+        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      )
+      if (input$in_upset_mode == "both" && input$in_upset_colored) {
         mode <- "both_colored"
       } else {
-        mode <- input$upset_mode
+        mode <- input$in_upset_mode
       }
-      res <- deedee_upset(mydata_use(),
-                          mode = mode,
-                          pthresh = input$upset_pthresh,
-                          min_setsize = input$upset_minset
+
+      res <- deedee_upset(
+        mydata_use(),
+        mode = mode,
+        pthresh = input$in_upset_pthresh,
+        min_setsize = input$in_upset_minset
       )
 
       shiny::validate(
@@ -1123,42 +1146,42 @@ ddedde_app <- function(deedee_obj = NULL) {
     })
 
 
-    # --------------------------------- qq -------------------------------------
-    output$qq_choices1 <- shiny::renderUI({
+    # server - qq --------------------------------------------------------------
+    output$ui_qq_choices1 <- shiny::renderUI({
       shiny::req(
-        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
       )
       shiny::selectInput(
-        inputId = "qq_select1",
+        inputId = "in_qq_select1",
         label = "1st data set",
         choices = names(mydata_use())
       )
     })
 
-    output$qq_choices2 <- shiny::renderUI({
+    output$ui_qq_choices2 <- shiny::renderUI({
       shiny::req(
-        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
       )
       shiny::selectInput(
-        inputId = "qq_select2",
+        inputId = "in_qq_select2",
         label = "2nd data set",
         selected = names(mydata_use())[2],
         choices = names(mydata_use())
       )
     })
 
-    output$qq_ref <- shiny::renderUI({
+    output$ui_qq_ref <- shiny::renderUI({
       shiny::req(
-        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
       )
       shiny::selectInput(
-        inputId = "qq_reference",
+        inputId = "in_qq_reference",
         label = "Reference",
         choices = names(mydata_use())
       )
     })
 
-    output$qq <- shiny::renderPlot({
+    output$plot_deedee_qq <- shiny::renderPlot({
       shiny::validate(
         shiny::need(
           length(mydata()@DeeDeeList) >= 2,
@@ -1173,19 +1196,19 @@ ddedde_app <- function(deedee_obj = NULL) {
       )
 
       shiny::req(
-        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
       )
-      sel1 <- match(input$qq_select1, names(mydata_use()))
-      sel2 <- match(input$qq_select2, names(mydata_use()))
+      sel1 <- match(input$in_qq_select1, names(mydata_use()))
+      sel2 <- match(input$in_qq_select2, names(mydata_use()))
       shiny::req(sel1)
       shiny::req(sel2)
       res <- deedee_qq(
         mydata_use(),
         select1 = sel1,
         select2 = sel2,
-        color_by = input$qq_color_by,
-        pthresh = input$qq_pthresh,
-        as_line = input$qq_line
+        color_by = input$in_qq_color_by,
+        pthresh = input$in_qq_pthresh,
+        as_line = input$in_qq_line
       )
 
       shiny::validate(
@@ -1198,7 +1221,7 @@ ddedde_app <- function(deedee_obj = NULL) {
       res
     })
 
-    output$qq_mult <- shiny::renderPlot({
+    output$plot_deedee_qq_mult <- shiny::renderPlot({
       shiny::validate(
         shiny::need(
           length(mydata()@DeeDeeList) >= 2,
@@ -1213,14 +1236,14 @@ ddedde_app <- function(deedee_obj = NULL) {
       )
 
       shiny::req(
-        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
       )
-      ref <- match(input$qq_reference, names(mydata_use()))
+      ref <- match(input$in_qq_reference, names(mydata_use()))
       shiny::req(ref)
       res <- deedee_qqmult(
         mydata_use(),
         ref = ref,
-        pthresh = input$qq_pthresh
+        pthresh = input$in_qq_pthresh
       )
 
       shiny::validate(
@@ -1235,12 +1258,12 @@ ddedde_app <- function(deedee_obj = NULL) {
 
     qq_brushed <- shiny::reactive({
       shiny::req(input$qq_brush)
-      x <- mydata()@DeeDeeList[[input$qq_select1]]$logFC
-      y <- mydata()@DeeDeeList[[input$qq_select2]]$logFC
-      pval1 <- mydata()@DeeDeeList[[input$qq_select2]]$pval
-      pval2 <- mydata()@DeeDeeList[[input$qq_select2]]$pval
-      names(x) <- row.names(mydata()@DeeDeeList[[input$qq_select2]])
-      names(y) <- row.names(mydata()@DeeDeeList[[input$qq_select2]])
+      x <- mydata()@DeeDeeList[[input$in_qq_select1]]$logFC
+      y <- mydata()@DeeDeeList[[input$in_qq_select2]]$logFC
+      pval1 <- mydata()@DeeDeeList[[input$in_qq_select2]]$pval
+      pval2 <- mydata()@DeeDeeList[[input$in_qq_select2]]$pval
+      names(x) <- row.names(mydata()@DeeDeeList[[input$in_qq_select2]])
+      names(y) <- row.names(mydata()@DeeDeeList[[input$in_qq_select2]])
 
       sx_idx <- order(x)
       sy_idx <- order(y)
@@ -1273,16 +1296,16 @@ ddedde_app <- function(deedee_obj = NULL) {
       )
 
       names(qq) <- c(
-        paste(input$qq_select1, "gene", sep = "."),
-        paste(input$qq_select1, "logFC", sep = "."),
-        paste(input$qq_select1, "pval", sep = "."),
-        paste(input$qq_select2, "gene", sep = "."),
-        paste(input$qq_select2, "logFC", sep = "."),
-        paste(input$qq_select2, "pval", sep = ".")
+        paste(input$in_qq_select1, "gene", sep = "."),
+        paste(input$in_qq_select1, "logFC", sep = "."),
+        paste(input$in_qq_select1, "pval", sep = "."),
+        paste(input$in_qq_select2, "gene", sep = "."),
+        paste(input$in_qq_select2, "logFC", sep = "."),
+        paste(input$in_qq_select2, "pval", sep = ".")
       )
 
-      temp1 <- paste(input$qq_select1, "logFC", sep = ".")
-      temp2 <- paste(input$qq_select2, "logFC", sep = ".")
+      temp1 <- paste(input$in_qq_select1, "logFC", sep = ".")
+      temp2 <- paste(input$in_qq_select2, "logFC", sep = ".")
 
       shiny::brushedPoints(
         df = qq,
@@ -1300,7 +1323,7 @@ ddedde_app <- function(deedee_obj = NULL) {
       rownames = FALSE
     )
 
-    output$qq_brush_download <- shiny::downloadHandler(
+    output$btn_qq_brush_download <- shiny::downloadHandler(
       filename = "qq_brushed_genes.xlsx",
       content = function(file) {
         shiny::req(input$qq_brush)
@@ -1324,20 +1347,20 @@ ddedde_app <- function(deedee_obj = NULL) {
     )
 
 
-    # --------------------------------- cat ------------------------------------
-    output$cat_choice <- shiny::renderUI({
+    # server - cat -------------------------------------------------------------
+    output$ui_cat_choice <- shiny::renderUI({
       shiny::req(
-        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
       )
       shiny::selectInput(
-        inputId = "cat_ref",
+        inputId = "in_cat_ref",
         label = "Reference contrast",
         selected = names(mydata_use())[1],
         choices = names(mydata_use())
       )
     })
 
-    output$cat <- shiny::renderPlot({
+    output$plot_deedee_cat <- shiny::renderPlot({
       shiny::validate(
         shiny::need(
           length(mydata()@DeeDeeList) >= 2,
@@ -1352,18 +1375,18 @@ ddedde_app <- function(deedee_obj = NULL) {
       )
 
       shiny::req(
-        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
       )
-      shiny::req(input$cat_maxrank)
-      shiny::req(input$cat_ref)
+      shiny::req(input$in_cat_maxrank)
+      shiny::req(input$in_cat_ref)
 
-      ref <- match(input$cat_ref, names(mydata_use()))
+      ref <- match(input$in_cat_ref, names(mydata_use()))
       res <- deedee_cat(
         mydata_use(),
         ref = ref,
-        maxrank = input$cat_maxrank,
-        mode = input$cat_mode,
-        pthresh = input$cat_pthresh
+        maxrank = input$in_cat_maxrank,
+        mode = input$in_cat_mode,
+        pthresh = input$in_cat_pthresh
       )
 
       shiny::validate(
@@ -1376,10 +1399,10 @@ ddedde_app <- function(deedee_obj = NULL) {
       res
     })
 
-    # ------------------------------- summary ----------------------------------
-    output$sum_scatter_choices1 <- shiny::renderUI({
+    # server - summary ---------------------------------------------------------
+    output$ui_sum_scatter_choices1 <- shiny::renderUI({
       shiny::req(
-        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
       )
       shiny::selectInput(
         inputId = "sum_scatter_select1",
@@ -1388,9 +1411,9 @@ ddedde_app <- function(deedee_obj = NULL) {
       )
     })
 
-    output$sum_scatter_choices2 <- shiny::renderUI({
+    output$ui_sum_scatter_choices2 <- shiny::renderUI({
       shiny::req(
-        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
       )
       shiny::selectInput(
         inputId = "sum_scatter_select2",
@@ -1400,9 +1423,9 @@ ddedde_app <- function(deedee_obj = NULL) {
       )
     })
 
-    output$sum_qq_ref <- shiny::renderUI({
+    output$ui_sum_qq_ref <- shiny::renderUI({
       shiny::req(
-        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
       )
       shiny::selectInput(
         inputId = "sum_qqmult_ref",
@@ -1412,9 +1435,9 @@ ddedde_app <- function(deedee_obj = NULL) {
       )
     })
 
-    output$sum_cat_choice <- shiny::renderUI({
+    output$ui_sum_cat_choice <- shiny::renderUI({
       shiny::req(
-        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
       )
       shiny::selectInput(
         inputId = "sum_cat_ref",
@@ -1508,7 +1531,7 @@ ddedde_app <- function(deedee_obj = NULL) {
       }
     )
 
-    output$show_html_summary <- shiny::renderUI({
+    output$ui_show_html_summary <- shiny::renderUI({
       shiny::req(summary())
 
       out <- tempfile(fileext = ".html")
@@ -1522,7 +1545,7 @@ ddedde_app <- function(deedee_obj = NULL) {
   }
 
 
-  # ------------------------------ run application -------------------------------
-  shiny::shinyOptions(deedee_obj = deedee_obj)
+  # launch app -----------------------------------------------------------------
+  # shiny::shinyOptions(deedee_obj = deedee_obj)
   shiny::shinyApp(ui = deedee_ui, server = deedee_server)
 }
