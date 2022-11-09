@@ -22,5 +22,26 @@ dea: the named list, as for the main constructor
 Title
 }
 \examples{
-# todo
+data("de_named_list", package = "DeeDee")
+library("SummarizedExperiment")
+
+rd_macrophage <- DataFrame(
+  gene_id = rownames(del$ifng_vs_naive))
+rownames(rd_macrophage) <- rownames(del$ifng_vs_naive)
+se_macrophage_noassays <- SummarizedExperiment(
+  assays = SimpleList(),
+  rowData = rd_macrophage
+)
+dde <- DeeDeeExperiment(
+  se_macrophage_noassays,
+  del
+)
+dde
+
+new_del <- list(
+  ifng2 = del$ifng_vs_naive,
+  ifngsalmo2 = del$ifngsalmo_vs_naive
+)
+# add a new (set of) DE result(s)
+dde_new <- add_dea(dde, new_del)
 }

@@ -6,10 +6,11 @@
 \alias{DeeDeeExperiment}
 \title{DeeDeeExperiment}
 \usage{
-DeeDeeExperiment(se, de_results)
+DeeDeeExperiment(..., de_results)
 }
 \arguments{
-\item{se}{ssss}
+\item{...}{Arguments passed to the \code{\link{SummarizedExperiment}}
+constructor to fill the slots of the base class.}
 
 \item{de_results}{ssss}
 }

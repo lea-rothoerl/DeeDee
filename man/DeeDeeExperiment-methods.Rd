@@ -6,7 +6,7 @@
 \alias{dea<-}
 \alias{dea,DeeDeeExperiment-method}
 \alias{dea<-,DeeDeeExperiment,list-method}
-\title{Methods for deedee exps}
+\title{Methods for DeeDeeExperiment objects}
 \usage{
 \S4method{dea}{DeeDeeExperiment}(x)
 
