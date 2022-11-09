@@ -165,19 +165,78 @@ deedee_import <- function(x) {
 #' @export
 #'
 #' @examples
-#' # todo
+#' data("de_named_list", package = "DeeDee")
+#' library("SummarizedExperiment")
+#'
+#' rd_macrophage <- DataFrame(
+#'   gene_id = rownames(del$ifng_vs_naive))
+#' rownames(rd_macrophage) <- rownames(del$ifng_vs_naive)
+#' se_macrophage_noassays <- SummarizedExperiment(
+#'   assays = SimpleList(),
+#'   rowData = rd_macrophage
+#' )
+#' dde <- DeeDeeExperiment(
+#'   se_macrophage_noassays,
+#'   del
+#' )
+#' dde
+#'
+#' new_del <- list(
+#'   ifng2 = del$ifng_vs_naive,
+#'   ifngsalmo2 = del$ifngsalmo_vs_naive
+#' )
+#' # add a new (set of) DE result(s)
+#' dde_new <- add_dea(dde, new_del)
 add_dea <- function(dde, dea) {
   # dde must be a DeeDeeExp
   # dea must be named list
 
   # check that names are all unique, and do not overlap with the existing ones
+  names(dea)
+  names(dea(dde))
+
+  dea_contrasts <- dea(dde)
+  dde_ids <- rownames(dde)
 
   # update rowData, naming them correctly
+  for (i in names(dea)){
+    this_de <- dea[[i]]
 
+    # do different things according to what these objects are
+    if(is(this_de, "DESeqResults")) {
+      matched_ids <- match(rownames(dde), dde_ids)
+
+      # if not tested, add NA - everywhere? -> pre-fill?
+      rowData(dde)[[paste0(i,"_log2FoldChange")]] <- NA
+      rowData(dde)[[paste0(i,"_pvalue")]] <- NA
+      rowData(dde)[[paste0(i,"_padj")]] <- NA
+
+      rowData(dde)[[paste0(i,"_log2FoldChange")]][matched_ids] <- this_de$log2FoldChange
+      rowData(dde)[[paste0(i,"_pvalue")]][matched_ids] <- this_de$pvalue
+      rowData(dde)[[paste0(i,"_padj")]][matched_ids] <- this_de$padj
+
+      dea_contrasts[[i]] <- list(
+        alpha = metadata(this_de)$alpha,
+        lfcThreshold = metadata(this_de)$lfcThreshold,
+        metainfo_logFC = mcols(this_de)$description[colnames(this_de) == "log2FoldChange"],
+        metainfo_pvalue = mcols(this_de)$description[colnames(this_de) == "pvalue"],
+        original_object = this_de,
+        package = "DESeq2"
+      )
+    }
+  }
   # update the deslot
+  ## TODO should be a replacement operator?
+  dea(dde) <- dea_contrasts
+
+  # here check some validity?
+  # TODO
 
   # return the object
+  return(dde)
 }
+
+# TODO: might need one where I also simply add ONE single DE object, and that gets autoconverted to a named list (of length 1)
 
 
 #' Title
