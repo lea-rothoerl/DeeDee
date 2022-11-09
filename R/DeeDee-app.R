@@ -577,7 +577,7 @@ deedee_app <- function(deedee_obj = NULL) {
       res <- list()
 
       if (!is.null(deedee_obj)) {
-        if (class(deedee_obj) == "DeeDeeObject") {
+        if (is(deedee_obj, "DeeDeeObject")) {
           ext[1] <- "arg"
           # df <- data.frame(filename, type, contrast, genes)
           res[[1]] <- deedee_obj@DeeDeeList
