@@ -31,7 +31,7 @@
 #' if (interactive()) {
 #'   # deedee_app(dd_list)
 #' }
-deedee_app <- function(deedee_obj = NULL) {
+ddedde_app <- function(deedee_obj = NULL) {
 
   # ----------------------------------------------------------------------------
   # --------------------------------- U I --------------------------------------
