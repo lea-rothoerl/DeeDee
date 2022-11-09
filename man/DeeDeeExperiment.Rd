@@ -6,7 +6,7 @@
 \alias{DeeDeeExperiment}
 \title{DeeDeeExperiment}
 \usage{
-DeeDeeExperiment(..., de_results)
+DeeDeeExperiment(..., de_results = NULL)
 }
 \arguments{
 \item{...}{Arguments passed to the \code{\link{SummarizedExperiment}}
