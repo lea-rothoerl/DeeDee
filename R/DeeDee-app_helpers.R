@@ -194,7 +194,7 @@ input_infobox <- function(deedee_obj,
       if (is(res[[i]], "DESeqResults") ||
           is(res[[i]], "DGEExact") ||
           length(names(res[[i]])) == 6 ||
-          is(res[[i]]), "DeeDeeObject") {
+          is(res[[i]], "DeeDeeObject")) {
         count <- count + 1
         type[count] <- class(res[[i]])
         filename[count] <- sets[i, "name"]
