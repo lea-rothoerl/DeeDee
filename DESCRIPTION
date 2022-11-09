@@ -63,7 +63,6 @@ Suggests:
     org.Rn.eg.db,
     org.Dm.eg.db,
     testthat (>= 3.0.0)
-Config/testthat/edition: 3
 VignetteBuilder: knitr
 biocViews: GUI, GeneExpression, Software, Transcription, Transcriptomics, 
     Visualization, DifferentialExpression
