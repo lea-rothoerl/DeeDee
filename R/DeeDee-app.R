@@ -4,7 +4,7 @@
 #' the functionalities of all other DeeDee functions with a user-friendly
 #' graphical user interface.
 #'
-#' @param dde An object of the class DeeDeeExperiment to be analyzed.
+#' @param deedee_obj An object of the class DeeDeeExperiment to be analyzed.
 #'
 #' @return A shiny app
 #' @export
@@ -32,7 +32,7 @@
 #'   # deedee_app(dd_list)
 #'   # ddedde_app(dde)
 #' }
-ddedde_app <- function(dde = NULL) {
+ddedde_app <- function(deedee_obj = NULL) {
 
 
   # UI definition -----------------------------------------------------------
@@ -662,13 +662,15 @@ ddedde_app <- function(dde = NULL) {
         for (i in (length(ext) + 1):(length(input$inp[, 1]) + length(ext))) {
           k <- k + 1
           ext[i] <- tools::file_ext(input$inp[k, "datapath"])
-          shiny::validate(shiny::need(
-            ext[[i]] == "rds" ||
-              ext[[i]] == "RDS" ||
-              ext[[i]] == "xlsx" ||
-              ext[[i]] == "txt",
-            "Please upload only .RDS, .xlsx or .txt files"
-          ))
+          shiny::validate(
+            shiny::need(
+              ext[[i]] == "rds" ||
+                ext[[i]] == "RDS" ||
+                ext[[i]] == "xlsx" ||
+                ext[[i]] == "txt",
+              "Please upload only .RDS, .xlsx or .txt files"
+            )
+          )
 
           # .RDS input
           if (ext[[i]] == "rds" || ext[[i]] == "RDS") {
@@ -687,10 +689,8 @@ ddedde_app <- function(dde = NULL) {
           } else if (ext[[i]] == "txt") {
             temp <- utils::read.table(input$inp[[k, "datapath"]])
             res[[i]] <- list(temp)
-            names(res[[i]]) <- unlist(strsplit(input$inp[k, "name"],
-                                               split = ".",
-                                               fixed = TRUE
-            ))[1]
+            names(res[[i]]) <-
+              unlist(strsplit(input$inp[k, "name"], split = ".", fixed = TRUE))[1]
           } else {
             return(NULL)
           }
@@ -712,11 +712,14 @@ ddedde_app <- function(dde = NULL) {
     })
 
     output$datasets <- shiny::renderUI({
-      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
-      shiny::checkboxGroupInput("select_datasets",
-                                "Select datasets to be used",
-                                choices = names(mydata()@DeeDeeList),
-                                selected = names(mydata()@DeeDeeList)
+      shiny::req(
+        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+      )
+      shiny::checkboxGroupInput(
+        inputId = "select_datasets",
+        label = "Select datasets to be used",
+        choices = names(mydata()@DeeDeeList),
+        selected = names(mydata()@DeeDeeList)
       )
     })
 
@@ -747,9 +750,11 @@ ddedde_app <- function(dde = NULL) {
 
       shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
 
-      input_infobox(deedee_obj = deedee_obj,
-                    sets = input$inp,
-                    md = mydata())
+      input_infobox(
+        deedee_obj = deedee_obj,
+        sets = input$inp,
+        md = mydata()
+      )
     })
 
 
@@ -757,23 +762,28 @@ ddedde_app <- function(dde = NULL) {
     # --- selectors ---
     output$scatter_choices1 <- shiny::renderUI({
       shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
-      shiny::selectInput("scatter_select1",
-                         "1st data set",
-                         choices = names(mydata_use())
+      shiny::selectInput(
+        inputId = "scatter_select1",
+        label = "1st data set",
+        choices = names(mydata_use())
       )
     })
 
     output$scatter_choices2 <- shiny::renderUI({
       shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
-      shiny::selectInput("scatter_select2",
-                         "2nd data set",
-                         selected = names(mydata_use())[2],
-                         choices = names(mydata_use())
+      shiny::selectInput(
+        inputId = "scatter_select2",
+        label = "2nd data set",
+        selected = names(mydata_use())[2],
+        choices = names(mydata_use())
       )
     })
 
     # --- plot output ---
-    ranges <- shiny::reactiveValues(x = NULL, y = NULL)
+    ranges <- shiny::reactiveValues(
+      x = NULL,
+      y = NULL
+    )
 
     output$scatter <- shiny::renderPlot({
       shiny::validate(
@@ -793,12 +803,14 @@ ddedde_app <- function(dde = NULL) {
       sel2 <- match(input$scatter_select2, names(mydata_use()))
       shiny::req(sel1)
       shiny::req(sel2)
-      res <- deedee_scatter(mydata_use(),
-                            select1 = sel1,
-                            select2 = sel2,
-                            color_by = input$scatter_color_by,
-                            pthresh = input$scatter_pthresh
+      res <- deedee_scatter(
+        mydata_use(),
+        select1 = sel1,
+        select2 = sel2,
+        color_by = input$scatter_color_by,
+        pthresh = input$scatter_pthresh
       )
+
       shiny::validate(
         shiny::need(!is.null(res), "No common genes in input datasets.")
       )
@@ -831,10 +843,11 @@ ddedde_app <- function(dde = NULL) {
         paste(input$scatter_select2, ".logFC", sep = ""),
         paste(input$scatter_select2, ".pval", sep = "")
       )
-      shiny::brushedPoints(df,
-                           input$scatter_brush,
-                           xvar = paste(input$scatter_select1, ".logFC", sep = ""),
-                           yvar = paste(input$scatter_select2, ".logFC", sep = "")
+      shiny::brushedPoints(
+        df,
+        input$scatter_brush,
+        xvar = paste(input$scatter_select1, ".logFC", sep = ""),
+        yvar = paste(input$scatter_select2, ".logFC", sep = "")
       )
     })
 
@@ -871,47 +884,62 @@ ddedde_app <- function(dde = NULL) {
 
     # --- enrich ---
     enrich <- shiny::reactive({
-      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
-      shiny::validate(shiny::need(
-        scatter_brushed(),
-        "No brushed genes."
-      ))
+      shiny::req(
+        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+      )
+      shiny::validate(
+        shiny::need(
+          scatter_brushed(),
+          "No brushed genes."
+        )
+      )
+
       sel1 <- match(input$scatter_select1, names(mydata_use()))
       sel2 <- match(input$scatter_select2, names(mydata_use()))
       shiny::req(sel1)
       shiny::req(sel2)
       data <- list(mydata_use()[[sel1]], mydata_use()[[sel2]])
+
       res <- ora(
         geneList = scatter_brushed(),
         universe = data,
         orgDB = input$organism,
         key_type = input$key_type
       )
-      shiny::validate(shiny::need(
-        class(res) == "enrichResult",
-        "Not working."
-      ))
+      shiny::validate(
+        shiny::need(
+          class(res) == "enrichResult",
+          "Not working."
+        )
+      )
 
       return(res)
     })
 
     output$scatter_ora <- shiny::renderPlot({
-      shiny::validate(shiny::need(
-        !is.null(enrich()),
-        "Something went wrong..."
-      ))
+      shiny::validate(
+        shiny::need(
+          !is.null(enrich()),
+          "Something went wrong..."
+        )
+      )
       en <- enrich()
       en_df <- as.data.frame(en)
-      shiny::validate(shiny::need(
-        nrow(en_df) > 0,
-        "No enriched terms found."
-      ))
+      shiny::validate(
+        shiny::need(
+          nrow(en_df) > 0,
+          "No enriched terms found."
+        )
+      )
+
       options(ggrepel.max.overlaps = Inf)
       plt <- enrichplot::emapplot(enrichplot::pairwise_termsim(en))
-      shiny::validate(shiny::need(
-        !is.null(plt),
-        "No enriched terms found."
-      ))
+      shiny::validate(
+        shiny::need(
+          !is.null(plt),
+          "No enriched terms found."
+        )
+      )
       print(plt)
     })
 
@@ -947,16 +975,19 @@ ddedde_app <- function(dde = NULL) {
     })
 
     heatmap_output <- shiny::reactive({
-      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
+      shiny::req(
+        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+      )
       shiny::req(input$heatmap_show_first)
       shiny::req(mydata_use())
-      res <- deedee_heatmap(mydata_use(),
-                            show_first = input$heatmap_show_first,
-                            show_gene_names = input$heatmap_show_gene_names,
-                            dist = input$heatmap_dist,
-                            clust = input$heatmap_clust,
-                            pthresh = input$heatmap_pthresh,
-                            show_na = input$heatmap_showNA
+      res <- deedee_heatmap(
+        mydata_use(),
+        show_first = input$heatmap_show_first,
+        show_gene_names = input$heatmap_show_gene_names,
+        dist = input$heatmap_dist,
+        clust = input$heatmap_clust,
+        pthresh = input$heatmap_pthresh,
+        show_na = input$heatmap_showNA
       )
       shiny::validate(
         shiny::need(!is.null(res), "No common genes in input datasets.")
@@ -988,23 +1019,25 @@ ddedde_app <- function(dde = NULL) {
     shiny::observeEvent(input$tabs, {
       if (input$tabs == "Heatmap") {
         if (global$notify == TRUE) {
-          shiny::showNotification("Something changed. Click 'Create heatmap' to reload.",
-                                  duration = NULL,
-                                  type = "warning",
-                                  id = "heatmap_warning"
+          shiny::showNotification(
+            ui = "Something changed. Click 'Create heatmap' to reload.",
+            duration = NULL,
+            type = "warning",
+            id = "heatmap_warning"
           )
         }
       } else {
-        shiny::removeNotification("heatmap_warning")
+        shiny::removeNotification(id = "heatmap_warning")
       }
     })
 
     shiny::observeEvent(listen(), {
       req(input$tabs == "Heatmap")
-      shiny::showNotification("Something changed. Click 'Create heatmap' to reload.",
-                              duration = NULL,
-                              type = "warning",
-                              id = "heatmap_warning"
+      shiny::showNotification(
+        ui = "Something changed. Click 'Create heatmap' to reload.",
+        duration = NULL,
+        type = "warning",
+        id = "heatmap_warning"
       )
     })
 
@@ -1092,27 +1125,36 @@ ddedde_app <- function(dde = NULL) {
 
     # --------------------------------- qq -------------------------------------
     output$qq_choices1 <- shiny::renderUI({
-      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
-      shiny::selectInput("qq_select1",
-                         "1st data set",
-                         choices = names(mydata_use())
+      shiny::req(
+        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+      )
+      shiny::selectInput(
+        inputId = "qq_select1",
+        label = "1st data set",
+        choices = names(mydata_use())
       )
     })
 
     output$qq_choices2 <- shiny::renderUI({
-      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
-      shiny::selectInput("qq_select2",
-                         "2nd data set",
-                         selected = names(mydata_use())[2],
-                         choices = names(mydata_use())
+      shiny::req(
+        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+      )
+      shiny::selectInput(
+        inputId = "qq_select2",
+        label = "2nd data set",
+        selected = names(mydata_use())[2],
+        choices = names(mydata_use())
       )
     })
 
     output$qq_ref <- shiny::renderUI({
-      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
-      shiny::selectInput("qq_reference",
-                         "Reference",
-                         choices = names(mydata_use())
+      shiny::req(
+        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+      )
+      shiny::selectInput(
+        inputId = "qq_reference",
+        label = "Reference",
+        choices = names(mydata_use())
       )
     })
 
@@ -1130,17 +1172,20 @@ ddedde_app <- function(dde = NULL) {
         )
       )
 
-      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
+      shiny::req(
+        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+      )
       sel1 <- match(input$qq_select1, names(mydata_use()))
       sel2 <- match(input$qq_select2, names(mydata_use()))
       shiny::req(sel1)
       shiny::req(sel2)
-      res <- deedee_qq(mydata_use(),
-                       select1 = sel1,
-                       select2 = sel2,
-                       color_by = input$qq_color_by,
-                       pthresh = input$qq_pthresh,
-                       as_line = input$qq_line
+      res <- deedee_qq(
+        mydata_use(),
+        select1 = sel1,
+        select2 = sel2,
+        color_by = input$qq_color_by,
+        pthresh = input$qq_pthresh,
+        as_line = input$qq_line
       )
 
       shiny::validate(
@@ -1167,12 +1212,15 @@ ddedde_app <- function(dde = NULL) {
         )
       )
 
-      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
+      shiny::req(
+        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+      )
       ref <- match(input$qq_reference, names(mydata_use()))
       shiny::req(ref)
-      res <- deedee_qqmult(mydata_use(),
-                           ref = ref,
-                           pthresh = input$qq_pthresh
+      res <- deedee_qqmult(
+        mydata_use(),
+        ref = ref,
+        pthresh = input$qq_pthresh
       )
 
       shiny::validate(
@@ -1236,10 +1284,11 @@ ddedde_app <- function(dde = NULL) {
       temp1 <- paste(input$qq_select1, "logFC", sep = ".")
       temp2 <- paste(input$qq_select2, "logFC", sep = ".")
 
-      shiny::brushedPoints(qq,
-                           input$qq_brush,
-                           xvar = temp1,
-                           yvar = temp2
+      shiny::brushedPoints(
+        df = qq,
+        brush = input$qq_brush,
+        xvar = temp1,
+        yvar = temp2
       )
     })
 
@@ -1277,11 +1326,14 @@ ddedde_app <- function(dde = NULL) {
 
     # --------------------------------- cat ------------------------------------
     output$cat_choice <- shiny::renderUI({
-      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
-      shiny::selectInput("cat_ref",
-                         "Reference contrast",
-                         selected = names(mydata_use())[1],
-                         choices = names(mydata_use())
+      shiny::req(
+        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+      )
+      shiny::selectInput(
+        inputId = "cat_ref",
+        label = "Reference contrast",
+        selected = names(mydata_use())[1],
+        choices = names(mydata_use())
       )
     })
 
@@ -1299,16 +1351,19 @@ ddedde_app <- function(dde = NULL) {
         )
       )
 
-      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
+      shiny::req(
+        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+      )
       shiny::req(input$cat_maxrank)
       shiny::req(input$cat_ref)
 
       ref <- match(input$cat_ref, names(mydata_use()))
-      res <- deedee_cat(mydata_use(),
-                        ref = ref,
-                        maxrank = input$cat_maxrank,
-                        mode = input$cat_mode,
-                        pthresh = input$cat_pthresh
+      res <- deedee_cat(
+        mydata_use(),
+        ref = ref,
+        maxrank = input$cat_maxrank,
+        mode = input$cat_mode,
+        pthresh = input$cat_pthresh
       )
 
       shiny::validate(
@@ -1323,37 +1378,49 @@ ddedde_app <- function(dde = NULL) {
 
     # ------------------------------- summary ----------------------------------
     output$sum_scatter_choices1 <- shiny::renderUI({
-      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
-      shiny::selectInput("sum_scatter_select1",
-                         "1st data set",
-                         choices = names(mydata_use())
+      shiny::req(
+        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+      )
+      shiny::selectInput(
+        inputId = "sum_scatter_select1",
+        label = "1st data set",
+        choices = names(mydata_use())
       )
     })
 
     output$sum_scatter_choices2 <- shiny::renderUI({
-      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
-      shiny::selectInput("sum_scatter_select2",
-                         "2nd data set",
-                         selected = names(mydata_use())[2],
-                         choices = names(mydata_use())
+      shiny::req(
+        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+      )
+      shiny::selectInput(
+        inputId = "sum_scatter_select2",
+        label = "2nd data set",
+        selected = names(mydata_use())[2],
+        choices = names(mydata_use())
       )
     })
 
     output$sum_qq_ref <- shiny::renderUI({
-      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
-      shiny::selectInput("sum_qqmult_ref",
-                         "Reference",
-                         selected = names(mydata_use())[1],
-                         choices = names(mydata_use())
+      shiny::req(
+        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+      )
+      shiny::selectInput(
+        inputId = "sum_qqmult_ref",
+        label = "Reference",
+        selected = names(mydata_use())[1],
+        choices = names(mydata_use())
       )
     })
 
     output$sum_cat_choice <- shiny::renderUI({
-      shiny::req(shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj))
-      shiny::selectInput("sum_cat_ref",
-                         "Reference contrast",
-                         selected = names(mydata_use())[1],
-                         choices = names(mydata_use())
+      shiny::req(
+        shiny::isTruthy(input$inp) || shiny::isTruthy(deedee_obj)
+      )
+      shiny::selectInput(
+        inputId = "sum_cat_ref",
+        label = "Reference contrast",
+        selected = names(mydata_use())[1],
+        choices = names(mydata_use())
       )
     })
 
@@ -1405,27 +1472,28 @@ ddedde_app <- function(dde = NULL) {
       shiny::req(qq_ref)
       shiny::req(cat_ref)
 
-      deedee_summary(mydata_use(),
-                     output_path = outfile,
-                     overwrite = TRUE,
-                     pthresh = input$sum_pthresh,
-                     scatter_select1 = sc_sel1,
-                     scatter_select2 = sc_sel2,
-                     scatter_color_by = input$sum_scatter_color_by,
-                     heatmap_show_first = input$sum_heatmap_show_first,
-                     heatmap_show_gene_names = input$sum_heatmap_show_gene_names,
-                     heatmap_dist = input$sum_heatmap_dist,
-                     heatmap_clust = input$sum_heatmap_clust,
-                     heatmap_show_na = input$sum_heatmap_show_na,
-                     venn_mode = input$sum_venn_mode,
-                     upset_mode = ups_mode,
-                     upset_min_setsize = input$sum_upset_min_setsize,
-                     qqmult_ref = qq_ref,
-                     cat_ref = cat_ref,
-                     cat_maxrank = input$sum_cat_maxrank,
-                     cat_mode = input$sum_cat_mode,
-                     silent = TRUE,
-                     open_file = FALSE
+      deedee_summary(
+        mydata_use(),
+        output_path = outfile,
+        overwrite = TRUE,
+        pthresh = input$sum_pthresh,
+        scatter_select1 = sc_sel1,
+        scatter_select2 = sc_sel2,
+        scatter_color_by = input$sum_scatter_color_by,
+        heatmap_show_first = input$sum_heatmap_show_first,
+        heatmap_show_gene_names = input$sum_heatmap_show_gene_names,
+        heatmap_dist = input$sum_heatmap_dist,
+        heatmap_clust = input$sum_heatmap_clust,
+        heatmap_show_na = input$sum_heatmap_show_na,
+        venn_mode = input$sum_venn_mode,
+        upset_mode = ups_mode,
+        upset_min_setsize = input$sum_upset_min_setsize,
+        qqmult_ref = qq_ref,
+        cat_ref = cat_ref,
+        cat_maxrank = input$sum_cat_maxrank,
+        cat_mode = input$sum_cat_mode,
+        silent = TRUE,
+        open_file = FALSE
       )
 
       return(outfile)
