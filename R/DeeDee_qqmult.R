@@ -39,7 +39,7 @@ ddedde_qqmult <- function(dde,
   # checkmate::assert_number(pthresh, lower = 0, upper = 1)
   # checkmate::assert_number(ref, lower = 1, upper = length(data))
 
-  dea_list <- get_deas_list(dde)
+  dea_list <- get_dea_list(dde)
 
   output <- list()
   nm <- c()

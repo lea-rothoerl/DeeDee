@@ -49,8 +49,8 @@ ddedde_scatter <- function(dde,
   names1 <- dea_names[select1]
   names2 <- dea_names[select2]
 
-  de_1 <- get_dea(dde, names1)
-  de_2 <- get_dea(dde, names2)
+  de_1 <- get_dea_df(dde, names1)
+  de_2 <- get_dea_df(dde, names2)
   data_red <- list(
     tibble::rownames_to_column(as.data.frame(de_1)),
     tibble::rownames_to_column(as.data.frame(de_2))) # selected samples

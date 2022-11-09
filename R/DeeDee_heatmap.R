@@ -56,7 +56,7 @@ ddedde_heatmap <- function(dde,
   # checkmate::assert_choice(clust, choices2)
   # checkmate::assert_logical(show_na)
 
-  dea_list <- get_deas_list(dde)
+  dea_list <- get_dea_list(dde)
   # and then proceed as for the old implementation
 
   for (i in 1:length(dea_list)) {

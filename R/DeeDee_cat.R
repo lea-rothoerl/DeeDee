@@ -44,7 +44,7 @@ ddedde_cat <- function(dde,
   # choices <- c("up", "down", "both")
   # checkmate::assert_choice(mode, choices)
 
-  dea_list <- get_deas_list(dde)
+  dea_list <- get_dea_list(dde)
 
   for (i in 1:length(dea_list)) {
     dea_list[i][[1]] <- subset(

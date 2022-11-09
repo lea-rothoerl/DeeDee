@@ -40,7 +40,7 @@ ddedde_venn <- function(dde,
   # checkmate::assert_choice(mode, choices)
 
 
-  dea_list <- get_deas_list(dde)
+  dea_list <- get_dea_list(dde)
   for (i in 1:length(dea_list)) {
     dea_list[[i]] <- subset(
       dea_list[[i]],

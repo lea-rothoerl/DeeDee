@@ -47,7 +47,7 @@ ddedde_qq <- function(dde,
   # checkmate::assert_choice(color_by, choices)
 
 
-  dea_list <- get_deas_list(dde)
+  dea_list <- get_dea_list(dde)
 
   data_red <- list(dea_list[[select1]], dea_list[[select2]])
 
