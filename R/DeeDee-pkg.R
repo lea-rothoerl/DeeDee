@@ -35,7 +35,7 @@
 #' @importFrom stats approx complete.cases
 #' @importClassesFrom SummarizedExperiment RangedSummarizedExperiment
 #' @importFrom SummarizedExperiment rowData rowData<- mcols
-#' rowData rowData<-
+#' rowData rowData<- SummarizedExperiment
 #' @importFrom tibble column_to_rownames rownames_to_column
 #' @importFrom tools file_ext
 #' @importFrom utils read.table data packageVersion
