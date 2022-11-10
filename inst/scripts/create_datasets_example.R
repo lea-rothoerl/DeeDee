@@ -127,4 +127,5 @@ del <- list(
 # save(del, file = "data/de_named_list.RData", compress = "xz")
 data("de_named_list", package = "DeeDee")
 
+dde <- DeeDeeExperiment(se_macrophage_noassays, de_results = del)
 
