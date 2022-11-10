@@ -20,6 +20,7 @@ se_macrophage_noassays <- SummarizedExperiment(
   assays = SimpleList(),
   rowData = rownames(se_macrophage)
 )
+rownames(se_macrophage_noassays) <- rownames(se_macrophage)
 
 anno_df <- data.frame(
   gene_id = rownames(dds_macrophage),
@@ -40,10 +41,6 @@ keep <- rowSums(counts(dds_macrophage) >= 10) >= 6
 dds_macrophage <- dds_macrophage[keep, ]
 dds_unnormalized <- dds_macrophage
 
-se_macrophage_noassays <- SummarizedExperiment(
-  assays = SimpleList(),
-  rowData = rownames(se_macrophage)
-)
 
 
 dds_macrophage <- DESeq(dds_macrophage)
@@ -56,6 +53,7 @@ summary(res_macrophage_IFNg_vs_naive)
 res_macrophage_IFNg_vs_naive$SYMBOL <- rowData(dds_macrophage)$SYMBOL
 
 se_macrophage <- se_macrophage[keep, ]
+se_macrophage_noassays <- se_macrophage_noassays[keep, ]
 
 colData(se_macrophage)
 rowData(se_macrophage)
