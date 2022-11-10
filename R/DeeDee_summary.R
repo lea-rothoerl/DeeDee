@@ -1,5 +1,3 @@
-#' deedee_summary(dd_list_original)
-
 #' Title
 #'
 #' @param dde todo
@@ -44,6 +42,8 @@
 #'   de_results = del
 #' )
 #' dde
+#'
+#' # ddedde_summary(dde)
 ddedde_summary <- function(dde,
                            template = system.file("extdata",
                                                   "summary_template.Rmd",

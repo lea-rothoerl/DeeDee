@@ -1,8 +1,3 @@
-#' deedee_qqmult(dd_list_original, pthresh = 0.05, ref = 1)
-#' deedee_qqmult(dd_list_original, pthresh = 0.05, ref = 2)
-#' deedee_qqmult(dd_list_original, pthresh = 0.05, ref = 3)
-#' deedee_qqmult(dd_list_original, pthresh = 0.05, ref = 4)
-
 #' Title
 #'
 #' @param dde todo
@@ -28,6 +23,9 @@
 #'   de_results = del
 #' )
 #' dde
+#'
+#' ddedde_qqmult(dde, pthresh = 0.05, ref = 1)
+#'
 ddedde_qqmult <- function(dde,
                           ref = 1,
                           pthresh = 0.05) {

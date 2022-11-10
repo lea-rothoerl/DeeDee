@@ -1,6 +1,3 @@
-
-#' deedee_qq(dd_list_original, pthresh = 0.05, select = 1, select2 = 2, color_by = "pval1")
-
 #' Title
 #'
 #' @param dde todo
@@ -29,6 +26,9 @@
 #'   de_results = del
 #' )
 #' dde
+#'
+#' ddedde_qq(dde)
+#'
 ddedde_qq <- function(dde,
                       select1 = 1,
                       select2 = 2,

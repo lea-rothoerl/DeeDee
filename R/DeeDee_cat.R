@@ -1,6 +1,3 @@
-
-#' deedee_cat(dd_list_original, ref = 1, maxrank = 1000, mode = "up", pthresh = 0.05)
-
 #' Title
 #'
 #' @param dde todo
@@ -28,6 +25,8 @@
 #'   de_results = del
 #' )
 #' dde
+#'
+#' ddedde_cat(dde, ref = 1, maxrank = 1000, mode = "up", pthresh = 0.05)
 ddedde_cat <- function(dde,
                        ref = 1,
                        maxrank = 1000,

@@ -1,9 +1,4 @@
 
-#' deedee_heatmap(dd_list_original,
-#'                pthresh = 0.05, show_first = 25,
-#'                show_gene_names = FALSE, dist = "euclidean",
-#'                clust = "average", show_na = FALSE
-#' )
 
 
 #' Title
@@ -35,6 +30,13 @@
 #'   de_results = del
 #' )
 #' dde
+#'
+#' ddedde_heatmap(dde,
+#'                pthresh = 0.05, show_first = 25,
+#'                show_gene_names = FALSE, dist = "euclidean",
+#'                clust = "average", show_na = FALSE
+#' )
+#'
 ddedde_heatmap <- function(dde,
                            show_first = 25,
                            show_gene_names = FALSE,

@@ -1,7 +1,3 @@
-
-
-#' deedee_venn(dd_list_original, pthresh = 0.05, mode = "both")
-
 #' Title
 #'
 #' @param dde todo
@@ -27,6 +23,8 @@
 #'   de_results = del
 #' )
 #' dde
+#'
+#' ddedde_venn(dde, pthresh = 0.05, mode = "both")
 ddedde_venn <- function(dde,
                         mode = "both",
                         pthresh = 0.05) {

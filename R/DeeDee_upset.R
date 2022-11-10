@@ -1,7 +1,3 @@
-
-
-#' deedee_upset(dd_list_original, pthresh = 0.05, mode = "both_colored", min_setsize = 10)
-
 #' Title
 #'
 #' @param dde todo
@@ -28,6 +24,7 @@
 #'   de_results = del
 #' )
 #' dde
+#' ddedde_upset(dde, pthresh = 0.05, mode = "both_colored", min_setsize = 10)
 ddedde_upset <- function(dde,
                          mode = "both_colored",
                          min_setsize = 10,
