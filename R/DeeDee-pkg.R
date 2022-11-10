@@ -28,7 +28,7 @@
 #' fileInput fluidRow includeMarkdown navbarPage need numericInput
 #' observeEvent plotOutput reactive reactiveValues renderPlot renderTable
 #' renderText renderUI req selectInput shinyApp tableOutput tabPanel
-#' textOutput uiOutput validate
+#' tags textOutput uiOutput validate
 #' @importFrom shinyBS bsCollapse bsCollapsePanel bsModal
 #' @importFrom shinycssloaders withSpinner
 #' @importFrom shinythemes shinytheme
