@@ -45,6 +45,7 @@ dde <- DeeDeeExperiment(
   de_results = del
 )
 dde
+
 ddedde_scatter(dde, 1, 3, color_by = "pval2")
 ddedde_scatter(dde, 1, 2)
 ddedde_scatter(dde, 1, 4)

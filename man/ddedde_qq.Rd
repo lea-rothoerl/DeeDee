@@ -2,8 +2,7 @@
 % Please edit documentation in R/DeeDee_qq.R
 \name{ddedde_qq}
 \alias{ddedde_qq}
-\title{deedee_qq(dd_list_original, pthresh = 0.05, select = 1, select2 = 2, color_by = "pval1")
-Title}
+\title{Title}
 \usage{
 ddedde_qq(
   dde,
@@ -31,7 +30,6 @@ ddedde_qq(
 todo
 }
 \description{
-deedee_qq(dd_list_original, pthresh = 0.05, select = 1, select2 = 2, color_by = "pval1")
 Title
 }
 \examples{
@@ -50,4 +48,7 @@ dde <- DeeDeeExperiment(
   de_results = del
 )
 dde
+
+ddedde_qq(dde)
+
 }

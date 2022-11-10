@@ -2,12 +2,7 @@
 % Please edit documentation in R/DeeDee_heatmap.R
 \name{ddedde_heatmap}
 \alias{ddedde_heatmap}
-\title{deedee_heatmap(dd_list_original,
-pthresh = 0.05, show_first = 25,
-show_gene_names = FALSE, dist = "euclidean",
-clust = "average", show_na = FALSE
-)
-Title}
+\title{Title}
 \usage{
 ddedde_heatmap(
   dde,
@@ -38,11 +33,6 @@ ddedde_heatmap(
 todo
 }
 \description{
-deedee_heatmap(dd_list_original,
-pthresh = 0.05, show_first = 25,
-show_gene_names = FALSE, dist = "euclidean",
-clust = "average", show_na = FALSE
-)
 Title
 }
 \examples{
@@ -61,4 +51,11 @@ dde <- DeeDeeExperiment(
   de_results = del
 )
 dde
+
+ddedde_heatmap(dde,
+               pthresh = 0.05, show_first = 25,
+               show_gene_names = FALSE, dist = "euclidean",
+               clust = "average", show_na = FALSE
+)
+
 }

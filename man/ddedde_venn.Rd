@@ -2,8 +2,7 @@
 % Please edit documentation in R/DeeDee_venn.R
 \name{ddedde_venn}
 \alias{ddedde_venn}
-\title{deedee_venn(dd_list_original, pthresh = 0.05, mode = "both")
-Title}
+\title{Title}
 \usage{
 ddedde_venn(dde, mode = "both", pthresh = 0.05)
 }
@@ -18,7 +17,6 @@ ddedde_venn(dde, mode = "both", pthresh = 0.05)
 todo
 }
 \description{
-deedee_venn(dd_list_original, pthresh = 0.05, mode = "both")
 Title
 }
 \examples{
@@ -37,4 +35,6 @@ dde <- DeeDeeExperiment(
   de_results = del
 )
 dde
+
+ddedde_venn(dde, pthresh = 0.05, mode = "both")
 }

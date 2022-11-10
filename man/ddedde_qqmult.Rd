@@ -2,11 +2,7 @@
 % Please edit documentation in R/DeeDee_qqmult.R
 \name{ddedde_qqmult}
 \alias{ddedde_qqmult}
-\title{deedee_qqmult(dd_list_original, pthresh = 0.05, ref = 1)
-deedee_qqmult(dd_list_original, pthresh = 0.05, ref = 2)
-deedee_qqmult(dd_list_original, pthresh = 0.05, ref = 3)
-deedee_qqmult(dd_list_original, pthresh = 0.05, ref = 4)
-Title}
+\title{Title}
 \usage{
 ddedde_qqmult(dde, ref = 1, pthresh = 0.05)
 }
@@ -21,10 +17,6 @@ ddedde_qqmult(dde, ref = 1, pthresh = 0.05)
 todo
 }
 \description{
-deedee_qqmult(dd_list_original, pthresh = 0.05, ref = 1)
-deedee_qqmult(dd_list_original, pthresh = 0.05, ref = 2)
-deedee_qqmult(dd_list_original, pthresh = 0.05, ref = 3)
-deedee_qqmult(dd_list_original, pthresh = 0.05, ref = 4)
 Title
 }
 \examples{
@@ -43,4 +35,7 @@ dde <- DeeDeeExperiment(
   de_results = del
 )
 dde
+
+ddedde_qqmult(dde, pthresh = 0.05, ref = 1)
+
 }

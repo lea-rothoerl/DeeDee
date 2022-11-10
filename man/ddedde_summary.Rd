@@ -2,8 +2,7 @@
 % Please edit documentation in R/DeeDee_summary.R
 \name{ddedde_summary}
 \alias{ddedde_summary}
-\title{deedee_summary(dd_list_original)
-Title}
+\title{Title}
 \usage{
 ddedde_summary(
   dde,
@@ -79,7 +78,6 @@ ddedde_summary(
 todo
 }
 \description{
-deedee_summary(dd_list_original)
 Title
 }
 \examples{
@@ -98,4 +96,6 @@ dde <- DeeDeeExperiment(
   de_results = del
 )
 dde
+
+# ddedde_summary(dde)
 }

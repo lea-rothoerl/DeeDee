@@ -2,8 +2,7 @@
 % Please edit documentation in R/DeeDee_upset.R
 \name{ddedde_upset}
 \alias{ddedde_upset}
-\title{deedee_upset(dd_list_original, pthresh = 0.05, mode = "both_colored", min_setsize = 10)
-Title}
+\title{Title}
 \usage{
 ddedde_upset(dde, mode = "both_colored", min_setsize = 10, pthresh = 0.05)
 }
@@ -20,7 +19,6 @@ ddedde_upset(dde, mode = "both_colored", min_setsize = 10, pthresh = 0.05)
 todo
 }
 \description{
-deedee_upset(dd_list_original, pthresh = 0.05, mode = "both_colored", min_setsize = 10)
 Title
 }
 \examples{
@@ -39,4 +37,5 @@ dde <- DeeDeeExperiment(
   de_results = del
 )
 dde
+ddedde_upset(dde, pthresh = 0.05, mode = "both_colored", min_setsize = 10)
 }

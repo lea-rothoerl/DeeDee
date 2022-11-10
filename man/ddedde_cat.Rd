@@ -2,8 +2,7 @@
 % Please edit documentation in R/DeeDee_cat.R
 \name{ddedde_cat}
 \alias{ddedde_cat}
-\title{deedee_cat(dd_list_original, ref = 1, maxrank = 1000, mode = "up", pthresh = 0.05)
-Title}
+\title{Title}
 \usage{
 ddedde_cat(dde, ref = 1, maxrank = 1000, mode = "up", pthresh = 0.05)
 }
@@ -22,7 +21,6 @@ ddedde_cat(dde, ref = 1, maxrank = 1000, mode = "up", pthresh = 0.05)
 todo
 }
 \description{
-deedee_cat(dd_list_original, ref = 1, maxrank = 1000, mode = "up", pthresh = 0.05)
 Title
 }
 \examples{
@@ -41,4 +39,6 @@ dde <- DeeDeeExperiment(
   de_results = del
 )
 dde
+
+ddedde_cat(dde, ref = 1, maxrank = 1000, mode = "up", pthresh = 0.05)
 }
