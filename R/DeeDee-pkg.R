@@ -26,9 +26,9 @@
 #' @importFrom shiny actionButton brushedPoints brushOpts checkboxGroupInput
 #' checkboxInput column conditionalPanel downloadButton downloadHandler
 #' fileInput fluidRow HTML includeMarkdown navbarPage need numericInput
-#' observeEvent plotOutput reactive reactiveValues renderPlot renderTable
-#' renderText renderUI req selectInput shinyApp tableOutput tabPanel
-#' tagList tags textOutput uiOutput validate
+#' observeEvent plotOutput reactive reactiveValues renderPlot renderPrint renderTable
+#' renderText renderUI req selectInput showNotification shinyApp tableOutput tabPanel
+#' tagList tags textOutput uiOutput validate verbatimTextOutput
 #' @importFrom shinyBS bsCollapse bsCollapsePanel bsModal
 #' @importFrom shinycssloaders withSpinner
 #' @importFrom shinythemes shinytheme
