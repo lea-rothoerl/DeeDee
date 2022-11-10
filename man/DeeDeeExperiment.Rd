@@ -6,7 +6,7 @@
 \alias{DeeDeeExperiment}
 \title{DeeDeeExperiment}
 \usage{
-DeeDeeExperiment(se, de_results = NULL)
+DeeDeeExperiment(se = NULL, de_results = NULL)
 }
 \arguments{
 \item{se}{SumExp}
