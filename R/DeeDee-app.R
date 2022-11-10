@@ -11,27 +11,24 @@
 #' @export
 #'
 #' @examples
+#' data("de_named_list", package = "DeeDee")
+#' library("SummarizedExperiment")
 #'
-#' data(DE_results_IFNg_naive, package = "DeeDee")
-#' # IFNg_naive <- deedee_prepare(IFNg_naive, "DESeq2")
-#'
-#' data(DE_results_IFNg_both, package = "DeeDee")
-#' # IFNg_both <- deedee_prepare(IFNg_both, "DESeq2")
-#'
-#' data(DE_results_Salm_naive, package = "DeeDee")
-#' # Salm_naive <- deedee_prepare(Salm_naive, "DESeq2")
-#'
-#' data(DE_results_Salm_both, package = "DeeDee")
-#' # Salm_both <- deedee_prepare(Salm_both, "DESeq2")
-#'
-#' # dd_list <- list(
-#' #   IFNg_naive = IFNg_naive, IFNg_both = IFNg_both,
-#' #   Salm_naive = Salm_naive, Salm_both = Salm_both
-#' # )
+#' rd_macrophage <- DataFrame(
+#'   gene_id = rownames(del$ifng_vs_naive))
+#' rownames(rd_macrophage) <- rownames(del$ifng_vs_naive)
+#' se_macrophage_noassays <- SummarizedExperiment(
+#'   assays = SimpleList(),
+#'   rowData = rd_macrophage
+#' )
+#' dde <- DeeDeeExperiment(
+#'   se_macrophage_noassays,
+#'   de_results = del
+#' )
+#' dde
 #'
 #' if (interactive()) {
-#'   # deedee_app(dd_list)
-#'   # ddedde_app(deedee_obj = DeeDeeLegacy::DeeDeeObject(DeeDeeList = dd_list_original))
+#'   ddedde_app(dde = dde)
 #' }
 ddedde_app <- function(deedee_obj = NULL,
                        dde = NULL) {
