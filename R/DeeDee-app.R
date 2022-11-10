@@ -68,7 +68,19 @@ ddedde_app <- function(deedee_obj = NULL,
             accept = c(".rds", ".txt", ".xlsx"),
             placeholder = "No files selected"
           ),
-          shiny::tableOutput("inp_infobox")
+
+          shiny::fileInput(
+            inputId = "upload_deedee",
+            label = "Upload your DeeDeeExperiment object",
+            # multiple = TRUE,
+            multiple = FALSE,
+            accept = c(".rds"),
+            placeholder = "no DeeDeeExperiment provided"
+          ),
+
+          verbatimTextOutput("print_dde"),
+          shiny::tableOutput("inp_infobox"),
+          verbatimTextOutput("print_dde_touse")
         ),
         shiny::column(
           width = 4,
@@ -84,6 +96,7 @@ ddedde_app <- function(deedee_obj = NULL,
           ),
           shiny::uiOutput("ui_key_inp"),
           shiny::uiOutput("ui_datasets"),
+          shiny::uiOutput("ui_datasets_deedee"),
           shiny::conditionalPanel(
             "output.inp_infobox",
             shiny::downloadButton(
@@ -645,6 +658,18 @@ ddedde_app <- function(deedee_obj = NULL,
   # nocov start
   deedee_server <- function(input, output, session) {
 
+    # initializing reactives ---------------------------------------------------
+    reactive_values <- reactiveValues()
+
+    if (!is.null(dde)) {
+      message("DeeDeeExperiment object provided")
+
+      reactive_values$dde <- dde
+    } else {
+      message("no DeeDeeExperiment data provided, upload at runtime expected")
+      reactive_values$dde <- NULL
+    }
+
     # server - data input ------------------------------------------------------
     output$ui_key_inp <- shiny::renderUI({
       shiny::req(input$in_organism)
@@ -732,6 +757,16 @@ ddedde_app <- function(deedee_obj = NULL,
       return(obj)
     })
 
+    my_deedee <- reactive({
+      # TODO: from the list to the DeeDeeExperiment
+
+      # TODO: or directly from the uploads
+
+
+      # TODO: or as of now, passed directly from the argument
+      reactive_values$dde
+    })
+
     output$ui_datasets <- shiny::renderUI({
       shiny::req(
         shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
@@ -741,6 +776,21 @@ ddedde_app <- function(deedee_obj = NULL,
         label = "Select datasets to be used",
         choices = names(mydata()@DeeDeeList),
         selected = names(mydata()@DeeDeeList)
+      )
+    })
+
+    output$ui_datasets_deedee <- shiny::renderUI({
+      shiny::req(
+        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      )
+      shiny::req(
+        shiny::isTruthy(reactive_values$dde)
+      )
+      shiny::checkboxGroupInput(
+        inputId = "select_datasets_deedee",
+        label = "Select datasets to be used",
+        choices = names(dea(my_deedee())),
+        selected = names(dea(my_deedee()))
       )
     })
 
@@ -754,6 +804,23 @@ ddedde_app <- function(deedee_obj = NULL,
         dat2[i] <- mydata()@DeeDeeList[i]
       }
       return(dat2)
+    })
+
+
+    output$print_dde <- renderPrint({
+      my_deedee()
+    })
+
+    my_deedee_use <- reactive({
+      to_use <- input$select_datasets_deedee
+      to_remove <- setdiff(names(dea(my_deedee())), to_use)
+
+      dde_to_use <- remove_dea(my_deedee(), dea_name = to_remove)
+      dde_to_use
+    })
+
+    output$print_dde_touse <- renderPrint({
+      my_deedee_use()
     })
 
     output$btn_inp_download <- shiny::downloadHandler(
@@ -1557,6 +1624,38 @@ ddedde_app <- function(deedee_obj = NULL,
 
       shiny::includeHTML(path = out)
     })
+
+
+
+    # observers ----------------------------------------------------------------
+
+    observeEvent(input$upload_deedee, {
+      tryCatch(
+        {
+          showNotification(
+            "Trying to upload a DeeDeeExperiment object as an RDS file...",
+            id = "upload_try"
+          )
+
+          reactive_values$in_dde <- readRDS(input$upload_deedee$datapath)
+
+          if (is(reactive_values$in_dde, "DeeDeeExperiment")) {
+            reactive_values$dde <- reactive_values$in_dde
+            showNotification(
+              ui = "Upload complete, enjoy exploring your dataset with DeeDee! ",
+              type = "message"
+            )
+          }
+        },
+        error = function(e) {
+          showNotification(
+            "Wrong/unexpected file format uploaded! Please check the content of your RDS file to be a DeeDeeExperiment.",
+            type = "error"
+          )
+        }
+      )
+    })
+
   }
   # nocov end
 
