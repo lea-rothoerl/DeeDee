@@ -49,7 +49,7 @@ DeeDeeExperiment <- function(se,
 
 
   # TODO: additional checks
-  dde <- se
+  se_out <- se
 
   # here is where I add the names in the rowData to make all info matched
   # checks on the names
@@ -57,7 +57,7 @@ DeeDeeExperiment <- function(se,
   # if not there, "force add"
   # TODO
 
-  dde_ids <- rownames(dde)
+  dde_ids <- rownames(se_out)
 
   dea_contrasts <- list()
 
@@ -66,32 +66,38 @@ DeeDeeExperiment <- function(se,
 
     # do different things according to what these objects are
     if(is(this_de, "DESeqResults")) {
-      matched_ids <- match(rownames(dde), dde_ids)
 
-      # if not tested, add NA - everywhere? -> pre-fill?
-      rowData(dde)[[paste0(i,"_log2FoldChange")]] <- NA
-      rowData(dde)[[paste0(i,"_pvalue")]] <- NA
-      rowData(dde)[[paste0(i,"_padj")]] <- NA
 
-      rowData(dde)[[paste0(i,"_log2FoldChange")]][matched_ids] <- this_de$log2FoldChange
-      rowData(dde)[[paste0(i,"_pvalue")]][matched_ids] <- this_de$pvalue
-      rowData(dde)[[paste0(i,"_padj")]][matched_ids] <- this_de$padj
+      input_deseq2 <- .importDE_DESeq2(se_out, this_de, i)
+      se_out <- input_deseq2$se
+      dea_contrasts[[i]] <- input_deseq2$dea_contrast
 
-      dea_contrasts[[i]] <- list(
-        alpha = metadata(this_de)$alpha,
-        lfcThreshold = metadata(this_de)$lfcThreshold,
-        metainfo_logFC = mcols(this_de)$description[colnames(this_de) == "log2FoldChange"],
-        metainfo_pvalue = mcols(this_de)$description[colnames(this_de) == "pvalue"],
-        original_object = this_de,
-        package = "DESeq2"
-      )
+      # matched_ids <- match(rownames(se_out), rownames(this_de))
+      #
+      # # if not tested, add NA - everywhere? -> pre-fill?
+      # rowData(se_out)[[paste0(i,"_log2FoldChange")]] <- NA
+      # rowData(se_out)[[paste0(i,"_pvalue")]] <- NA
+      # rowData(se_out)[[paste0(i,"_padj")]] <- NA
+      #
+      # rowData(se_out)[[paste0(i,"_log2FoldChange")]][matched_ids] <- this_de$log2FoldChange
+      # rowData(se_out)[[paste0(i,"_pvalue")]][matched_ids] <- this_de$pvalue
+      # rowData(se_out)[[paste0(i,"_padj")]][matched_ids] <- this_de$padj
+      #
+      # dea_contrasts[[i]] <- list(
+      #   alpha = metadata(this_de)$alpha,
+      #   lfcThreshold = metadata(this_de)$lfcThreshold,
+      #   metainfo_logFC = mcols(this_de)$description[colnames(this_de) == "log2FoldChange"],
+      #   metainfo_pvalue = mcols(this_de)$description[colnames(this_de) == "pvalue"],
+      #   original_object = this_de,
+      #   package = "DESeq2"
+      # )
     }
   }
 
   # rowData(dde)[["new_rd"]] <- de_name
 
   object <- new("DeeDeeExperiment",
-                dde,
+                se_out,
                 dea = dea_contrasts
   )
 
@@ -105,28 +111,42 @@ DeeDeeExperiment <- function(se,
 
 
 
-
-#' Title
-#'
-#' @param del todo
-#'
-#' @return todo
-#' @export
-#'
-#' @examples
-#' # todo
-de_list_checker <- function(del) {
-  # check that all things are as expected/expectable
-}
-
-
-.importDE_DESeq2 <- function(x) {
+#' extends the rowData slot of the provided SE and returns also metadata
+.importDE_DESeq2 <- function(se, res_de, de_name) {
   # checks TODO:
   # correct object format
   # contain the right columns
   # contain the feature ids
   # p value respect the 0-1 interval
 
+
+  matched_ids <- match(rownames(se), rownames(res_de))
+
+  # if not tested, add NA - everywhere? -> pre-fill?
+  rowData(se)[[paste0(de_name,"_log2FoldChange")]] <- NA
+  rowData(se)[[paste0(de_name,"_pvalue")]] <- NA
+  rowData(se)[[paste0(de_name,"_padj")]] <- NA
+
+  rowData(se)[[paste0(de_name,"_log2FoldChange")]][matched_ids] <- res_de$log2FoldChange
+  rowData(se)[[paste0(de_name,"_pvalue")]][matched_ids] <- res_de$pvalue
+  rowData(se)[[paste0(de_name,"_padj")]][matched_ids] <- res_de$padj
+
+  dea_contrast <- list(
+    alpha = metadata(res_de)$alpha,
+    lfcThreshold = metadata(res_de)$lfcThreshold,
+    metainfo_logFC = mcols(res_de)$description[colnames(res_de) == "log2FoldChange"],
+    metainfo_pvalue = mcols(res_de)$description[colnames(res_de) == "pvalue"],
+    original_object = res_de,
+    # object_name = deparse(substitute(res_de)),
+    package = "DESeq2"
+  )
+
+  return(
+    list(
+      se = se,
+      dea_contrast = dea_contrast
+    )
+  )
 }
 
 
