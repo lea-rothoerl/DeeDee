@@ -153,10 +153,9 @@ setMethod("remove_dea",
             for (i in deas_to_remove) {
               cols_to_remove <- c(paste0(i, c("_log2FoldChange", "_pvalue", "_padj")))
               rowData(x) <- rowData(x)[, !(colnames(rowData(x)) %in% cols_to_remove)]
+              # update the deslot
+              dea(x)[[i]] <- NULL
             }
-
-            # update the deslot
-            dea(x)[[deas_to_remove]] <- NULL
 
             # here check some validity?
             validObject(x)
