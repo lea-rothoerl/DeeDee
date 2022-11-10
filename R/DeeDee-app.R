@@ -48,7 +48,7 @@ ddedde_app <- function(deedee_obj = NULL,
       title = "Input",
       tags$head(
         tags$style(
-          HTML(
+          shiny::HTML(
             ".shiny-output-error-validation {
               font-size: 15px;
               color: forestgreen;
@@ -58,63 +58,8 @@ ddedde_app <- function(deedee_obj = NULL,
           )
         )
       ),
-      shiny::fluidRow(
-        shiny::column(
-          width = 8,
-          shiny::fileInput(
-            inputId = "upload_de",
-            label = "Upload your DEA results or DeeDee objects",
-            multiple = TRUE,
-            accept = c(".rds", ".txt", ".xlsx"),
-            placeholder = "No files selected"
-          ),
 
-          shiny::fileInput(
-            inputId = "upload_deedee",
-            label = "Upload your DeeDeeExperiment object",
-            # multiple = TRUE,
-            multiple = FALSE,
-            accept = c(".rds"),
-            placeholder = "no DeeDeeExperiment provided"
-          ),
-
-          verbatimTextOutput("print_dde"),
-          shiny::tableOutput("inp_infobox"),
-          verbatimTextOutput("print_dde_touse")
-        ),
-        shiny::column(
-          width = 4,
-          shiny::selectInput(
-            inputId = "in_organism",
-            label = "Organism",
-            choices = list(
-              "Human" = "org.Hs.eg.db",
-              "Mouse" = "org.Mm.eg.db",
-              "Fly" = "org.Dm.eg.db",
-              "Rat" = "org.Rn.eg.db"
-            )
-          ),
-          shiny::uiOutput("ui_key_inp"),
-          shiny::uiOutput("ui_datasets"),
-          shiny::uiOutput("ui_datasets_deedee"),
-          shiny::conditionalPanel(
-            "output.inp_infobox",
-            shiny::downloadButton(
-              "btn_inp_download",
-              "Download DeeDee object (.RDS)"
-            )
-          )
-        )
-      ),
-      shinyBS::bsCollapse(
-        shinyBS::bsCollapsePanel(
-          title = "INFO - input",
-          shiny::includeMarkdown(
-            system.file("extdata", "input.md", package = "DeeDee")
-          ),
-          style = "primary"
-        )
-      ),
+      uiOutput("ui_panel_datainput"),
 
       # shiny::downloadButton("vignette",
       #                "Download DeeDee Package vignette (.html)")
@@ -123,71 +68,8 @@ ddedde_app <- function(deedee_obj = NULL,
     # ui - scatter -------------------------------------------------------------
     shiny::tabPanel(
       title = "Scatterplot",
-      shiny::fluidRow(
-        shiny::column(
-          width = 4,
-          shiny::uiOutput("ui_scatter_choices1"),
-          shiny::uiOutput("ui_scatter_choices2"),
-          shiny::selectInput(
-            inputId = "in_scatter_color_by",
-            label = "Color by",
-            choices = list(
-              "1st p-value" = "pval1",
-              "2nd p-value" = "pval2"
-            ),
-            selected = "pval1"
-          ),
-          shiny::numericInput(
-            inputId = "in_scatter_pthresh",
-            label = "P-value threshold",
-            value = 0.05, min = 0.01, max = 1, step = 0.01
-          ),
-          shiny::actionButton(
-            inputId = "btn_ora_button",
-            label = "Over-representation analysis"
-          )
-        ),
-        shiny::column(
-          width = 8,
-          shinycssloaders::withSpinner(
-            shiny::plotOutput(
-              outputId = "plot_deedee_scatter",
-              # dblclick = "scatter_dblclick",
-              brush = shiny::brushOpts(
-                id = "scatter_brush",
-                resetOnNew = FALSE
-              )
-            )
-          )
-        )
-      ),
-      shinyBS::bsCollapse(
-        shinyBS::bsCollapsePanel(
-          title = "INFO - scatter plot",
-          shiny::includeMarkdown(
-            system.file("extdata", "scatter.md", package = "DeeDee")
-          ),
-          style = "primary"
-        )
-      ),
-      shinyBS::bsModal(
-        id = "modalExample",
-        title = "Gene Ontology over-representation analysis",
-        trigger = "btn_ora_button",
-        size = "large",
-        shinycssloaders::withSpinner(
-          shiny::plotOutput("scatter_ora")
-        ),
-        shiny::downloadButton(
-          outputId = "btn_ora_download",
-          label = "Download enrichment result object (.RDS)"
-        )
-      ),
-      shiny::downloadButton(
-        outputId = "btn_scatter_brush_download",
-        label = "Download brushed genes (.xlsx)"
-      ),
-      shiny::tableOutput("scatter_brush_info")
+
+      uiOutput("ui_panel_scatter"),
     ),
 
 
@@ -195,459 +77,47 @@ ddedde_app <- function(deedee_obj = NULL,
     shiny::tabPanel(
       title = "Heatmap",
       id = "heatmap",
-      shiny::fluidRow(
-        shiny::column(
-          width = 4,
-          shiny::numericInput(
-            inputId = "in_heatmap_show_first",
-            label = "Show first",
-            value = 25,
-            min = 1
-          ),
-          shiny::checkboxInput(
-            inputId = "in_heatmap_show_gene_names",
-            label = "Show gene names",
-            value = FALSE
-          ),
-          shiny::checkboxInput(
-            inputId = "in_heatmap_showNA",
-            label = "Show NA",
-            value = FALSE
-          ),
-          shiny::selectInput(
-            inputId = "in_heatmap_dist",
-            label = "Distance measure",
-            choices = list(
-              "Euclidean" = "euclidean",
-              "Manhattan" = "manhattan",
-              "Pearson" = "pearson",
-              "Spearman" = "spearman"
-            ),
-            selected = "euclidean"
-          ),
-          shiny::selectInput(
-            inputId = "in_heatmap_clust",
-            label = "Clustering method",
-            choices = list(
-              "Single" = "single",
-              "Complete" = "complete",
-              "Average" = "average",
-              "Centroid" = "centroid"
-            ),
-            selected = "average"
-          ),
-          shiny::numericInput(
-            inputId = "in_heatmap_pthresh",
-            label = "P-value threshold",
-            value = 0.05, min = 0.01, max = 1, step = 0.01
-          ),
-          shiny::actionButton(
-            inputId = "btn_heatmap_action",
-            label = "Create heatmap")
-        ),
-        shiny::column(
-          width = 8,
-          shiny::textOutput("heatmap_errors"),
-          shiny::conditionalPanel(
-            "output.heatmap_errors == ''",
-            shinycssloaders::withSpinner(
-              InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput()
-            )
-          )
-        )
-      ),
-      shinyBS::bsCollapse(
-        shinyBS::bsCollapsePanel(
-          title = "INFO - heatmap",
-          shiny::includeMarkdown(
-            system.file("extdata", "heatmap.md",package = "DeeDee")
-          ),
-          style = "primary"
-        )
-      )
+
+      uiOutput("ui_panel_heatmap"),
+
     ),
 
     # ui - venn ----------------------------------------------------------------
     shiny::tabPanel(
       title = "Venn Diagram",
-      shiny::fluidRow(
-        shiny::column(
-          width = 4,
-          shiny::selectInput(
-            inputId = "in_venn_mode",
-            label = "Mode",
-            choices = list(
-              "Up" = "up",
-              "Down" = "down",
-              "Both" = "both"
-            ),
-            selected = "both"
-          ),
-          shiny::numericInput(
-            inputId = "in_venn_pthresh",
-            label = "P-value threshold",
-            value = 0.05, min = 0.01, max = 1, step = 0.01
-          )
-        ),
-        shiny::column(
-          width = 8,
-          shinycssloaders::withSpinner(
-            shiny::plotOutput("plot_deedee_venn")
-          )
-        )
-      ),
-      shinyBS::bsCollapse(
-        shinyBS::bsCollapsePanel(
-          title = "INFO - venn",
-          shiny::includeMarkdown(
-            system.file("extdata", "venn.md", package = "DeeDee")
-          ),
-          style = "primary"
-        )
-      )
+
+      uiOutput("ui_panel_venn"),
     ),
 
 
     # ui - upset ---------------------------------------------------------------
     shiny::tabPanel(
       title = "UpSet Plot",
-      shiny::fluidRow(
-        shiny::column(
-          width = 4,
-          shiny::selectInput(
-            inputId = "in_upset_mode",
-            label = "Mode",
-            choices = list(
-              "Up" = "up",
-              "Down" = "down",
-              "Both" = "both"
-            ),
-            selected = "both"
-          ),
-          shiny::conditionalPanel(
-            condition = "input.in_upset_mode == 'both'",
-            shiny::checkboxInput(
-              inputId = "in_upset_colored",
-              label = "Coloring",
-              value = TRUE
-            )
-          ),
-          shiny::numericInput(
-            inputId = "in_upset_minset",
-            label = "Minimum set size",
-            value = 10, min = 0, step = 1
-          ),
-          shiny::numericInput(
-            inputId = "in_upset_pthresh",
-            label = "P-value threshold",
-            value = 0.05, min = 0.01, max = 1, step = 0.01
-          )
-        ),
-        shiny::column(
-          width = 8,
-          shinycssloaders::withSpinner(
-            shiny::plotOutput("plot_deedee_upset")
-          )
-        )
-      ),
-      shinyBS::bsCollapse(
-        shinyBS::bsCollapsePanel(
-          title = "INFO - upset",
-          shiny::includeMarkdown(
-            system.file("extdata", "upset.md", package = "DeeDee")
-          ),
-          style = "primary"
-        )
-      )
+
+      uiOutput("ui_panel_upset"),
     ),
 
 
     # ui - qq ------------------------------------------------------------------
     shiny::tabPanel(
       title = "Quantile-Quantile Plot",
-      shiny::fluidRow(
-        shiny::column(
-          width = 4,
-          shiny::checkboxInput(
-            inputId = "in_qq_multiple",
-            label = "Multiple",
-            value = FALSE
-          ),
-          shiny::conditionalPanel(
-            condition = "!input.in_qq_multiple",
-            shiny::uiOutput("ui_qq_choices1"),
-            shiny::uiOutput("ui_qq_choices2"),
-            shiny::selectInput(
-              inputId = "in_qq_color_by",
-              label = "Color by",
-              choices = list(
-                "1st p-value" = "pval1",
-                "2nd p-value" = "pval2"
-              ),
-              selected = "pval1"
-            ),
-            shiny::checkboxInput(
-              inputId = "in_qq_line",
-              "As line",
-              value = FALSE)
-          ),
-          shiny::conditionalPanel(
-            condition = "input.in_qq_multiple",
-            shiny::uiOutput("ui_qq_ref"),
-          ),
-          shiny::numericInput(
-            inputId = "in_qq_pthresh",
-            label = "P-value threshold",
-            value = 0.05, min = 0.01, max = 1, step = 0.01
-          )
-        ),
-        shiny::column(
-          width = 8,
-          shiny::conditionalPanel(
-            condition = "!input.in_qq_multiple",
-            shinycssloaders::withSpinner(
-              shiny::plotOutput(
-                outputId = "plot_deedee_qq",
-                brush = "qq_brush"
-              )
-            )
-          ),
-          shiny::conditionalPanel(
-            condition = "input.in_qq_multiple",
-            shinycssloaders::withSpinner(
-              shiny::plotOutput("plot_deedee_qq_mult")
-            )
-          )
-        )
-      ),
-      shinyBS::bsCollapse(
-        shinyBS::bsCollapsePanel(
-          title = "INFO - qq plot",
-          shiny::includeMarkdown(
-            system.file("extdata", "qq.md", package = "DeeDee")
-          ),
-          style = "primary"
-        )
-      ),
-      shiny::conditionalPanel(
-        condition = "!input.in_qq_multiple",
-        shiny::downloadButton(
-          outputId = "btn_qq_brush_download",
-          label = "Download brushed genes (.xlsx)"
-        ),
-        shiny::tableOutput("qq_brush_info")
-      )
+
+      uiOutput("ui_panel_qq"),
     ),
 
 
     # ui - cat -----------------------------------------------------------------
     shiny::tabPanel(
       title = "Concordance At the Top Plot",
-      shiny::fluidRow(
-        shiny::column(
-          width = 4,
-          shiny::selectInput(
-            inputId = "in_cat_mode",
-            label = "Mode",
-            choices = list(
-              "Up" = "up",
-              "Down" = "down",
-              "Both" = "both"
-            ),
-            selected = "up"
-          ),
-          shiny::numericInput(
-            inputId = "in_cat_maxrank",
-            label = "Max rank",
-            value = 1000,
-            min = 1
-          ),
-          shiny::uiOutput("ui_cat_choice"),
-          shiny::numericInput(
-            inputId = "in_cat_pthresh",
-            label = "P-value threshold",
-            value = 0.05, min = 0.01, max = 1, step = 0.01
-          )
-        ),
-        shiny::column(
-          width = 8,
-          shinycssloaders::withSpinner(
-            shiny::plotOutput("plot_deedee_cat")
-          )
-        )
-      ),
-      shinyBS::bsCollapse(
-        shinyBS::bsCollapsePanel(
-          title = "INFO - cat plot",
-          shiny::includeMarkdown(
-            system.file("extdata", "cat.md", package = "DeeDee")
-          ),
-          style = "primary"
-        )
-      )
+
+      uiOutput("ui_panel_cat"),
     ),
 
     # ui - summary -------------------------------------------------------------
     shiny::tabPanel(
       title = "Summary",
-      shiny::numericInput(
-        inputId = "sum_pthresh",
-        label = "P-value threshold",
-        value = 0.05, min = 0.01, max = 1, step = 0.01
-      ),
-      shiny::actionButton(
-        inputId = "sum_button",
-        label = "Create Summary"
-      ),
-      shinyBS::bsModal(
-        id = "sum_modal",
-        title = "DeeDee Summary",
-        trigger = "sum_button",
-        size = "large",
-        shiny::fluidPage(
-          shiny::downloadButton(
-            outputId = "sum_download",
-            label = "Download your DeeDee Summary (.html)"
-          ),
-          shinycssloaders::withSpinner(
-            shiny::uiOutput("ui_show_html_summary")
-          )
-        )
-      ),
-      shiny::fluidRow(
-        shinydashboard::tabBox(
-          title = "",
-          width = 12,
-          id = "sum_params",
-          shiny::tabPanel(
-            "Scatterplot",
-            shiny::uiOutput("ui_sum_scatter_choices1"),
-            shiny::uiOutput("ui_sum_scatter_choices2"),
-            shiny::selectInput(
-              inputId = "sum_scatter_color_by",
-              label = "Color by",
-              choices = list(
-                "1st p-value" = "pval1",
-                "2nd p-value" = "pval2"
-              ),
-              selected = "pval1"
-            )
-          ),
-          shiny::tabPanel(
-            title = "Heatmap",
-            shiny::numericInput(
-              inputId = "sum_heatmap_show_first",
-              label = "Show first",
-              value = 25,
-              min = 1
-            ),
-            shiny::checkboxInput(
-              inputId = "sum_heatmap_show_gene_names",
-              label = "Show gene names",
-              value = FALSE
-            ),
-            shiny::checkboxInput(
-              inputId = "sum_heatmap_show_na",
-              label = "Show NA",
-              value = FALSE
-            ),
-            shiny::selectInput(
-              inputId = "sum_heatmap_dist",
-              label = "Distance measure",
-              choices = list(
-                "Euclidean" = "euclidean",
-                "Manhattan" = "manhattan",
-                "Pearson" = "pearson",
-                "Spearman" = "spearman"
-              ),
-              selected = "euclidean"
-            ),
-            shiny::selectInput(
-              inputId = "sum_heatmap_clust",
-              label = "Clustering method",
-              choices = list(
-                "Single" = "single",
-                "Complete" = "complete",
-                "Average" = "average",
-                "Centroid" = "centroid"
-              ),
-              selected = "average"
-            )
-          ),
-          shiny::tabPanel(
-            title = "Venn Diagram",
-            shiny::selectInput(
-              inputId = "sum_venn_mode",
-              label = "Mode",
-              choices = list(
-                "Up" = "up",
-                "Down" = "down",
-                "Both" = "both"
-              ),
-              selected = "both"
-            )
-          ),
-          shiny::tabPanel(
-            title = "UpSet Plot",
-            shiny::selectInput(
-              inputId = "sum_upset_mode",
-              label = "Mode",
-              choices = list(
-                "Up" = "up",
-                "Down" = "down",
-                "Both" = "both"
-              ),
-              selected = "both"
-            ),
-            shiny::conditionalPanel(
-              condition = "input.sum_upset_mode == 'both'",
-              shiny::checkboxInput(
-                inputId = "sum_upset_colored",
-                label = "Coloring",
-                value = TRUE
-              )
-            ),
-            shiny::numericInput(
-              inputId = "sum_upset_min_setsize",
-              label = "Minimum set size",
-              value = 10, min = 0, step = 1
-            )
-          ),
-          shiny::tabPanel(
-            title = "Quantile-Quantile Plot",
-            shiny::uiOutput("ui_sum_qq_ref"),
-          ),
-          shiny::tabPanel(
-            title = "Concordance At the Top Plot",
-            shiny::selectInput(
-              inputId = "sum_cat_mode",
-              label = "Mode",
-              choices = list(
-                "Up" = "up",
-                "Down" = "down",
-                "Both" = "both"
-              ),
-              selected = "up"
-            ),
-            shiny::numericInput(
-              inputId = "sum_cat_maxrank",
-              label = "Max rank",
-              value = 1000,
-              min = 1
-            ),
-            shiny::uiOutput("ui_sum_cat_choice")
-          )
-        )
-      ),
-      shinyBS::bsCollapse(
-        shinyBS::bsCollapsePanel(
-          title = "INFO - summary",
-          shiny::includeMarkdown(
-            system.file("extdata", "summary.md", package = "DeeDee")
-          ),
-          style = "primary"
-        )
-      )
+
+      uiOutput("ui_panel_summary")
     )
   )
 
@@ -671,6 +141,67 @@ ddedde_app <- function(deedee_obj = NULL,
     }
 
     # server - data input ------------------------------------------------------
+    output$ui_panel_datainput <- renderUI({
+      tagList(
+        shiny::fluidRow(
+          shiny::column(
+            width = 8,
+            shiny::fileInput(
+              inputId = "upload_de",
+              label = "Upload your DEA results or DeeDee objects",
+              multiple = TRUE,
+              accept = c(".rds", ".txt", ".xlsx"),
+              placeholder = "No files selected"
+            ),
+
+            shiny::fileInput(
+              inputId = "upload_deedee",
+              label = "Upload your DeeDeeExperiment object",
+              # multiple = TRUE,
+              multiple = FALSE,
+              accept = c(".rds"),
+              placeholder = "no DeeDeeExperiment provided"
+            ),
+
+            verbatimTextOutput("print_dde"),
+            shiny::tableOutput("inp_infobox"),
+            verbatimTextOutput("print_dde_touse")
+          ),
+          shiny::column(
+            width = 4,
+            shiny::selectInput(
+              inputId = "in_organism",
+              label = "Organism",
+              choices = list(
+                "Human" = "org.Hs.eg.db",
+                "Mouse" = "org.Mm.eg.db",
+                "Fly" = "org.Dm.eg.db",
+                "Rat" = "org.Rn.eg.db"
+              )
+            ),
+            shiny::uiOutput("ui_key_inp"),
+            shiny::uiOutput("ui_datasets"),
+            shiny::uiOutput("ui_datasets_deedee"),
+            shiny::conditionalPanel(
+              "output.inp_infobox",
+              shiny::downloadButton(
+                "btn_inp_download",
+                "Download DeeDee object (.RDS)"
+              )
+            )
+          )
+        ),
+        shinyBS::bsCollapse(
+          shinyBS::bsCollapsePanel(
+            title = "INFO - input",
+            shiny::includeMarkdown(
+              system.file("extdata", "input.md", package = "DeeDee")
+            ),
+            style = "primary"
+          )
+        )
+      )
+    })
     output$ui_key_inp <- shiny::renderUI({
       shiny::req(input$in_organism)
       anno <- input$in_organism
@@ -780,9 +311,9 @@ ddedde_app <- function(deedee_obj = NULL,
     })
 
     output$ui_datasets_deedee <- shiny::renderUI({
-      shiny::req(
-        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
-      )
+      # shiny::req(
+      #   shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      # )
       shiny::req(
         shiny::isTruthy(reactive_values$dde)
       )
@@ -853,7 +384,76 @@ ddedde_app <- function(deedee_obj = NULL,
 
 
     # server - scatter ---------------------------------------------------------
-    # --- selectors ---
+    output$ui_panel_scatter <- renderUI({
+      tagList(
+        shiny::fluidRow(
+          shiny::column(
+            width = 4,
+            shiny::uiOutput("ui_scatter_choices1"),
+            shiny::uiOutput("ui_scatter_choices2"),
+            shiny::selectInput(
+              inputId = "in_scatter_color_by",
+              label = "Color by",
+              choices = list(
+                "1st p-value" = "pval1",
+                "2nd p-value" = "pval2"
+              ),
+              selected = "pval1"
+            ),
+            shiny::numericInput(
+              inputId = "in_scatter_pthresh",
+              label = "P-value threshold",
+              value = 0.05, min = 0.01, max = 1, step = 0.01
+            ),
+            shiny::actionButton(
+              inputId = "btn_ora_button",
+              label = "Over-representation analysis"
+            )
+          ),
+          shiny::column(
+            width = 8,
+            shinycssloaders::withSpinner(
+              shiny::plotOutput(
+                outputId = "plot_deedee_scatter",
+                # dblclick = "scatter_dblclick",
+                brush = shiny::brushOpts(
+                  id = "scatter_brush",
+                  resetOnNew = FALSE
+                )
+              )
+            )
+          )
+        ),
+        shinyBS::bsCollapse(
+          shinyBS::bsCollapsePanel(
+            title = "INFO - scatter plot",
+            shiny::includeMarkdown(
+              system.file("extdata", "scatter.md", package = "DeeDee")
+            ),
+            style = "primary"
+          )
+        ),
+        shinyBS::bsModal(
+          id = "modalExample",
+          title = "Gene Ontology over-representation analysis",
+          trigger = "btn_ora_button",
+          size = "large",
+          shinycssloaders::withSpinner(
+            shiny::plotOutput("scatter_ora")
+          ),
+          shiny::downloadButton(
+            outputId = "btn_ora_download",
+            label = "Download enrichment result object (.RDS)"
+          )
+        ),
+        shiny::downloadButton(
+          outputId = "btn_scatter_brush_download",
+          label = "Download brushed genes (.xlsx)"
+        ),
+        shiny::tableOutput("scatter_brush_info")
+      )
+    })
+
     output$ui_scatter_choices1 <- shiny::renderUI({
       shiny::req(
         shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
@@ -1052,6 +652,81 @@ ddedde_app <- function(deedee_obj = NULL,
     )
 
     # server - heatmap ---------------------------------------------------------
+    output$ui_panel_heatmap <- renderUI({
+      tagList(
+        shiny::fluidRow(
+          shiny::column(
+            width = 4,
+            shiny::numericInput(
+              inputId = "in_heatmap_show_first",
+              label = "Show first",
+              value = 25,
+              min = 1
+            ),
+            shiny::checkboxInput(
+              inputId = "in_heatmap_show_gene_names",
+              label = "Show gene names",
+              value = FALSE
+            ),
+            shiny::checkboxInput(
+              inputId = "in_heatmap_showNA",
+              label = "Show NA",
+              value = FALSE
+            ),
+            shiny::selectInput(
+              inputId = "in_heatmap_dist",
+              label = "Distance measure",
+              choices = list(
+                "Euclidean" = "euclidean",
+                "Manhattan" = "manhattan",
+                "Pearson" = "pearson",
+                "Spearman" = "spearman"
+              ),
+              selected = "euclidean"
+            ),
+            shiny::selectInput(
+              inputId = "in_heatmap_clust",
+              label = "Clustering method",
+              choices = list(
+                "Single" = "single",
+                "Complete" = "complete",
+                "Average" = "average",
+                "Centroid" = "centroid"
+              ),
+              selected = "average"
+            ),
+            shiny::numericInput(
+              inputId = "in_heatmap_pthresh",
+              label = "P-value threshold",
+              value = 0.05, min = 0.01, max = 1, step = 0.01
+            ),
+            shiny::actionButton(
+              inputId = "btn_heatmap_action",
+              label = "Create heatmap")
+          ),
+          shiny::column(
+            width = 8,
+            shiny::textOutput("heatmap_errors"),
+            shiny::conditionalPanel(
+              "output.heatmap_errors == ''",
+              shinycssloaders::withSpinner(
+                InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput()
+              )
+            )
+          )
+        ),
+        shinyBS::bsCollapse(
+          shinyBS::bsCollapsePanel(
+            title = "INFO - heatmap",
+            shiny::includeMarkdown(
+              system.file("extdata", "heatmap.md",package = "DeeDee")
+            ),
+            style = "primary"
+          )
+        )
+      )
+    })
+
     output$heatmap_errors <- shiny::renderText({
       shiny::validate(
         shiny::need(
@@ -1160,6 +835,46 @@ ddedde_app <- function(deedee_obj = NULL,
 
 
     # server - venn ------------------------------------------------------------
+    output$ui_panel_venn <- renderUI({
+      tagList(
+        shiny::fluidRow(
+          shiny::column(
+            width = 4,
+            shiny::selectInput(
+              inputId = "in_venn_mode",
+              label = "Mode",
+              choices = list(
+                "Up" = "up",
+                "Down" = "down",
+                "Both" = "both"
+              ),
+              selected = "both"
+            ),
+            shiny::numericInput(
+              inputId = "in_venn_pthresh",
+              label = "P-value threshold",
+              value = 0.05, min = 0.01, max = 1, step = 0.01
+            )
+          ),
+          shiny::column(
+            width = 8,
+            shinycssloaders::withSpinner(
+              shiny::plotOutput("plot_deedee_venn")
+            )
+          )
+        ),
+        shinyBS::bsCollapse(
+          shinyBS::bsCollapsePanel(
+            title = "INFO - venn",
+            shiny::includeMarkdown(
+              system.file("extdata", "venn.md", package = "DeeDee")
+            ),
+            style = "primary"
+          )
+        )
+      )
+    })
+
     output$plot_deedee_venn <- shiny::renderPlot({
       shiny::validate(
         shiny::need(
@@ -1197,6 +912,59 @@ ddedde_app <- function(deedee_obj = NULL,
 
 
     # server - upset -----------------------------------------------------------
+    output$ui_panel_upset <- renderUI({
+      tagList(
+        shiny::fluidRow(
+          shiny::column(
+            width = 4,
+            shiny::selectInput(
+              inputId = "in_upset_mode",
+              label = "Mode",
+              choices = list(
+                "Up" = "up",
+                "Down" = "down",
+                "Both" = "both"
+              ),
+              selected = "both"
+            ),
+            shiny::conditionalPanel(
+              condition = "input.in_upset_mode == 'both'",
+              shiny::checkboxInput(
+                inputId = "in_upset_colored",
+                label = "Coloring",
+                value = TRUE
+              )
+            ),
+            shiny::numericInput(
+              inputId = "in_upset_minset",
+              label = "Minimum set size",
+              value = 10, min = 0, step = 1
+            ),
+            shiny::numericInput(
+              inputId = "in_upset_pthresh",
+              label = "P-value threshold",
+              value = 0.05, min = 0.01, max = 1, step = 0.01
+            )
+          ),
+          shiny::column(
+            width = 8,
+            shinycssloaders::withSpinner(
+              shiny::plotOutput("plot_deedee_upset")
+            )
+          )
+        ),
+        shinyBS::bsCollapse(
+          shinyBS::bsCollapsePanel(
+            title = "INFO - upset",
+            shiny::includeMarkdown(
+              system.file("extdata", "upset.md", package = "DeeDee")
+            ),
+            style = "primary"
+          )
+        )
+      )
+    })
+
     output$plot_deedee_upset <- shiny::renderPlot({
       shiny::validate(
         shiny::need(
@@ -1240,6 +1008,83 @@ ddedde_app <- function(deedee_obj = NULL,
 
 
     # server - qq --------------------------------------------------------------
+    output$ui_panel_qq <- renderUI({
+      tagList(
+        shiny::fluidRow(
+          shiny::column(
+            width = 4,
+            shiny::checkboxInput(
+              inputId = "in_qq_multiple",
+              label = "Multiple",
+              value = FALSE
+            ),
+            shiny::conditionalPanel(
+              condition = "!input.in_qq_multiple",
+              shiny::uiOutput("ui_qq_choices1"),
+              shiny::uiOutput("ui_qq_choices2"),
+              shiny::selectInput(
+                inputId = "in_qq_color_by",
+                label = "Color by",
+                choices = list(
+                  "1st p-value" = "pval1",
+                  "2nd p-value" = "pval2"
+                ),
+                selected = "pval1"
+              ),
+              shiny::checkboxInput(
+                inputId = "in_qq_line",
+                "As line",
+                value = FALSE)
+            ),
+            shiny::conditionalPanel(
+              condition = "input.in_qq_multiple",
+              shiny::uiOutput("ui_qq_ref"),
+            ),
+            shiny::numericInput(
+              inputId = "in_qq_pthresh",
+              label = "P-value threshold",
+              value = 0.05, min = 0.01, max = 1, step = 0.01
+            )
+          ),
+          shiny::column(
+            width = 8,
+            shiny::conditionalPanel(
+              condition = "!input.in_qq_multiple",
+              shinycssloaders::withSpinner(
+                shiny::plotOutput(
+                  outputId = "plot_deedee_qq",
+                  brush = "qq_brush"
+                )
+              )
+            ),
+            shiny::conditionalPanel(
+              condition = "input.in_qq_multiple",
+              shinycssloaders::withSpinner(
+                shiny::plotOutput("plot_deedee_qq_mult")
+              )
+            )
+          )
+        ),
+        shinyBS::bsCollapse(
+          shinyBS::bsCollapsePanel(
+            title = "INFO - qq plot",
+            shiny::includeMarkdown(
+              system.file("extdata", "qq.md", package = "DeeDee")
+            ),
+            style = "primary"
+          )
+        ),
+        shiny::conditionalPanel(
+          condition = "!input.in_qq_multiple",
+          shiny::downloadButton(
+            outputId = "btn_qq_brush_download",
+            label = "Download brushed genes (.xlsx)"
+          ),
+          shiny::tableOutput("qq_brush_info")
+        )
+      )
+    })
+
     output$ui_qq_choices1 <- shiny::renderUI({
       shiny::req(
         shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
@@ -1445,6 +1290,53 @@ ddedde_app <- function(deedee_obj = NULL,
 
 
     # server - cat -------------------------------------------------------------
+    output$ui_panel_cat <- renderUI({
+      tagList(
+        shiny::fluidRow(
+          shiny::column(
+            width = 4,
+            shiny::selectInput(
+              inputId = "in_cat_mode",
+              label = "Mode",
+              choices = list(
+                "Up" = "up",
+                "Down" = "down",
+                "Both" = "both"
+              ),
+              selected = "up"
+            ),
+            shiny::numericInput(
+              inputId = "in_cat_maxrank",
+              label = "Max rank",
+              value = 1000,
+              min = 1
+            ),
+            shiny::uiOutput("ui_cat_choice"),
+            shiny::numericInput(
+              inputId = "in_cat_pthresh",
+              label = "P-value threshold",
+              value = 0.05, min = 0.01, max = 1, step = 0.01
+            )
+          ),
+          shiny::column(
+            width = 8,
+            shinycssloaders::withSpinner(
+              shiny::plotOutput("plot_deedee_cat")
+            )
+          )
+        ),
+        shinyBS::bsCollapse(
+          shinyBS::bsCollapsePanel(
+            title = "INFO - cat plot",
+            shiny::includeMarkdown(
+              system.file("extdata", "cat.md", package = "DeeDee")
+            ),
+            style = "primary"
+          )
+        )
+      )
+    })
+
     output$ui_cat_choice <- shiny::renderUI({
       shiny::req(
         shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
@@ -1499,6 +1391,169 @@ ddedde_app <- function(deedee_obj = NULL,
     })
 
     # server - summary ---------------------------------------------------------
+    output$ui_panel_summary <- renderUI({
+      tagList(
+        shiny::numericInput(
+          inputId = "sum_pthresh",
+          label = "P-value threshold",
+          value = 0.05, min = 0.01, max = 1, step = 0.01
+        ),
+        shiny::actionButton(
+          inputId = "sum_button",
+          label = "Create Summary"
+        ),
+        shinyBS::bsModal(
+          id = "sum_modal",
+          title = "DeeDee Summary",
+          trigger = "sum_button",
+          size = "large",
+          shiny::fluidPage(
+            shiny::downloadButton(
+              outputId = "sum_download",
+              label = "Download your DeeDee Summary (.html)"
+            ),
+            shinycssloaders::withSpinner(
+              shiny::uiOutput("ui_show_html_summary")
+            )
+          )
+        ),
+        shiny::fluidRow(
+          shinydashboard::tabBox(
+            title = "",
+            width = 12,
+            id = "sum_params",
+            shiny::tabPanel(
+              "Scatterplot",
+              shiny::uiOutput("ui_sum_scatter_choices1"),
+              shiny::uiOutput("ui_sum_scatter_choices2"),
+              shiny::selectInput(
+                inputId = "sum_scatter_color_by",
+                label = "Color by",
+                choices = list(
+                  "1st p-value" = "pval1",
+                  "2nd p-value" = "pval2"
+                ),
+                selected = "pval1"
+              )
+            ),
+            shiny::tabPanel(
+              title = "Heatmap",
+              shiny::numericInput(
+                inputId = "sum_heatmap_show_first",
+                label = "Show first",
+                value = 25,
+                min = 1
+              ),
+              shiny::checkboxInput(
+                inputId = "sum_heatmap_show_gene_names",
+                label = "Show gene names",
+                value = FALSE
+              ),
+              shiny::checkboxInput(
+                inputId = "sum_heatmap_show_na",
+                label = "Show NA",
+                value = FALSE
+              ),
+              shiny::selectInput(
+                inputId = "sum_heatmap_dist",
+                label = "Distance measure",
+                choices = list(
+                  "Euclidean" = "euclidean",
+                  "Manhattan" = "manhattan",
+                  "Pearson" = "pearson",
+                  "Spearman" = "spearman"
+                ),
+                selected = "euclidean"
+              ),
+              shiny::selectInput(
+                inputId = "sum_heatmap_clust",
+                label = "Clustering method",
+                choices = list(
+                  "Single" = "single",
+                  "Complete" = "complete",
+                  "Average" = "average",
+                  "Centroid" = "centroid"
+                ),
+                selected = "average"
+              )
+            ),
+            shiny::tabPanel(
+              title = "Venn Diagram",
+              shiny::selectInput(
+                inputId = "sum_venn_mode",
+                label = "Mode",
+                choices = list(
+                  "Up" = "up",
+                  "Down" = "down",
+                  "Both" = "both"
+                ),
+                selected = "both"
+              )
+            ),
+            shiny::tabPanel(
+              title = "UpSet Plot",
+              shiny::selectInput(
+                inputId = "sum_upset_mode",
+                label = "Mode",
+                choices = list(
+                  "Up" = "up",
+                  "Down" = "down",
+                  "Both" = "both"
+                ),
+                selected = "both"
+              ),
+              shiny::conditionalPanel(
+                condition = "input.sum_upset_mode == 'both'",
+                shiny::checkboxInput(
+                  inputId = "sum_upset_colored",
+                  label = "Coloring",
+                  value = TRUE
+                )
+              ),
+              shiny::numericInput(
+                inputId = "sum_upset_min_setsize",
+                label = "Minimum set size",
+                value = 10, min = 0, step = 1
+              )
+            ),
+            shiny::tabPanel(
+              title = "Quantile-Quantile Plot",
+              shiny::uiOutput("ui_sum_qq_ref"),
+            ),
+            shiny::tabPanel(
+              title = "Concordance At the Top Plot",
+              shiny::selectInput(
+                inputId = "sum_cat_mode",
+                label = "Mode",
+                choices = list(
+                  "Up" = "up",
+                  "Down" = "down",
+                  "Both" = "both"
+                ),
+                selected = "up"
+              ),
+              shiny::numericInput(
+                inputId = "sum_cat_maxrank",
+                label = "Max rank",
+                value = 1000,
+                min = 1
+              ),
+              shiny::uiOutput("ui_sum_cat_choice")
+            )
+          )
+        ),
+        shinyBS::bsCollapse(
+          shinyBS::bsCollapsePanel(
+            title = "INFO - summary",
+            shiny::includeMarkdown(
+              system.file("extdata", "summary.md", package = "DeeDee")
+            ),
+            style = "primary"
+          )
+        )
+      )
+    })
+
     output$ui_sum_scatter_choices1 <- shiny::renderUI({
       shiny::req(
         shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
