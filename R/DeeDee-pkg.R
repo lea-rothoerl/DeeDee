@@ -25,10 +25,10 @@
 #' @importFrom readxl excel_sheets read_excel
 #' @importFrom shiny actionButton brushedPoints brushOpts checkboxGroupInput
 #' checkboxInput column conditionalPanel downloadButton downloadHandler
-#' fileInput fluidRow includeMarkdown navbarPage need numericInput
+#' fileInput fluidRow HTML includeMarkdown navbarPage need numericInput
 #' observeEvent plotOutput reactive reactiveValues renderPlot renderTable
 #' renderText renderUI req selectInput shinyApp tableOutput tabPanel
-#' tags textOutput uiOutput validate
+#' tagList tags textOutput uiOutput validate
 #' @importFrom shinyBS bsCollapse bsCollapsePanel bsModal
 #' @importFrom shinycssloaders withSpinner
 #' @importFrom shinythemes shinytheme
