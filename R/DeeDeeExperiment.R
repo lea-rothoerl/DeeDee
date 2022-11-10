@@ -144,6 +144,24 @@ de_list_checker <- function(del) {
 
 
 
+.check_de_results <- function(x) {
+  # checks that:
+  # it is a list
+  # its component are either of the expected/accepted elements
+  # checks their columns?
+
+  stopifnot(is.list(x))
+  stopifnot(length(x) > 0)
+
+  ok_types <- unlist(lapply(x, function(arg) {
+    is(arg, "DESeqResults") | is(arg, "DGEExact")
+  }))
+
+  stopifnot(all(ok_types))
+
+  return(TRUE)
+}
+
 
 deedee_import <- function(x) {
 
