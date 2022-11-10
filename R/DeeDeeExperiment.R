@@ -145,7 +145,7 @@ DeeDeeExperiment <- function(se = NULL,
 
 
 
-#' extends the rowData slot of the provided SE and returns also metadata
+# extends the rowData slot of the provided SE and returns also metadata
 .importDE_DESeq2 <- function(se, res_de, de_name) {
   # checks TODO:
   # correct object format
