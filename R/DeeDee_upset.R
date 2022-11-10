@@ -140,7 +140,9 @@ ddedde_upset <- function(dde,
     comp <- as.data.frame(comp)
     res <- ComplexUpset::upset(comp,
                                contrasts,
-                               guide = NULL
+                               guide = NULL,
+                               width_ratio = 0.1,
+                               min_size = min_setsize
     )
   }
 
