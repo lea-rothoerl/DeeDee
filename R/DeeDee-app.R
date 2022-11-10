@@ -357,9 +357,10 @@ ddedde_app <- function(deedee_obj = NULL,
     output$btn_inp_download <- shiny::downloadHandler(
       filename = "DeeDee_object.RDS",
       content = function(file) {
-        shiny::req(
-          shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
-        )
+        # shiny::req(
+        #   shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+        # )
+        shiny::req(shiny::isTruthy(reactive_values$dde))
         dl <- DeeDeeLegacy::DeeDeeObject(DeeDeeList = mydata_use())
         saveRDS(dl, file)
       }
@@ -455,9 +456,10 @@ ddedde_app <- function(deedee_obj = NULL,
     })
 
     output$ui_scatter_choices1 <- shiny::renderUI({
-      shiny::req(
-        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
-      )
+      # shiny::req(
+      #   shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      # )
+      shiny::req(shiny::isTruthy(reactive_values$dde))
       shiny::selectInput(
         inputId = "in_scatter_select1",
         label = "1st data set",
@@ -466,9 +468,10 @@ ddedde_app <- function(deedee_obj = NULL,
     })
 
     output$ui_scatter_choices2 <- shiny::renderUI({
-      shiny::req(
-        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
-      )
+      # shiny::req(
+      #   shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      # )
+      shiny::req(shiny::isTruthy(reactive_values$dde))
       shiny::selectInput(
         inputId = "in_scatter_select2",
         label = "2nd data set",
@@ -584,9 +587,10 @@ ddedde_app <- function(deedee_obj = NULL,
 
     # --- enrich ---
     enrich <- shiny::reactive({
-      shiny::req(
-        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
-      )
+      # shiny::req(
+      #   shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      # )
+      shiny::req(shiny::isTruthy(reactive_values$dde))
       shiny::validate(
         shiny::need(
           scatter_brushed(),
@@ -752,11 +756,12 @@ ddedde_app <- function(deedee_obj = NULL,
     })
 
     heatmap_output <- shiny::reactive({
-      shiny::req(
-        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
-      )
+      # shiny::req(
+      #   shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      # )
+      shiny::req(shiny::isTruthy(reactive_values$dde))
       shiny::req(input$in_heatmap_show_first)
-      shiny::req(mydata_use())
+      # shiny::req(mydata_use())
       res <- ddedde_heatmap(
         my_deedee_use(),
         show_first = input$in_heatmap_show_first,
@@ -891,9 +896,10 @@ ddedde_app <- function(deedee_obj = NULL,
         )
       )
 
-      shiny::req(
-        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
-      )
+      # shiny::req(
+      #   shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      # )
+      shiny::req(shiny::isTruthy(reactive_values$dde))
       res <- ddedde_venn(
         my_deedee_use(),
         mode = input$in_venn_mode,
@@ -981,9 +987,10 @@ ddedde_app <- function(deedee_obj = NULL,
         )
       )
 
-      shiny::req(
-        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
-      )
+      # shiny::req(
+      #   shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      # )
+      shiny::req(shiny::isTruthy(reactive_values$dde))
       if (input$in_upset_mode == "both" && input$in_upset_colored) {
         mode <- "both_colored"
       } else {
@@ -1086,9 +1093,10 @@ ddedde_app <- function(deedee_obj = NULL,
     })
 
     output$ui_qq_choices1 <- shiny::renderUI({
-      shiny::req(
-        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
-      )
+      # shiny::req(
+      #   shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      # )
+      shiny::req(shiny::isTruthy(reactive_values$dde))
       shiny::selectInput(
         inputId = "in_qq_select1",
         label = "1st data set",
@@ -1097,9 +1105,10 @@ ddedde_app <- function(deedee_obj = NULL,
     })
 
     output$ui_qq_choices2 <- shiny::renderUI({
-      shiny::req(
-        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
-      )
+      # shiny::req(
+      #   shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      # )
+      shiny::req(shiny::isTruthy(reactive_values$dde))
       shiny::selectInput(
         inputId = "in_qq_select2",
         label = "2nd data set",
@@ -1109,9 +1118,10 @@ ddedde_app <- function(deedee_obj = NULL,
     })
 
     output$ui_qq_ref <- shiny::renderUI({
-      shiny::req(
-        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
-      )
+      # shiny::req(
+      #   shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      # )
+      shiny::req(shiny::isTruthy(reactive_values$dde))
       shiny::selectInput(
         inputId = "in_qq_reference",
         label = "Reference",
@@ -1135,9 +1145,10 @@ ddedde_app <- function(deedee_obj = NULL,
         )
       )
 
-      shiny::req(
-        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
-      )
+      # shiny::req(
+      #   shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      # )
+      shiny::req(shiny::isTruthy(reactive_values$dde))
       sel1 <- match(input$in_qq_select1, names(dea(my_deedee_use())))
       sel2 <- match(input$in_qq_select2, names(dea(my_deedee_use())))
       shiny::req(sel1)
@@ -1177,9 +1188,10 @@ ddedde_app <- function(deedee_obj = NULL,
         )
       )
 
-      shiny::req(
-        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
-      )
+      # shiny::req(
+      #   shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      # )
+      shiny::req(shiny::isTruthy(reactive_values$dde))
       ref <- match(input$in_qq_reference, names(dea(my_deedee_use())))
       shiny::req(ref)
       res <- ddedde_qqmult(
@@ -1338,9 +1350,10 @@ ddedde_app <- function(deedee_obj = NULL,
     })
 
     output$ui_cat_choice <- shiny::renderUI({
-      shiny::req(
-        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
-      )
+      # shiny::req(
+      #   shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      # )
+      shiny::req(shiny::isTruthy(reactive_values$dde))
       shiny::selectInput(
         inputId = "in_cat_ref",
         label = "Reference contrast",
@@ -1365,9 +1378,10 @@ ddedde_app <- function(deedee_obj = NULL,
         )
       )
 
-      shiny::req(
-        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
-      )
+      # shiny::req(
+      #   shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      # )
+      shiny::req(shiny::isTruthy(reactive_values$dde))
       shiny::req(input$in_cat_maxrank)
       shiny::req(input$in_cat_ref)
 
@@ -1555,32 +1569,35 @@ ddedde_app <- function(deedee_obj = NULL,
     })
 
     output$ui_sum_scatter_choices1 <- shiny::renderUI({
-      shiny::req(
-        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
-      )
+      # shiny::req(
+      #   shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      # )
+      shiny::req(shiny::isTruthy(reactive_values$dde))
       shiny::selectInput(
         inputId = "sum_scatter_select1",
         label = "1st data set",
-        choices = names(mydata_use())
+        choices = names(dea(my_deedee_use()))
       )
     })
 
     output$ui_sum_scatter_choices2 <- shiny::renderUI({
-      shiny::req(
-        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
-      )
+      # shiny::req(
+      #   shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      # )
+      shiny::req(shiny::isTruthy(reactive_values$dde))
       shiny::selectInput(
         inputId = "sum_scatter_select2",
         label = "2nd data set",
-        selected = names(mydata_use())[2],
-        choices = names(mydata_use())
+        selected = names(dea(my_deedee_use()))[2],
+        choices = names(dea(my_deedee_use()))
       )
     })
 
     output$ui_sum_qq_ref <- shiny::renderUI({
-      shiny::req(
-        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
-      )
+      # shiny::req(
+      #   shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      # )
+      shiny::req(shiny::isTruthy(reactive_values$dde))
       shiny::selectInput(
         inputId = "sum_qqmult_ref",
         label = "Reference",
@@ -1590,9 +1607,10 @@ ddedde_app <- function(deedee_obj = NULL,
     })
 
     output$ui_sum_cat_choice <- shiny::renderUI({
-      shiny::req(
-        shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
-      )
+      # shiny::req(
+      #   shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
+      # )
+      shiny::req(shiny::isTruthy(reactive_values$dde))
       shiny::selectInput(
         inputId = "sum_cat_ref",
         label = "Reference contrast",
@@ -1617,6 +1635,7 @@ ddedde_app <- function(deedee_obj = NULL,
         )
       )
 
+      # TODO: update summary code from here
       shiny::req(mydata_use())
 
       outfile <- tempfile(fileext = ".html")
