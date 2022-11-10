@@ -14,17 +14,51 @@
 #'
 #' @examples
 #' # todo
-DeeDeeExperiment <- function(se,
+DeeDeeExperiment <- function(se = NULL,
                              de_results = NULL) {
 
-  # se <- SummarizedExperiment(...)
+  # old <- S4Vectors:::disableValidity()
+  # if (!isTRUE(old)) {
+  #   S4Vectors:::disableValidity(TRUE)
+  #   on.exit(S4Vectors:::disableValidity(old))
+  # }
 
-  if (!is(se, "RangedSummarizedExperiment")) {
-    if (is(se, "SummarizedExperiment")) {
-      se <- as(se, "RangedSummarizedExperiment")
-    } else {
-      stop("'se' must be a RangedSummarizedExperiment object")
+  if (!is.null(de_results))
+    .check_de_results(de_results)
+
+  # se <- SummarizedExperiment(...)
+  if(!is.null(se)) {
+    if (!is(se, "RangedSummarizedExperiment")) {
+      if (is(se, "SummarizedExperiment")) {
+        se <- as(se, "RangedSummarizedExperiment")
+      } else {
+        stop("'se' must be a RangedSummarizedExperiment object")
+      }
     }
+  } else {
+    if(is.null(de_results))
+      stop("You have to provide at least an se object or a de_results object")
+
+    message("TODO: needs to create a mock SE that does not break the creation later?!")
+    ## mock - todo ## # mock up the se from the de_results
+    ## mock - todo ## first_de <- de_results[[1]]
+    ## mock - todo ##
+    ## mock - todo ## # independently of the class, the feature names are in the rownames slot, TODO: check
+    ## mock - todo ## ids <- rownames(first_de)
+    ## mock - todo ##
+    ## mock - todo ## rd_mock <- DataFrame(
+    ## mock - todo ##   gene_id = ids,
+    ## mock - todo ##   row.names = ids)
+    ## mock - todo ##
+    ## mock - todo ## # way1
+    ## mock - todo ## se_mock <- SummarizedExperiment(
+    ## mock - todo ##   assays = SimpleList(),
+    ## mock - todo ##   rowData = rd_mock
+    ## mock - todo ## )
+    ## mock - todo ## # se_mock@NAMES <- NULL
+    ## mock - todo ## # rownames(se_mock) <- ids
+    ## mock - todo ##
+    ## mock - todo ## se <- se_mock
   }
 
   # TODO: if no SE is really provided, instantiate some rownames, at least directly
