@@ -130,6 +130,21 @@ de_list_checker <- function(del) {
 }
 
 
+.importDE_edgeR <- function(x) {
+
+}
+
+.importDE_limma <- function(x) {
+
+}
+
+.importDE_custom <- function(x) {
+
+}
+
+
+
+
 deedee_import <- function(x) {
 
   # legacy code:
@@ -159,19 +174,5 @@ deedee_import <- function(x) {
   # }
   # return(input)
 }
-
-
-.importDE_edgeR <- function(x) {
-
-}
-
-.importDE_limma <- function(x) {
-
-}
-
-.importDE_custom <- function(x) {
-
-}
-
 
 
