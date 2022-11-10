@@ -32,7 +32,8 @@
 #'   # deedee_app(dd_list)
 #'   # ddedde_app(deedee_obj = DeeDeeLegacy::DeeDeeObject(DeeDeeList = dd_list_original))
 #' }
-ddedde_app <- function(deedee_obj = NULL) {
+ddedde_app <- function(deedee_obj = NULL,
+                       dde = NULL) {
 
 
   # ui definition -----------------------------------------------------------
@@ -40,6 +41,19 @@ ddedde_app <- function(deedee_obj = NULL) {
     title = "DeeDee",
     id = "tabs",
     theme = shinythemes::shinytheme("flatly"),
+
+    tags$head(
+      tags$style(
+        HTML(
+          ".shiny-output-error-validation {
+            font-size: 15px;
+            color: forestgreen;
+            text-align: center;
+            }
+          "
+        )
+      )
+    ),
 
     # ui - data input ----------------------------------------------------------
     shiny::tabPanel(
