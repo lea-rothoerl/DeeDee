@@ -39,4 +39,9 @@ dde
 if (interactive()) {
   ddedde_app(dde = dde)
 }
+
+# one can provide the DeeDeeExperiment object also at runtime
+if (interactive()) {
+  ddedde_app()
+}
 }

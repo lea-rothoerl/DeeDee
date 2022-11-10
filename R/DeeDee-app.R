@@ -30,6 +30,11 @@
 #' if (interactive()) {
 #'   ddedde_app(dde = dde)
 #' }
+#'
+#' # one can provide the DeeDeeExperiment object also at runtime
+#' if (interactive()) {
+#'   ddedde_app()
+#' }
 ddedde_app <- function(deedee_obj = NULL,
                        dde = NULL) {
 
