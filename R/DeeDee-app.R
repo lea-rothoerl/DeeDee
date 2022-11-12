@@ -286,6 +286,7 @@ ddedde_app <- function(deedee_obj = NULL,
       }
 
       ###### to-replace ####### obj <- DeeDeeLegacy::DeeDeeObject(DeeDeeList = dat)
+      obj <- dat #### TODO
 
       return(obj)
     })
@@ -1672,8 +1673,9 @@ ddedde_app <- function(deedee_obj = NULL,
       shiny::req(qq_ref)
       shiny::req(cat_ref)
 
-      deedee_summary(
-        mydata_use(),
+      ddedde_summary(
+        # mydata_use(),
+        dde = my_deedee_use(),
         output_path = outfile,
         overwrite = TRUE,
         pthresh = input$sum_pthresh,
