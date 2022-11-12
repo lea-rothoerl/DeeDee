@@ -74,19 +74,5 @@ ddedde_qqmult <- function(dde,
   return(res)
 }
 
-#' ddedde_qqmult(dde,
-#'               pthresh = 0.05,
-#'               ref = 1)
-#'
-#' deedee_qqmult(dd_list_original, pthresh = 0.05, ref = 2)
-#' ddedde_qqmult(dde, pthresh = 0.05, ref = 2)
-#'
-#' deedee_qqmult(dd_list_original, pthresh = 0.05, ref = 3)
-#' ddedde_qqmult(dde, pthresh = 0.05, ref = 3)
-#'
-#' deedee_qqmult(dd_list_original, pthresh = 0.05, ref = 4)
-#' ddedde_qqmult(dde, pthresh = 0.05, ref = 4)
-
-
 
 
