@@ -285,7 +285,7 @@ ddedde_app <- function(deedee_obj = NULL,
         }
       }
 
-      obj <- DeeDeeLegacy::DeeDeeObject(DeeDeeList = dat)
+      ###### to-replace ####### obj <- DeeDeeLegacy::DeeDeeObject(DeeDeeList = dat)
 
       return(obj)
     })
@@ -363,8 +363,8 @@ ddedde_app <- function(deedee_obj = NULL,
         #   shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
         # )
         shiny::req(shiny::isTruthy(reactive_values$dde))
-        dl <- DeeDeeLegacy::DeeDeeObject(DeeDeeList = mydata_use())
-        saveRDS(dl, file)
+        ###### to-replace ####### dl <- DeeDeeLegacy::DeeDeeObject(DeeDeeList = mydata_use())
+        ###### to-replace ####### saveRDS(dl, file)
       }
     )
 

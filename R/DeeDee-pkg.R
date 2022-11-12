@@ -43,8 +43,6 @@
 #' @importFrom S4Vectors metadata metadata<-
 #' @importFrom rlang .data
 #' @import methods
-#' @importFrom DeeDeeLegacy deedee_prepare deedee_cat deedee_heatmap deedee_qq
-#' deedee_qqmult deedee_scatter deedee_summary deedee_upset deedee_venn DeeDeeObject
 #'
 #' @name DeeDee-pkg
 #' @docType package
