@@ -124,7 +124,15 @@ DeeDeeExperiment <- function(se = NULL,
       #   metainfo_pvalue = mcols(this_de)$description[colnames(this_de) == "pvalue"],
       #   original_object = this_de,
       #   package = "DESeq2"
-      # )
+      # ) is(res_de, "DGEExact") | is(res_de, "DGELRT")
+    } else if (is(this_de, "DGEExact") | is(this_de, "DGELRT")) {
+      input_edgeR <- .importDE_edgeR(se_out, this_de, i)
+      se_out <- input_edgeR$se
+      dea_contrasts[[i]] <- input_edgeR$dea_contrast
+    } else if (is(this_de, "MArrayLM")) {
+      input_limma <- .importDE_limma(se_out, this_de, i)
+      se_out <- input_limma$se
+      dea_contrasts[[i]] <- input_limma$dea_contrast
     }
   }
 
