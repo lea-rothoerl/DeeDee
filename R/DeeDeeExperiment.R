@@ -192,13 +192,97 @@ DeeDeeExperiment <- function(se = NULL,
 }
 
 
-.importDE_edgeR <- function(x) {
+# as an example, use the converted DEformats
+.importDE_edgeR <- function(se, res_de, de_name) {
+  # checks object
+  stopifnot(
+    is(res_de, "DGEExact") | is(res_de, "DGELRT")
+  )
+
+  # extract columns
+  res_tbl <- topTags(res_de, n = nrow(res_de), sort.by = "none")
+
+
+  matched_ids <- match(rownames(res_tbl), rownames(se))
+
+  # if not tested, add NA - everywhere? -> pre-fill?
+  rowData(se)[[paste0(de_name,"_log2FoldChange")]] <- NA
+  rowData(se)[[paste0(de_name,"_pvalue")]] <- NA
+  rowData(se)[[paste0(de_name,"_padj")]] <- NA
+
+  rowData(se)[[paste0(de_name,"_log2FoldChange")]][matched_ids] <- res_tbl$table$logFC
+  rowData(se)[[paste0(de_name,"_pvalue")]][matched_ids] <- res_tbl$table$PValue
+  rowData(se)[[paste0(de_name,"_padj")]][matched_ids] <- res_tbl$table$FDR
+
+  dea_contrast <- list(
+    alpha = NA,
+    lfcThreshold = NA,
+    metainfo_logFC = res_tbl$comparison,
+    metainfo_pvalue = NA,
+    original_object = res_de,
+    # object_name = deparse(substitute(res_tbl)),
+    package = "edgeR"
+  )
+
+  return(
+    list(
+      se = se,
+      dea_contrast = dea_contrast
+    )
+  )
+
+
+  # returns info (in the standardized manner)
 
 }
 
-.importDE_limma <- function(x) {
+
+# ... limma_de <- lmFit
+# will provide the outout of lmFit - see its examples
+.importDE_limma <- function(se, res_de, de_name) {
+  # checks object
+  stopifnot(is(res_de, "MArrayLM"))
+
+  # extract columns
+  res_tbl <- topTable(res_de,
+                      coef = 2,
+                      n = nrow(res_de),
+                      sort.by = "none")
+
+
+  matched_ids <- match(rownames(res_tbl), rownames(se))
+
+  # if not tested, add NA - everywhere? -> pre-fill?
+  rowData(se)[[paste0(de_name,"_log2FoldChange")]] <- NA
+  rowData(se)[[paste0(de_name,"_pvalue")]] <- NA
+  rowData(se)[[paste0(de_name,"_padj")]] <- NA
+
+  rowData(se)[[paste0(de_name,"_log2FoldChange")]][matched_ids] <- res_tbl$logFC
+  rowData(se)[[paste0(de_name,"_pvalue")]][matched_ids] <- res_tbl$P.Value
+  rowData(se)[[paste0(de_name,"_padj")]][matched_ids] <- res_tbl$adj.P.Val
+
+  dea_contrast <- list(
+    alpha = NA,
+    lfcThreshold = NA,
+    metainfo_logFC = res_tbl$comparison,
+    metainfo_pvalue = NA,
+    original_object = res_de,
+    # object_name = deparse(substitute(res_tbl)),
+    package = "limma"
+  )
+
+  return(
+    list(
+      se = se,
+      dea_contrast = dea_contrast
+    )
+  )
+
+
+  # returns info (in the standardized manner)
 
 }
+
 
 .importDE_custom <- function(x) {
 
@@ -216,7 +300,7 @@ DeeDeeExperiment <- function(se = NULL,
   stopifnot(length(x) > 0)
 
   ok_types <- unlist(lapply(x, function(arg) {
-    is(arg, "DESeqResults") | is(arg, "DGEExact")
+    is(arg, "DESeqResults") | is(arg, "DGEExact") | is(arg, "DGELRT") | is(arg, "MArrayLM")
   }))
 
   stopifnot(all(ok_types))
