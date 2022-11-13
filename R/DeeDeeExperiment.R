@@ -162,7 +162,7 @@ DeeDeeExperiment <- function(se = NULL,
   # p value respect the 0-1 interval
 
 
-  matched_ids <- match(rownames(se), rownames(res_de))
+  matched_ids <- match(rownames(res_de), rownames(se))
 
   # if not tested, add NA - everywhere? -> pre-fill?
   rowData(se)[[paste0(de_name,"_log2FoldChange")]] <- NA
