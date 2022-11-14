@@ -41,7 +41,7 @@ library("DeeDee")
 ## DeeDee scatter plot
 
 ```{r echo = TRUE}
-ddedde_scatter(dde = dde,
+deedee_scatter(dde = dde,
                pthresh = pthresh,
                select1 = scatter_select1,
                select2 = scatter_select2,
@@ -60,7 +60,7 @@ Your parameters:
 ## DeeDee heatmap
 
 ```{r echo = TRUE}
-ddedde_heatmap(dde = dde,
+deedee_heatmap(dde = dde,
                pthresh = pthresh,
                show_first = heatmap_show_first,
                show_gene_names = heatmap_show_gene_names,
@@ -83,7 +83,7 @@ Your parameters:
 ## DeeDee Venn diagram
 
 ```{r echo = TRUE}
-ddedde_venn(dde = dde,
+deedee_venn(dde = dde,
             pthresh = pthresh,
             mode = venn_mode)
 ```
@@ -98,7 +98,7 @@ Your parameters:
 ## DeeDee UpSet plot
 
 ```{r echo = TRUE}
-ddedde_upset(dde = dde,
+deedee_upset(dde = dde,
              pthresh = pthresh,
              mode = upset_mode,
              min_setsize = upset_min_setsize)
@@ -115,7 +115,7 @@ Your parameters:
 ## DeeDee Q-Q plot
 
 ```{r echo = TRUE}
-ddedde_qqmult(dde = dde,
+deedee_qqmult(dde = dde,
               pthresh = pthresh,
               ref = qqmult_ref)
 ```
@@ -130,7 +130,7 @@ Your parameters:
 ## DeeDee CAT plot
 
 ```{r echo = TRUE}
-ddedde_cat(dde = dde,
+deedee_cat(dde = dde,
            pthresh = pthresh,
            ref = cat_ref,
            maxrank = cat_maxrank,
