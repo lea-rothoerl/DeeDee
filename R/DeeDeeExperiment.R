@@ -246,7 +246,7 @@ DeeDeeExperiment <- function(se = NULL,
   # extract columns
   res_tbl <- topTable(res_de,
                       coef = 2,
-                      n = nrow(res_de),
+                      number = nrow(res_de),
                       sort.by = "none")
 
 
