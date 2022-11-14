@@ -27,9 +27,9 @@
 #' )
 #' dde
 #'
-#' ddedde_qq(dde)
+#' deedee_qq(dde)
 #'
-ddedde_qq <- function(dde,
+deedee_qq <- function(dde,
                       select1 = 1,
                       select2 = 2,
                       color_by = "pval1",
@@ -115,7 +115,7 @@ ddedde_qq <- function(dde,
   return(res)
 }
 
-# ddedde_qq(dde,
+# deedee_qq(dde,
 #           pthresh = 0.05,
 #           select = 1,
 #           select2 = 2,

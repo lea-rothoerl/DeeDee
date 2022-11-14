@@ -26,11 +26,11 @@
 #' )
 #' dde
 #'
-#' ddedde_scatter(dde, 1, 3, color_by = "pval2")
-#' ddedde_scatter(dde, 1, 2)
-#' ddedde_scatter(dde, 1, 4)
-#' ddedde_scatter(dde, 3, 2)
-ddedde_scatter <- function(dde,
+#' deedee_scatter(dde, 1, 3, color_by = "pval2")
+#' deedee_scatter(dde, 1, 2)
+#' deedee_scatter(dde, 1, 4)
+#' deedee_scatter(dde, 3, 2)
+deedee_scatter <- function(dde,
                            select1 = 1,
                            select2 = 2,
                            color_by = "pval1",

@@ -24,9 +24,9 @@
 #' )
 #' dde
 #'
-#' ddedde_qqmult(dde, pthresh = 0.05, ref = 1)
+#' deedee_qqmult(dde, pthresh = 0.05, ref = 1)
 #'
-ddedde_qqmult <- function(dde,
+deedee_qqmult <- function(dde,
                           ref = 1,
                           pthresh = 0.05) {
 
@@ -45,7 +45,7 @@ ddedde_qqmult <- function(dde,
   for (i in 1:length(dea_list)) {
     if (i != ref) {
       output[[i]] <- data.frame(
-        ggplot2::ggplot_build(ddedde_qq(
+        ggplot2::ggplot_build(deedee_qq(
           dde = dde,
           select1 = ref,
           select2 = i,

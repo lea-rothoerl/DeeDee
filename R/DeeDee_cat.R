@@ -26,8 +26,8 @@
 #' )
 #' dde
 #'
-#' ddedde_cat(dde, ref = 1, maxrank = 1000, mode = "up", pthresh = 0.05)
-ddedde_cat <- function(dde,
+#' deedee_cat(dde, ref = 1, maxrank = 1000, mode = "up", pthresh = 0.05)
+deedee_cat <- function(dde,
                        ref = 1,
                        maxrank = 1000,
                        mode = "up",
@@ -115,7 +115,7 @@ ddedde_cat <- function(dde,
   return(res)
 }
 
-# ddedde_cat(dde,
+# deedee_cat(dde,
 #            ref = 1,
 #            maxrank = 1000,
 #            mode = "up",

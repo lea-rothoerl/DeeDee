@@ -28,14 +28,14 @@
 #' dde
 #'
 #' if (interactive()) {
-#'   ddedde_app(dde = dde)
+#'   deedee_app(dde = dde)
 #' }
 #'
 #' # one can provide the DeeDeeExperiment object also at runtime
 #' if (interactive()) {
-#'   ddedde_app()
+#'   deedee_app()
 #' }
-ddedde_app <- function(deedee_obj = NULL,
+deedee_app <- function(deedee_obj = NULL,
                        dde = NULL) {
 
 
@@ -509,7 +509,7 @@ ddedde_app <- function(deedee_obj = NULL,
       sel2 <- match(input$in_scatter_select2, names(dea(my_deedee_use())))
       shiny::req(sel1)
       shiny::req(sel2)
-      res <- ddedde_scatter(
+      res <- deedee_scatter(
         my_deedee_use(),
         select1 = sel1,
         select2 = sel2,
@@ -765,7 +765,7 @@ ddedde_app <- function(deedee_obj = NULL,
       shiny::req(shiny::isTruthy(reactive_values$dde))
       shiny::req(input$in_heatmap_show_first)
       # shiny::req(mydata_use())
-      res <- ddedde_heatmap(
+      res <- deedee_heatmap(
         my_deedee_use(),
         show_first = input$in_heatmap_show_first,
         show_gene_names = input$in_heatmap_show_gene_names,
@@ -903,7 +903,7 @@ ddedde_app <- function(deedee_obj = NULL,
       #   shiny::isTruthy(input$upload_de) || shiny::isTruthy(deedee_obj)
       # )
       shiny::req(shiny::isTruthy(reactive_values$dde))
-      res <- ddedde_venn(
+      res <- deedee_venn(
         my_deedee_use(),
         mode = input$in_venn_mode,
         pthresh = input$in_venn_pthresh
@@ -1000,7 +1000,7 @@ ddedde_app <- function(deedee_obj = NULL,
         mode <- input$in_upset_mode
       }
 
-      res <- ddedde_upset(
+      res <- deedee_upset(
         my_deedee_use(),
         mode = mode,
         pthresh = input$in_upset_pthresh,
@@ -1156,7 +1156,7 @@ ddedde_app <- function(deedee_obj = NULL,
       sel2 <- match(input$in_qq_select2, names(dea(my_deedee_use())))
       shiny::req(sel1)
       shiny::req(sel2)
-      res <- ddedde_qq(
+      res <- deedee_qq(
         my_deedee_use(),
         select1 = sel1,
         select2 = sel2,
@@ -1197,7 +1197,7 @@ ddedde_app <- function(deedee_obj = NULL,
       shiny::req(shiny::isTruthy(reactive_values$dde))
       ref <- match(input$in_qq_reference, names(dea(my_deedee_use())))
       shiny::req(ref)
-      res <- ddedde_qqmult(
+      res <- deedee_qqmult(
         my_deedee_use(),
         ref = ref,
         pthresh = input$in_qq_pthresh
@@ -1389,7 +1389,7 @@ ddedde_app <- function(deedee_obj = NULL,
       shiny::req(input$in_cat_ref)
 
       ref <- match(input$in_cat_ref, names(dea(my_deedee_use())))
-      res <- ddedde_cat(
+      res <- deedee_cat(
         my_deedee_use(),
         ref = ref,
         maxrank = input$in_cat_maxrank,
@@ -1673,7 +1673,7 @@ ddedde_app <- function(deedee_obj = NULL,
       shiny::req(qq_ref)
       shiny::req(cat_ref)
 
-      ddedde_summary(
+      deedee_summary(
         # mydata_use(),
         dde = my_deedee_use(),
         output_path = outfile,

@@ -31,13 +31,13 @@
 #' )
 #' dde
 #'
-#' ddedde_heatmap(dde,
+#' deedee_heatmap(dde,
 #'                pthresh = 0.05, show_first = 25,
 #'                show_gene_names = FALSE, dist = "euclidean",
 #'                clust = "average", show_na = FALSE
 #' )
 #'
-ddedde_heatmap <- function(dde,
+deedee_heatmap <- function(dde,
                            show_first = 25,
                            show_gene_names = FALSE,
                            dist = "euclidean",
@@ -125,13 +125,13 @@ ddedde_heatmap <- function(dde,
 #'                clust = "average", show_na = FALSE
 #' )
 
-# ddedde_heatmap(dde = dde,
+# deedee_heatmap(dde = dde,
 #                pthresh = 0.05, show_first = 25,
 #                show_gene_names = FALSE, dist = "euclidean",
 #                clust = "average", show_na = FALSE
 # )
 #
-# ddedde_heatmap(dde = dde,
+# deedee_heatmap(dde = dde,
 #                pthresh = 0.05, show_first = 25,
 #                show_gene_names = TRUE, dist = "euclidean",
 #                clust = "average", show_na = TRUE

@@ -24,8 +24,8 @@
 #'   de_results = del
 #' )
 #' dde
-#' ddedde_upset(dde, pthresh = 0.05, mode = "both_colored", min_setsize = 10)
-ddedde_upset <- function(dde,
+#' deedee_upset(dde, pthresh = 0.05, mode = "both_colored", min_setsize = 10)
+deedee_upset <- function(dde,
                          mode = "both_colored",
                          min_setsize = 10,
                          pthresh = 0.05) {
@@ -147,7 +147,7 @@ ddedde_upset <- function(dde,
 }
 
 
-# ddedde_upset(dde,
+# deedee_upset(dde,
 #              pthresh = 0.05,
 #              mode = "both_colored",
 #              min_setsize = 10)

@@ -43,8 +43,8 @@
 #' )
 #' dde
 #'
-#' # ddedde_summary(dde)
-ddedde_summary <- function(dde,
+#' # deedee_summary(dde)
+deedee_summary <- function(dde,
                            template = system.file("extdata",
                                                   "summary_template.Rmd",
                                                   package = "DeeDee"),
@@ -146,7 +146,7 @@ ddedde_summary <- function(dde,
   }
 }
 
-# ddedde_summary(dde,
+# deedee_summary(dde,
 #                template = "inst/extdata/summary_template.Rmd", output_path = "v2.html")
 
 

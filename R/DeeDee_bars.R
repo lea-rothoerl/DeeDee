@@ -21,7 +21,7 @@
 #'   de_results = del
 #' )
 #' dde
-ddedde_bars <- function(dde) {
+deedee_bars <- function(dde) {
   # extract the summary infos
 
 

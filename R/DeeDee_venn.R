@@ -25,8 +25,8 @@
 #' dde
 #'
 #' library("dplyr") ## to have the inner_join, needed by ggvenn
-#' ddedde_venn(dde, pthresh = 0.05, mode = "both")
-ddedde_venn <- function(dde,
+#' deedee_venn(dde, pthresh = 0.05, mode = "both")
+deedee_venn <- function(dde,
                         mode = "both",
                         pthresh = 0.05) {
 
@@ -85,7 +85,7 @@ ddedde_venn <- function(dde,
   return(res)
 }
 
-# ddedde_venn(dde, pthresh = 0.05, mode = "both")
+# deedee_venn(dde, pthresh = 0.05, mode = "both")
 
 
 
