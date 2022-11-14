@@ -6,7 +6,7 @@ test_that("summary report", {
   )
 
   temp_output_file <- "test_report.html"
-  ddedde_summary(
+  deedee_summary(
     dde = dde,
     template = system.file("extdata",
                            "summary_template.Rmd",

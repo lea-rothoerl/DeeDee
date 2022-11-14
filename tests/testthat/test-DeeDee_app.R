@@ -2,7 +2,7 @@ test_that("shiny", {
   data(dd_list_original, package = "DeeDee")
 
   library("shiny")
-  myapp <- ddedde_app(dde = DeeDeeExperiment(se = se_macrophage_noassays, de_results = del))
+  myapp <- deedee_app(dde = DeeDeeExperiment(se = se_macrophage_noassays, de_results = del))
 
   expect_is(myapp, "shiny.appobj")
 })
