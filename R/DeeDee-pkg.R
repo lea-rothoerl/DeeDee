@@ -16,11 +16,13 @@
 #' @importFrom ComplexUpset intersection_size upset
 #' @importFrom DESeq2 results DESeq
 #' @importFrom dplyr bind_rows full_join inner_join
+#' @importFrom edgeR topTags
 #' @importFrom enrichplot emapplot pairwise_termsim
 #' @importFrom ggplot2 aes annotate coord_cartesian geom_line geom_point ggplot labs
 #' scale_fill_manual theme_light xlab ylab
 #' @importFrom ggvenn ggvenn
 #' @importFrom InteractiveComplexHeatmap makeInteractiveComplexHeatmap
+#' @importFrom limma topTable
 #' @importFrom writexl write_xlsx
 #' @importFrom readxl excel_sheets read_excel
 #' @importFrom shiny actionButton brushedPoints brushOpts checkboxGroupInput
