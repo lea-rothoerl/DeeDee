@@ -20,6 +20,7 @@
 #' @param cat_ref todo
 #' @param cat_maxrank todo
 #' @param cat_mode todo
+#' @param render_quiet todo
 #' @param silent todo
 #' @param open_file todo
 #'
@@ -66,6 +67,7 @@ deedee_summary <- function(dde,
                            cat_ref = 1,
                            cat_maxrank = 1000,
                            cat_mode = "up",
+                           render_quiet = TRUE,
                            silent = FALSE,
                            open_file = TRUE) {
 
@@ -133,7 +135,8 @@ deedee_summary <- function(dde,
   args$output_path <- output_path
 
   output_path <- rmarkdown::render(output_rmd,
-                                   params = args
+                                   params = args,
+                                   quiet = render_quiet
   )
   if (open_file == TRUE) {
     utils::browseURL(output_path)

@@ -25,6 +25,7 @@ deedee_summary(
   cat_ref = 1,
   cat_maxrank = 1000,
   cat_mode = "up",
+  render_quiet = TRUE,
   silent = FALSE,
   open_file = TRUE
 )
@@ -69,6 +70,8 @@ deedee_summary(
 \item{cat_maxrank}{todo}
 
 \item{cat_mode}{todo}
+
+\item{render_quiet}{todo}
 
 \item{silent}{todo}
 
