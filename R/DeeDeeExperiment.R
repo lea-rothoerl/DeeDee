@@ -39,26 +39,28 @@ DeeDeeExperiment <- function(se = NULL,
     if(is.null(de_results))
       stop("You have to provide at least an se object or a de_results object")
 
-    message("TODO: needs to create a mock SE that does not break the creation later?!")
-    ## mock - todo ## # mock up the se from the de_results
-    ## mock - todo ## first_de <- de_results[[1]]
-    ## mock - todo ##
-    ## mock - todo ## # independently of the class, the feature names are in the rownames slot, TODO: check
-    ## mock - todo ## ids <- rownames(first_de)
-    ## mock - todo ##
-    ## mock - todo ## rd_mock <- DataFrame(
-    ## mock - todo ##   gene_id = ids,
-    ## mock - todo ##   row.names = ids)
-    ## mock - todo ##
-    ## mock - todo ## # way1
-    ## mock - todo ## se_mock <- SummarizedExperiment(
-    ## mock - todo ##   assays = SimpleList(),
-    ## mock - todo ##   rowData = rd_mock
-    ## mock - todo ## )
-    ## mock - todo ## # se_mock@NAMES <- NULL
-    ## mock - todo ## # rownames(se_mock) <- ids
-    ## mock - todo ##
-    ## mock - todo ## se <- se_mock
+    message("creating a mock SE from the rows of the DE result objects")
+    # mock up the se from the de_results
+    first_de <- de_results[[1]]
+
+    # independently of the class, the feature names are in the
+    # rownames slot, TODO: check
+    ids <- rownames(first_de)
+
+    rd_mock <- DataFrame(
+      gene_id = ids,
+      row.names = ids)
+
+    # way1
+    se_mock <- SummarizedExperiment(
+      assays = SimpleList(),
+      rowData = rd_mock
+    )
+    # se_mock@NAMES <- NULL
+    # rownames(se_mock) <- ids
+
+    # no clue why this is strictly needed, but still it seems it is, if mocking up
+    se <- as(se_mock, "RangedSummarizedExperiment")
   }
 
   # TODO: if no SE is really provided, instantiate some rownames, at least directly
