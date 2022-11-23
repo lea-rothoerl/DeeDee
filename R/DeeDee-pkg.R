@@ -42,7 +42,7 @@
 #' @importFrom tools file_ext
 #' @importFrom utils read.table data packageVersion
 #' @importFrom viridis scale_color_viridis viridis
-#' @importFrom S4Vectors metadata metadata<-
+#' @importFrom S4Vectors metadata metadata<- DataFrame SimpleList
 #' @importFrom rlang .data
 #' @import methods
 #'
