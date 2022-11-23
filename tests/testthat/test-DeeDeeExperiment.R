@@ -6,12 +6,12 @@ test_that("creating", {
   dde
 
   expect_is(dde, "DeeDeeExperiment")
-  new_del <- list(
-    ifng2 = del$ifng_vs_naive,
-    ifngsalmo2 = del$ifngsalmo_vs_naive
+
+  dde_only_de <- DeeDeeExperiment(
+    de_results = del
   )
-  # add a new (set of) DE result(s)
-  dde_new <- add_dea(dde, new_del)
+  expect_is(dde, "DeeDeeExperiment")
+
 })
 
 
