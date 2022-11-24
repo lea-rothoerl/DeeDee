@@ -1,4 +1,4 @@
-
+# nocov start
 rds_input <- function(obj,
                       nm) {
 
@@ -227,3 +227,4 @@ input_infobox <- function(deedee_obj,
   df <- data.frame(filename, type, contrast, genes)
   return(df)
 }
+# nocov end
