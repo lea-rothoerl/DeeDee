@@ -1,8 +1,12 @@
 validDeeDeeExperiment <- function(object) {
   msg <- NULL
 
-  if (!is(object@dea, "list")) {
+  if (!is(dea(object), "list")) {
     msg <- c(msg, "'dea' must be a list")
+  }
+
+  if (length(dea(object)) == 0) {
+    msg <- c(msg, "'dea' must be a non-empty list")
   }
 
   if (length(dea(object)) > 0) {
@@ -10,7 +14,7 @@ validDeeDeeExperiment <- function(object) {
       msg <- c(msg, "'dea' must be a named list")
     }
 
-    dea_names <- names(object@dea)
+    dea_names <- names(dea(object))
 
     required_rowdata <- unlist(
       lapply(
