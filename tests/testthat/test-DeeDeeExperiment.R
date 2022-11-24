@@ -54,8 +54,9 @@ test_that("validity and so", {
   )
 
   # invalid replacements
-  dde3@dea <- list()
-  expect_error(validObject(dde3))
+  ## actually, can enable it is an empty list (i.e. no DE (yet) inserted)
+  # dde3@dea <- list()
+  # expect_error(validObject(dde3))
 
   dde3@dea <- list("foo", "bar")
   expect_error(validObject(dde3))
