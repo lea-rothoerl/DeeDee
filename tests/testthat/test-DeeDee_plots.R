@@ -18,13 +18,31 @@ test_that("plotting & plotting", {
   p_venn <- deedee_venn(dde)
   expect_is(p_venn, "gg")
 
+  p_venn_up <- deedee_venn(dde, mode = "up")
+  expect_is(p_venn_up, "gg")
+  p_venn_down <- deedee_venn(dde, mode = "down")
+  expect_is(p_venn_down, "gg")
+
 
   p_upset <- deedee_upset(dde)
   expect_is(p_upset, "gg")
 
+  p_upset_both <- deedee_upset(dde, mode = "both")
+  expect_is(p_upset_both, "gg")
+
+  p_upset_up <- deedee_upset(dde, mode = "up")
+  expect_is(p_upset_up, "gg")
+  p_upset_down <- deedee_upset(dde, mode = "down")
+  expect_is(p_upset_down, "gg")
+
 
   p_cat <- deedee_cat(dde)
   expect_is(p_cat, "gg")
+
+  p_cat_down <- deedee_cat(dde, mode = "down")
+  expect_is(p_cat_down, "gg")
+  p_cat_both <- deedee_cat(dde, mode = "both")
+  expect_is(p_cat_both, "gg")
 
 
   p_qq <- deedee_qq(dde)
@@ -32,8 +50,6 @@ test_that("plotting & plotting", {
   p_qq_m <- deedee_qqmult(dde)
   expect_is(p_qq_m, "gg")
 
-
-  # deedee_summary(dde)
 })
 
 
