@@ -35,3 +35,28 @@ test_that("adding and removing", {
   expect_is(dde_removed, "DeeDeeExperiment")
   expect_equal(length(dea(dde_removed)), 3)
 })
+
+
+test_that("validity and so", {
+  dde2 <- DeeDeeExperiment(
+    se_macrophage_noassays,
+    de_results = del
+  )
+
+  expect_true(validObject(dde2))
+
+  rowData(dde2)[["ifng_vs_naive_log2FoldChange"]] <- NULL
+  expect_error(validObject(dde2))
+
+  dde3 <- DeeDeeExperiment(
+    se_macrophage_noassays,
+    de_results = del
+  )
+
+  # invalid replacements
+  dde3@dea <- list()
+  expect_error(validObject(dde3))
+
+  dde3@dea <- list("foo", "bar")
+  expect_error(validObject(dde3))
+})
