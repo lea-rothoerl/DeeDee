@@ -3,7 +3,8 @@ test_that("creating", {
     se_macrophage_noassays,
     de_results = del
   )
-  dde
+
+  print(dde)
 
   expect_is(dde, "DeeDeeExperiment")
 
@@ -12,6 +13,43 @@ test_that("creating", {
   )
   expect_is(dde, "DeeDeeExperiment")
 
+  dde_nodd <- DeeDeeExperiment(
+    se = se_macrophage_noassays,
+  )
+  expect_is(dde_nodd, "DeeDeeExperiment")
+
+
+  expect_is(
+    get_dea_df(dde, "ifng_vs_naive"), "DataFrame"
+  )
+
+  expect_error(
+    get_dea_df(dde, "wrong_name")
+  )
+
+  dde_gone_wrong <- dde
+  rowData(dde_gone_wrong)[["ifng_vs_naive_log2FoldChange"]] <- NULL
+  expect_error(
+    get_dea_df(dde_gone_wrong, "ifng_vs_naive")
+  )
+
+  expect_error(
+    DeeDeeExperiment(
+      rowData(se_macrophage_noassays),
+      de_results = del
+    )
+  )
+
+  expect_error(
+    DeeDeeExperiment(
+      assay(se_macrophage),
+      de_results = del
+    )
+  )
+
+  expect_error(
+    DeeDeeExperiment()
+  )
 })
 
 
