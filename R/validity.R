@@ -10,7 +10,7 @@ validDeeDeeExperiment <- function(object) {
   }
 
   if (length(dea(object)) > 0) {
-    if (any(is.null(names(object@dea)))) {
+    if (any(is.null(names(dea(object))))) {
       msg <- c(msg, "'dea' must be a named list")
     }
 
