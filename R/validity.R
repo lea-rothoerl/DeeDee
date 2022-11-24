@@ -38,5 +38,6 @@ validDeeDeeExperiment <- function(object) {
 
 }
 
-setValidity("DeeDeeExperiment", validDeeDeeExperiment)
+#' @importFrom S4Vectors setValidity2
+S4Vectors::setValidity2("DeeDeeExperiment", validDeeDeeExperiment)
 
