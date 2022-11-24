@@ -14,6 +14,17 @@ test_that("summary report", {
     output_path = temp_output_file
   )
 
+  # trigger error by trying to overwrite
+  expect_error(
+    deedee_summary(
+      dde = dde,
+      template = system.file("extdata",
+                             "summary_template.Rmd",
+                             package = "DeeDee"),
+      output_path = temp_output_file
+    )
+  )
+
   # browseURL(temp_output_file)
   expect_true(file.exists(temp_output_file))
 
