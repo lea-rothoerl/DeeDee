@@ -247,7 +247,7 @@ deedee_app <- function(deedee_obj = NULL,
                 ext[[i]] == "RDS" ||
                 ext[[i]] == "xlsx" ||
                 ext[[i]] == "txt",
-              "Please upload only .RDS, .xlsx or .txt files"
+              message = "Please upload only .RDS, .xlsx or .txt files"
             )
           )
 
@@ -372,7 +372,7 @@ deedee_app <- function(deedee_obj = NULL,
     output$inp_infobox <- shiny::renderTable({
       shiny::validate(shiny::need(
         !is.null(mydata()@DeeDeeList),
-        "Faulty input data provided."
+        message = "Faulty input data provided."
       ))
 
       shiny::req(
@@ -494,14 +494,14 @@ deedee_app <- function(deedee_obj = NULL,
         shiny::need(
           # length(mydata()@DeeDeeList) >= 2,
           length(dea(my_deedee())) >= 2,
-          "Please upload at least two contrasts."
+          message = "Please upload at least two contrasts."
         )
       )
       shiny::validate(
         shiny::need(
           # length(mydata_use()) >= 2,
           length(dea(my_deedee_use())) >= 2,
-          "Please select at least two contrasts."
+          message = "Please select at least two contrasts."
         )
       )
 
@@ -518,7 +518,9 @@ deedee_app <- function(deedee_obj = NULL,
       )
 
       shiny::validate(
-        shiny::need(!is.null(res), "No common genes in input datasets.")
+        shiny::need(
+          !is.null(res),
+          message = "No common genes in input datasets.")
       )
       res +
         ggplot2::coord_cartesian(
@@ -597,7 +599,7 @@ deedee_app <- function(deedee_obj = NULL,
       shiny::validate(
         shiny::need(
           scatter_brushed(),
-          "No brushed genes."
+          message = "No brushed genes."
         )
       )
 
@@ -739,20 +741,20 @@ deedee_app <- function(deedee_obj = NULL,
         shiny::need(
           # length(mydata()@DeeDeeList) >= 2,
           length(dea(my_deedee())) >= 2,
-          "Please upload at least two contrasts."
+          message = "Please upload at least two contrasts."
         )
       )
       shiny::validate(
         shiny::need(
           # length(mydata_use()) >= 2,
           length(dea(my_deedee_use())) >= 2,
-          "Please select at least two contrasts."
+          message = "Please select at least two contrasts."
         )
       )
       shiny::validate(
         shiny::need(
           !is.null(heatmap_output()),
-          "No common genes in input datasets."
+          message = "No common genes in input datasets."
         )
       )
       ""
@@ -775,7 +777,7 @@ deedee_app <- function(deedee_obj = NULL,
         show_na = input$in_heatmap_showNA
       )
       shiny::validate(
-        shiny::need(!is.null(res), "No common genes in input datasets.")
+        shiny::need(!is.null(res), message = "No common genes in input datasets.")
       )
 
       res <- ComplexHeatmap::draw(res)
@@ -888,14 +890,14 @@ deedee_app <- function(deedee_obj = NULL,
         shiny::need(
           # length(mydata()@DeeDeeList) >= 2,
           length(dea(my_deedee())) >= 2,
-          "Please upload at least two contrasts."
+          message = "Please upload at least two contrasts."
         )
       )
       shiny::validate(
         shiny::need(
           # length(mydata_use()) >= 2,
           length(dea(my_deedee_use())) >= 2,
-          "Please select at least two contrasts."
+          message = "Please select at least two contrasts."
         )
       )
 
@@ -912,7 +914,7 @@ deedee_app <- function(deedee_obj = NULL,
       shiny::validate(
         shiny::need(
           !is.null(res),
-          "No genes in your datasets. Maybe your specified p-value threshold is too low?"
+          message = "No genes in your datasets. Maybe your specified p-value threshold is too low?"
         )
       )
 
@@ -979,14 +981,14 @@ deedee_app <- function(deedee_obj = NULL,
         shiny::need(
           # length(mydata()@DeeDeeList) >= 2,
           length(dea(my_deedee())) >= 2,
-          "Please upload at least two contrasts."
+          message = "Please upload at least two contrasts."
         )
       )
       shiny::validate(
         shiny::need(
           # length(mydata_use()) >= 2,
           length(dea(my_deedee_use())) >= 2,
-          "Please select at least two contrasts."
+          message = "Please select at least two contrasts."
         )
       )
 
@@ -1010,7 +1012,7 @@ deedee_app <- function(deedee_obj = NULL,
       shiny::validate(
         shiny::need(
           !is.null(res),
-          "No genes in your datasets. Maybe your specified p-value threshold is too low?"
+          message = "No genes in your datasets. Maybe your specified p-value threshold is too low?"
         )
       )
       res
@@ -1137,14 +1139,14 @@ deedee_app <- function(deedee_obj = NULL,
         shiny::need(
           # length(mydata()@DeeDeeList) >= 2,
           length(dea(my_deedee())) >= 2,
-          "Please upload at least two contrasts."
+          message = "Please upload at least two contrasts."
         )
       )
       shiny::validate(
         shiny::need(
           # length(mydata_use()) >= 2,
           length(dea(my_deedee_use())) >= 2,
-          "Please select at least two contrasts."
+          message = "Please select at least two contrasts."
         )
       )
 
@@ -1168,7 +1170,7 @@ deedee_app <- function(deedee_obj = NULL,
       shiny::validate(
         shiny::need(
           !is.null(res),
-          "No genes in your datasets. Maybe your specified p-value threshold is too low?"
+          message = "No genes in your datasets. Maybe your specified p-value threshold is too low?"
         )
       )
 
@@ -1180,14 +1182,14 @@ deedee_app <- function(deedee_obj = NULL,
         shiny::need(
           # length(mydata()@DeeDeeList) >= 2,
           length(dea(my_deedee())) >= 2,
-          "Please upload at least two contrasts."
+          message = "Please upload at least two contrasts."
         )
       )
       shiny::validate(
         shiny::need(
           # length(mydata_use()) >= 2,
           length(dea(my_deedee_use())) >= 2,
-          "Please select at least two contrasts."
+          message = "Please select at least two contrasts."
         )
       )
 
@@ -1206,7 +1208,7 @@ deedee_app <- function(deedee_obj = NULL,
       shiny::validate(
         shiny::need(
           !is.null(res),
-          "No genes in your datasets. Maybe your specified p-value threshold is too low?"
+          message = "No genes in your datasets. Maybe your specified p-value threshold is too low?"
         )
       )
 
@@ -1370,14 +1372,14 @@ deedee_app <- function(deedee_obj = NULL,
         shiny::need(
           # length(mydata()@DeeDeeList) >= 2,
           length(dea(my_deedee())) >= 2,
-          "Please upload at least two contrasts."
+          message = "Please upload at least two contrasts."
         )
       )
       shiny::validate(
         shiny::need(
           # length(mydata_use()) >= 2,
           length(dea(my_deedee_use())) >= 2,
-          "Please select at least two contrasts."
+          message = "Please select at least two contrasts."
         )
       )
 
@@ -1400,7 +1402,7 @@ deedee_app <- function(deedee_obj = NULL,
       shiny::validate(
         shiny::need(
           !is.null(res),
-          "No genes in your datasets. Maybe your specified p-value threshold is too low?"
+          message = "No genes in your datasets. Maybe your specified p-value threshold is too low?"
         )
       )
 
@@ -1627,14 +1629,14 @@ deedee_app <- function(deedee_obj = NULL,
         shiny::need(
           # length(mydata()@DeeDeeList) >= 2,
           length(dea(my_deedee())) >= 2,
-          "Please upload at least two contrasts."
+          message = "Please upload at least two contrasts."
         )
       )
       shiny::validate(
         shiny::need(
           # length(mydata_use()) >= 2,
           length(dea(my_deedee_use())) >= 2,
-          "Please select at least two contrasts."
+          message = "Please select at least two contrasts."
         )
       )
 
