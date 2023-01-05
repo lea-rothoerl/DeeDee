@@ -615,8 +615,8 @@ deedee_app <- function(deedee_obj = NULL,
       )
       shiny::validate(
         shiny::need(
-          class(res) == "enrichResult",
-          "Not working."
+          is(res, "enrichResult"),
+          message = "Not working."
         )
       )
 
@@ -627,7 +627,7 @@ deedee_app <- function(deedee_obj = NULL,
       shiny::validate(
         shiny::need(
           !is.null(enrich()),
-          "Something went wrong..."
+          message = "Something went wrong..."
         )
       )
       en <- enrich()
@@ -635,7 +635,7 @@ deedee_app <- function(deedee_obj = NULL,
       shiny::validate(
         shiny::need(
           nrow(en_df) > 0,
-          "No enriched terms found."
+          message = "No enriched terms found."
         )
       )
 
@@ -644,10 +644,10 @@ deedee_app <- function(deedee_obj = NULL,
       shiny::validate(
         shiny::need(
           !is.null(plt),
-          "No enriched terms found."
+          message = "No enriched terms found."
         )
       )
-      print(plt)
+      return(plt)
     })
 
     output$btn_ora_download <- shiny::downloadHandler(
