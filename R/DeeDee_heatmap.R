@@ -61,7 +61,7 @@ deedee_heatmap <- function(dde,
   dea_list <- get_dea_list(dde)
   # and then proceed as for the old implementation
 
-  for (i in 1:length(dea_list)) {
+  for (i in seq_len(length(dea_list))) {
     dea_list[[i]] <- subset(dea_list[[i]], dea_list[[i]]$padj < pthresh) # pthresh
     dea_list[[i]] <- dea_list[[i]]["log2FoldChange"] # removing p-value column
     colnames(dea_list[[i]]) <- names(dea_list)[[i]] # creating unique colnames
@@ -101,10 +101,8 @@ deedee_heatmap <- function(dde,
 
   col <- viridis::viridis(n = 15, option = "magma")
 
-  res <- ComplexHeatmap::Heatmap(comp[1:min(
-    show_first,
-    length(comp[, 1])
-  ), ],
+  res <- ComplexHeatmap::Heatmap(
+    comp[seq_len(min(show_first, length(comp[, 1]))), ],
   name = "logFC",
   col = col,
   clustering_distance_rows = dist,

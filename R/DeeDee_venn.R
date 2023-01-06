@@ -40,7 +40,7 @@ deedee_venn <- function(dde,
 
 
   dea_list <- get_dea_list(dde)
-  for (i in 1:length(dea_list)) {
+  for (i in seq_len(length(dea_list))) {
     dea_list[[i]] <- subset(
       dea_list[[i]],
       dea_list[[i]]$padj < pthresh

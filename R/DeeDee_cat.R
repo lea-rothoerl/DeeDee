@@ -45,7 +45,7 @@ deedee_cat <- function(dde,
 
   dea_list <- get_dea_list(dde)
 
-  for (i in 1:length(dea_list)) {
+  for (i in seq_along(dea_list)) {
     dea_list[i][[1]] <- subset(
       dea_list[i][[1]],
       dea_list[i][[1]]$padj < pthresh
@@ -76,15 +76,18 @@ deedee_cat <- function(dde,
   output <- list()
   nm <- c()
 
-  for (i in 1:length(dea_list)) {
+  for (i in seq_len(length(dea_list))) {
     if (i != ref) {
       output[[i]] <- data.frame(
-        rank = 1:min(maxrank, length(dea_list[i][[1]])),
+        rank = seq_len(min(maxrank, length(dea_list[i][[1]]))),
         concordance = NA
       )
 
-      for (j in 1:nrow(output[[i]])) {
-        intsec <- intersect(dea_list[ref][[1]][1:j], dea_list[i][[1]][1:j])
+      for (j in seq_len(nrow(output[[i]]))) {
+        intsec <- intersect(
+          dea_list[ref][[1]][seq_len(j)],
+          dea_list[i][[1]][seq_len(j)]
+        )
         output[[i]][[j, "concordance"]] <- length(intsec) / j
       }
       nm[[i]] <- names(dea_list[i])

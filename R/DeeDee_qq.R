@@ -51,7 +51,7 @@ deedee_qq <- function(dde,
 
   data_red <- list(dea_list[[select1]], dea_list[[select2]])
 
-  for (i in 1:length(data_red)) {
+  for (i in seq_len(length(data_red))) {
     colnames(data_red[[i]]) <- c(
       paste("log2FoldChange", i, sep = ""),
       paste("pval", i, sep = ""),

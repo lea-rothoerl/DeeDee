@@ -77,7 +77,7 @@ xlsx_input <- function(obj,
                   path = path
     )
     names(out) <- obj
-    for (j in 1:length(obj)) {
+    for (j in seq_len(length(obj))) {
       out[[obj[j]]] <- as.data.frame(out[[obj[j]]])
       out[[obj[j]]] <- tibble::column_to_rownames(
         out[[obj[j]]], "rowname"
@@ -152,7 +152,7 @@ input_infobox <- function(deedee_obj,
   count <- 0
 
   if (!is.null(deedee_obj)) {
-    for (j in 1:length(deedee_obj@DeeDeeList)) {
+    for (j in seq_len(length(deedee_obj@DeeDeeList))) {
       count <- count + 1
       type[count] <- "DeeDee object"
       filename[count] <- "input as argument"
@@ -164,7 +164,7 @@ input_infobox <- function(deedee_obj,
 
   # reading out input files
   if (length(sets[, 1] > 0)) {
-    for (i in 1:(length(sets[, 1]))) {
+    for (i in seq_len((length(sets[, 1])))) {
       ext[i] <- tools::file_ext(sets[i, "datapath"])
 
       if (ext[[i]] == "rds" || ext[[i]] == "RDS") {
@@ -176,7 +176,7 @@ input_infobox <- function(deedee_obj,
                            path = sets[[i, "datapath"]]
         )
         names(res[[i]]) <- sheets
-        for (j in 1:length(sheets)) {
+        for (j in seq_len(length(sheets))) {
           res[[i]][[sheets[j]]] <- as.data.frame(res[[i]][[sheets[j]]])
           res[[i]][[sheets[j]]] <- tibble::column_to_rownames(
             res[[i]][[sheets[j]]], "rowname"
@@ -212,7 +212,7 @@ input_infobox <- function(deedee_obj,
                                              fixed = TRUE
           ))[1]
         }
-        for (j in 1:length(res[[i]])) {
+        for (j in seq_len(length(res[[i]]))) {
           count <- count + 1
           type[count] <- "DeeDee object"
           filename[count] <- sets[i, "name"]

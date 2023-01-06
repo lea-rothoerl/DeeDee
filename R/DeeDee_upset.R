@@ -41,7 +41,7 @@ deedee_upset <- function(dde,
 
 
   dea_list <- get_dea_list(dde)
-  for (i in 1:length(dea_list)) {
+  for (i in seq_len(length(dea_list))) {
     dea_list[[i]] <- subset(dea_list[[i]], dea_list[[i]]$padj < pthresh) # pthresh
 
     if (length(dea_list[[i]][[1]]) == 0) {
@@ -94,7 +94,7 @@ deedee_upset <- function(dde,
 
     nsets <- length(dea_list)
 
-    for (i in 1:length(comp[[1]])) {
+    for (i in seq_len(length(comp[[1]]))) {
       if ((comp[i, "count"] + comp[i, "na_count"]) == nsets) {
         comp[i, "dr"] <- "up"
       } else if ((comp[i, "count"] - comp[i, "na_count"]) == -nsets) {

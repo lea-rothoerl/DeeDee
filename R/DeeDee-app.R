@@ -278,8 +278,8 @@ deedee_app <- function(deedee_obj = NULL,
 
       # merging input data structures
       dat <- list()
-      for (i in 1:length(res)) {
-        for (j in 1:length(res[[i]])) {
+      for (i in seq_len(length(res))) {
+        for (j in seq_len(length(res[[i]]))) {
           checkmate::assert_subset(names(res[[i]][[j]]), c("logFC", "pval"))
           dat[[names(res[[i]])[[j]]]] <- res[[i]][[j]]
         }

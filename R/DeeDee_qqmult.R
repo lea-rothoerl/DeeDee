@@ -42,7 +42,7 @@ deedee_qqmult <- function(dde,
   output <- list()
   nm <- c()
 
-  for (i in 1:length(dea_list)) {
+  for (i in seq_len(length(dea_list))) {
     if (i != ref) {
       output[[i]] <- data.frame(
         ggplot2::ggplot_build(deedee_qq(
