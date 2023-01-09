@@ -19,32 +19,38 @@
 #' @importFrom edgeR topTags
 #' @importFrom enrichplot emapplot pairwise_termsim
 #' @importFrom ggplot2 aes annotate coord_cartesian geom_line geom_point ggplot labs
-#' scale_fill_manual theme_light xlab ylab
+#' scale_fill_manual theme_light xlab ylab ggplot_build
 #' @importFrom ggvenn ggvenn
 #' @importFrom InteractiveComplexHeatmap makeInteractiveComplexHeatmap
+#' InteractiveComplexHeatmapOutput
 #' @importFrom limma topTable
 #' @importFrom writexl write_xlsx
 #' @importFrom readxl excel_sheets read_excel
+#' @importFrom rlang .data
+#' @importFrom rmarkdown render
+#' @importFrom rvest html_node
 #' @importFrom shiny actionButton brushedPoints brushOpts checkboxGroupInput
-#' checkboxInput column conditionalPanel downloadButton downloadHandler
-#' fileInput fluidRow HTML includeMarkdown navbarPage need numericInput
-#' observeEvent plotOutput reactive reactiveValues renderPlot renderPrint renderTable
-#' renderText renderUI req selectInput showNotification shinyApp tableOutput tabPanel
-#' tagList tags textOutput uiOutput validate verbatimTextOutput
+#' checkboxInput column conditionalPanel downloadButton downloadHandler fileInput
+#' fluidPage fluidRow HTML includeHTML includeMarkdown isTruthy navbarPage need
+#' numericInput observeEvent plotOutput reactive reactiveValues removeNotification
+#' renderPlot renderPrint renderTable renderText renderUI req selectInput
+#' shinyApp showNotification tableOutput tabPanel tagList tags textOutput
+#' uiOutput validate verbatimTextOutput
+#' @importFrom shinydashboard tabBox
 #' @importFrom shinyBS bsCollapse bsCollapsePanel bsModal
 #' @importFrom shinycssloaders withSpinner
 #' @importFrom shinythemes shinytheme
 #' @importFrom stats approx complete.cases
 #' @importClassesFrom SummarizedExperiment RangedSummarizedExperiment
+#' @importFrom S4Vectors metadata metadata<- DataFrame SimpleList
 #' @importFrom SummarizedExperiment rowData rowData<- mcols
 #' rowData rowData<- SummarizedExperiment
 #' @importFrom tibble column_to_rownames rownames_to_column
 #' @importFrom tools file_ext
-#' @importFrom utils read.table data packageVersion
+#' @importFrom utils read.table data packageVersion browseURL
 #' @importFrom viridis scale_color_viridis viridis
-#' @importFrom S4Vectors metadata metadata<- DataFrame SimpleList
-#' @importFrom rlang .data
-#' @import methods
+#' @importFrom xml2 read_html write_html
+#' @importFrom methods show as callNextMethod is new validObject
 #'
 #' @name DeeDee-pkg
 #' @docType package
