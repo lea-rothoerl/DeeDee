@@ -39,6 +39,7 @@ Imports:
     InteractiveComplexHeatmap,
     limma,
     readxl, 
+    rmarkdown,
     rvest,
     shiny, 
     shinydashboard,
@@ -58,7 +59,6 @@ Imports:
     rlang
 Suggests: 
     macrophage,
-    rmarkdown,
     knitr,
     org.Hs.eg.db,
     org.Mm.eg.db,
