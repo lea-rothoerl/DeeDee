@@ -9,15 +9,38 @@
 DeeDeeExperiment(se = NULL, de_results = NULL)
 }
 \arguments{
-\item{se}{SumExp}
+\item{se}{A \code{SummarizedExperiment} object, that will be used as a scaffold to
+store the DE related information.}
 
-\item{de_results}{ssss}
+\item{de_results}{A named list of DE results, in any of the formats supported by
+the \code{DeeDee} package (currently: results from DESeq2, edgeR, limma).
+will be handled by other function to split/convert/make uniform
+has to have some names, otherwise will override with some defaults - ideally preferring names}
 }
 \value{
-tODO
+A \code{DeeDeeExperiment} object.
 }
 \description{
-dde <- DeeDeeExperiment(se_macrophage, de_results = del)
+The \code{DeeDeeExperiment} class is designed to represent
+It inherits from the SummarizedExperiment class, and additionally stores
+DE-related information via dedicated slots and \code{colData}.
+}
+\details{
+The \code{se} parameter can be optionally left unspecified. If this is the case,
+the resulting \code{DeeDeeExperiment} object will contain as features the ones
+specified by the provided components of the object supplied via the
+\code{de_results} parameter.
+
+The conversion of the components of the \code{de_results} list will be handled via
+conversion functions to uniform the names and set of information which will
+be stored in the returned \code{DeeDeeExperiment} object.
+The names of the list will be used to define the \code{contrasts} for the different
+DE analyses included, which will determine the way to access the information
+stored in the \code{dea} slot of the \code{DeeDeeExperiment} object
+
+Since a \code{DeeDeeExperiment} is also a \code{SummarizedExperiment} object, it can be
+seamlessly provided downstream for visualization and in-depth exploration to
+packages such as \code{iSEE} or similar.
 }
 \section{Slots}{
 
@@ -47,4 +70,7 @@ dde <- DeeDeeExperiment(
   se_macrophage_noassays,
   de_results = del
 )
+}
+\author{
+Lea Rothörl and Federico Marini
 }

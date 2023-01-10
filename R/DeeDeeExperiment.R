@@ -1,16 +1,44 @@
-
-#' se: one SE object
-#' de_results: a list of DE results, whatever format these are
+#' @name DeeDeeExperiment
+#'
+#' @title The DeeDeeExperiment class
+#'
+#' @aliases
+#' DeeDeeExperiment
+#' DeeDeeExperiment-class
+#'
+#' @description
+#' The `DeeDeeExperiment` class is designed to represent
+#' It inherits from the SummarizedExperiment class, and additionally stores
+#' DE-related information via dedicated slots and `colData`.
+#'
+#' @param se A `SummarizedExperiment` object, that will be used as a scaffold to
+#' store the DE related information.
+#' @param de_results A named list of DE results, in any of the formats supported by
+#' the `DeeDee` package (currently: results from DESeq2, edgeR, limma).
 #' will be handled by other function to split/convert/make uniform
 #' has to have some names, otherwise will override with some defaults - ideally preferring names
 #'
-#' dde <- DeeDeeExperiment(se_macrophage, de_results = del)
+#' @details
+#' The `se` parameter can be optionally left unspecified. If this is the case,
+#' the resulting `DeeDeeExperiment` object will contain as features the ones
+#' specified by the provided components of the object supplied via the
+#' `de_results` parameter.
 #'
-#' @param se SumExp
-#' @param de_results ssss
+#' The conversion of the components of the `de_results` list will be handled via
+#' conversion functions to uniform the names and set of information which will
+#' be stored in the returned `DeeDeeExperiment` object.
+#' The names of the list will be used to define the `contrasts` for the different
+#' DE analyses included, which will determine the way to access the information
+#' stored in the `dea` slot of the `DeeDeeExperiment` object
 #'
-#' @return tODO
+#' Since a `DeeDeeExperiment` is also a `SummarizedExperiment` object, it can be
+#' seamlessly provided downstream for visualization and in-depth exploration to
+#' packages such as `iSEE` or similar.
+#'
+#' @return A `DeeDeeExperiment` object.
 #' @export
+#'
+#' @author Lea Rothörl and Federico Marini
 #'
 #' @examples
 #' data("de_named_list", package = "DeeDee")
@@ -179,6 +207,9 @@ DeeDeeExperiment <- function(se = NULL,
 .importDE_DESeq2 <- function(se, res_de, de_name) {
   # checks TODO:
   # correct object format
+  stopifnot(
+    is(res_de, "DGEExact") | is(res_de, "DGELRT")
+  )
   # contain the right columns
   # contain the feature ids
   # p value respect the 0-1 interval
