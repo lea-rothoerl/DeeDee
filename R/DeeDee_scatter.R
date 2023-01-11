@@ -1,12 +1,15 @@
-#' Title
+#' deedee_scatter
 #'
-#' @param dde todo
+#' Scatter plot for the log fold change in the different DE analyses
+#'
+#' @param dde A [DeeDeeExperiment] object.
 #' @param select1 todo
 #' @param select2 todo
 #' @param color_by todo
-#' @param pthresh todo
+#' @param pthresh Numeric value, corresponding to the p-value to use as a
+#' threshold to subset the features to include.
 #'
-#' @return todo
+#' @return A `ggplot` plot object.
 #' @export
 #'
 #' @examples
@@ -30,21 +33,26 @@
 #' deedee_scatter(dde, 1, 2)
 #' deedee_scatter(dde, 1, 4)
 #' deedee_scatter(dde, 3, 2)
+#'
 deedee_scatter <- function(dde,
                            select1 = 1,
                            select2 = 2,
                            color_by = "pval1",
                            pthresh = 0.05) {
 
-  # checkmate::assert_list(data, type = "data.frame", min.len = 2)
-  # for (i in 1:length(data)) {
-  #   checkmate::assert_data_frame(data[[i]], type = "numeric")
-  # }
-  # checkmate::assert_number(pthresh, lower = 0, upper = 1)
-  # checkmate::assert_number(select1, lower = 1, upper = length(data))
-  # checkmate::assert_number(select2, lower = 1, upper = length(data))
-  # choices <- c("pval1", "pval2")
-  # checkmate::assert_choice(color_by, choices)
+  if (length(dea(dde)) < 2)
+    stop("Please provide a dde object including at least two DE analyses")
+
+  if (!is.numeric(select1) | !(select1 > 0 & select1 <= length(dea(dde))))
+    stop("Please specify a valid entry to use as 1st selection")
+  if (!is.numeric(select2) | !(select2 > 0 & select2 <= length(dea(dde))))
+    stop("Please specify a valid entry to use as 2nd selection")
+
+  if (!is.numeric(pthresh) | !(pthresh > 0 & pthresh <= 1))
+    stop("Please specify a valid p-value threshold")
+
+  color_by <- match.arg(color_by, c("pval1", "pval2"))
+
 
   dea_names <- names(dea(dde))
   names1 <- dea_names[select1]
