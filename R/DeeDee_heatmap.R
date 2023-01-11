@@ -1,17 +1,24 @@
-
-
-
-#' Title
+#' deedee_heatmap
 #'
-#' @param dde todo
-#' @param show_first todo
-#' @param show_gene_names todo
-#' @param dist todo
-#' @param clust todo
-#' @param show_na todo
-#' @param pthresh todo
+#' Construct a logFC heatmap on a subset of features
 #'
-#' @return todo
+#' @param dde A [DeeDeeExperiment] object.
+#' @param show_first Numeric value, specifying the number of features to include.
+#' The ranking is done according to ... TODO
+#' @param show_gene_names Logical value, whether to display the gene names on the
+#' heatmap's side.
+#' @param dist Character value, specifying the distance type to use in the call
+#' to `ComplexHeatmap`. Accordingly, it can be a pre-defined character
+#' ("euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski",
+#' "pearson", "spearman", "kendall").
+#' @param clust Character value. Defines the method to perform hierarchical
+#' clustering, passed to hclust, as used in `ComplexHeatmap`.
+#' @param show_na Logical value, whether to include features that have NA value
+#' for the log fold change.
+#' @param pthresh Numeric value, corresponding to the p-value to use as a
+#' threshold to subset the features to include.
+#'
+#' @return  A plot object generated via the `ComplexHeatmap` package.
 #' @export
 #'
 #' @examples
@@ -44,19 +51,21 @@ deedee_heatmap <- function(dde,
                            clust = "average",
                            show_na = FALSE,
                            pthresh = 0.05) {
+  if (length(dea(dde)) < 2)
+    stop("Please provide a dde object including at least two DE analyses")
 
-  # checkmate::assert_list(data, type = "data.frame", min.len = 2)
-  # for (i in 1:length(data)) {
-  #   checkmate::assert_data_frame(data[[i]], type = "numeric")
-  # }
-  # checkmate::assert_number(pthresh, lower = 0, upper = 1)
-  # checkmate::assert_number(show_first, lower = 1)
-  # checkmate::assert_logical(show_gene_names)
-  # choices1 <- c("euclidean", "manhattan", "pearson", "spearman")
-  # checkmate::assert_choice(dist, choices1)
-  # choices2 <- c("single", "complete", "average", "centroid")
-  # checkmate::assert_choice(clust, choices2)
-  # checkmate::assert_logical(show_na)
+  if (!is.numeric(show_first) | !(show_first > 0))
+    stop("Please specify a positive integer for the show_first parameter")
+
+  if (!is.numeric(pthresh) | !(pthresh > 0 & pthresh <= 1))
+    stop("Please specify a valid p-value threshold")
+
+  stopifnot(is.logical(show_gene_names))
+  stopifnot(is.logical(show_na))
+
+  stopifnot(is.character(dist))
+  stopifnot(is.character(clust))
+
 
   dea_list <- get_dea_list(dde)
   # and then proceed as for the old implementation
