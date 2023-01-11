@@ -1,12 +1,18 @@
-#' Title
+#' deedee_cat
 #'
-#' @param dde todo
-#' @param ref todo
-#' @param maxrank todo
-#' @param mode todo
-#' @param pthresh todo
+#' CAT plot - Concordance At the Top
 #'
-#' @return todo
+#' @param dde A [DeeDeeExperiment] object.
+#' @param ref A numeric value, corresponding to the order of the element in the
+#' `dde` object to be used as a reference.
+#' @param maxrank A numeric value. Indicates the maximum ranked feature to
+#' include when computing the Concordance At the Top. Defaults to 1000.
+#' @param mode A character value, could be one of "up", "down", or "both". Defines
+#' which features to include in the computations. Defaults to "up".
+#' @param pthresh Numeric value, corresponding to the p-value to use as a
+#' threshold to subset the features to include. Defaults sensibly to 0.05.
+#'
+#' @return A `ggplot` plot object.
 #' @export
 #'
 #' @examples
@@ -27,21 +33,27 @@
 #' dde
 #'
 #' deedee_cat(dde, ref = 1, maxrank = 1000, mode = "up", pthresh = 0.05)
+#'
 deedee_cat <- function(dde,
                        ref = 1,
                        maxrank = 1000,
                        mode = "up",
                        pthresh = 0.05) {
 
-  # checkmate::assert_list(data, type = "data.frame", min.len = 2)
-  # for (i in 1:length(data)) {
-  #   checkmate::assert_data_frame(data[[i]], type = "numeric")
-  # }
-  # checkmate::assert_number(ref, lower = 1, upper = length(data))
-  # checkmate::assert_number(pthresh, lower = 0, upper = 1)
-  # checkmate::assert_number(maxrank, lower = 1)
-  # choices <- c("up", "down", "both")
-  # checkmate::assert_choice(mode, choices)
+  if (length(dea(dde)) < 2)
+    stop("Please provide a dde object including at least two DE analyses")
+
+  if (!is.numeric(ref) | !(ref > 0 & ref <= length(dea(dde))))
+    stop("Please specify a valid entry to use as reference")
+
+  if (!is.numeric(maxrank) | !(maxrank > 1))
+    stop("Please specify a positive integer (larger than 1) for the maximum rank")
+
+  if (!is.numeric(pthresh) | !(pthresh > 0 & pthresh <= 1))
+    stop("Please specify a valid p-value threshold")
+
+  mode <- match.arg(mode, c("up", "down", "both"))
+
 
   dea_list <- get_dea_list(dde)
 
