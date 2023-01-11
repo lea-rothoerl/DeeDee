@@ -4,7 +4,7 @@
 \name{DeeDeeExperiment-class}
 \alias{DeeDeeExperiment-class}
 \alias{DeeDeeExperiment}
-\title{DeeDeeExperiment}
+\title{The DeeDeeExperiment class}
 \usage{
 DeeDeeExperiment(se = NULL, de_results = NULL)
 }
@@ -13,9 +13,7 @@ DeeDeeExperiment(se = NULL, de_results = NULL)
 store the DE related information.}
 
 \item{de_results}{A named list of DE results, in any of the formats supported by
-the \code{DeeDee} package (currently: results from DESeq2, edgeR, limma).
-will be handled by other function to split/convert/make uniform
-has to have some names, otherwise will override with some defaults - ideally preferring names}
+the \code{DeeDee} package (currently: results from DESeq2, edgeR, limma).}
 }
 \value{
 A \code{DeeDeeExperiment} object.
@@ -45,7 +43,9 @@ packages such as \code{iSEE} or similar.
 \section{Slots}{
 
 \describe{
-\item{\code{dea}}{todo}
+\item{\code{dea}}{This slot is designed to hold the DE-related information. This is
+internally being created upon importing from the list of DE results objects,
+provided when instantiating the \link{DeeDeeExperiment}.}
 }}
 
 \examples{

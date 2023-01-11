@@ -2,22 +2,24 @@
 % Please edit documentation in R/DeeDee_qqmult.R
 \name{deedee_qqmult}
 \alias{deedee_qqmult}
-\title{Title}
+\title{deedee_qqmult}
 \usage{
 deedee_qqmult(dde, ref = 1, pthresh = 0.05)
 }
 \arguments{
-\item{dde}{todo}
+\item{dde}{A \link{DeeDeeExperiment} object.}
 
-\item{ref}{todo}
+\item{ref}{A numeric value, corresponding to the order of the element in the
+\code{dde} object to be used as a reference.}
 
-\item{pthresh}{todo}
+\item{pthresh}{Numeric value, corresponding to the p-value to use as a
+threshold to subset the features to include.}
 }
 \value{
-todo
+A \code{ggplot} plot object.
 }
 \description{
-Title
+Q-Q plot for multiple comparisons of DE analyses
 }
 \examples{
 data("de_named_list", package = "DeeDee")

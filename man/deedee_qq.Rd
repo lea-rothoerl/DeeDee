@@ -2,7 +2,7 @@
 % Please edit documentation in R/DeeDee_qq.R
 \name{deedee_qq}
 \alias{deedee_qq}
-\title{Title}
+\title{deedee_qq}
 \usage{
 deedee_qq(
   dde,
@@ -14,7 +14,7 @@ deedee_qq(
 )
 }
 \arguments{
-\item{dde}{todo}
+\item{dde}{A \link{DeeDeeExperiment} object.}
 
 \item{select1}{todo}
 
@@ -24,13 +24,14 @@ deedee_qq(
 
 \item{as_line}{todo}
 
-\item{pthresh}{todo}
+\item{pthresh}{Numeric value, corresponding to the p-value to use as a
+threshold to subset the features to include.}
 }
 \value{
-todo
+A \code{ggplot} plot object.
 }
 \description{
-Title
+Q-Q plot for comparing DE analyses
 }
 \examples{
 data("de_named_list", package = "DeeDee")

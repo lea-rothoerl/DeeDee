@@ -14,7 +14,7 @@
 \alias{remove_dea,DeeDeeExperiment,character-method}
 \alias{get_dea_df,DeeDeeExperiment,character-method}
 \alias{get_dea_list,DeeDeeExperiment-method}
-\title{Methods for DeeDeeExperiment objects}
+\title{Methods for \link{DeeDeeExperiment} objects}
 \usage{
 \S4method{dea}{DeeDeeExperiment}(x)
 
@@ -29,19 +29,37 @@
 \S4method{get_dea_list}{DeeDeeExperiment}(x)
 }
 \arguments{
-\item{x}{A \code{\link{DeeDeeExperiment}} object}
+\item{x}{A \code{\link[=DeeDeeExperiment]{DeeDeeExperiment()}} object}
 
 \item{value}{Replacement value for replacement methods.}
 
-\item{dea}{todo}
+\item{dea}{A named list of DE results, in any of the formats supported by
+the \code{DeeDee} package (currently: results from DESeq2, edgeR, limma).}
 
-\item{dea_name}{todo}
+\item{dea_name}{Character value, specifying the name of the DE analysis to
+get or remove}
 }
 \value{
-Return value varies depending on method, as described below.
+Return value varies depending on the individual methods, as described
+below.
 }
 \description{
-Todo
+The \code{\link[=DeeDeeExperiment]{DeeDeeExperiment()}} class provides a family of methods to get
+and set DE-related information in \link{DeeDeeExperiment} objects.
+}
+\details{
+\itemize{
+\item \code{dea} and \verb{dea<-} are the methods to get and set the \code{dea} information as a
+whole. These methods return \code{DeeDeeExperiment} objects.
+\item \code{add_dea} and \code{remove_dea} are used to respectively add or remove DE-results
+items. These methods also return \code{DeeDeeExperiment} objects, with updated
+content in the \code{dea} slot.
+\item \code{get_dea_df} and \code{get_dea_list} retrieve the \code{dea} information and provide
+this as a \code{DataFrame} object (for a specific analysis) or as a list, with one
+element for each reported analysis.
+\item \code{show} is the method to nicely print out the information of a \code{DeeDeeExperiment}
+object.
+}
 }
 \examples{
 data("de_named_list", package = "DeeDee")

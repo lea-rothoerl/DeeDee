@@ -2,7 +2,7 @@
 % Please edit documentation in R/DeeDee_heatmap.R
 \name{deedee_heatmap}
 \alias{deedee_heatmap}
-\title{Title}
+\title{deedee_heatmap}
 \usage{
 deedee_heatmap(
   dde,
@@ -15,25 +15,33 @@ deedee_heatmap(
 )
 }
 \arguments{
-\item{dde}{todo}
+\item{dde}{A \link{DeeDeeExperiment} object.}
 
-\item{show_first}{todo}
+\item{show_first}{Numeric value, specifying the number of features to include.
+The ranking is done according to ... TODO}
 
-\item{show_gene_names}{todo}
+\item{show_gene_names}{Logical value, whether to display the gene names on the
+heatmap's side.}
 
-\item{dist}{todo}
+\item{dist}{Character value, specifying the distance type to use in the call
+to \code{ComplexHeatmap}. Accordingly, it can be a pre-defined character
+("euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski",
+"pearson", "spearman", "kendall").}
 
-\item{clust}{todo}
+\item{clust}{Character value. Defines the method to perform hierarchical
+clustering, passed to hclust, as used in \code{ComplexHeatmap}.}
 
-\item{show_na}{todo}
+\item{show_na}{Logical value, whether to include features that have NA value
+for the log fold change.}
 
-\item{pthresh}{todo}
+\item{pthresh}{Numeric value, corresponding to the p-value to use as a
+threshold to subset the features to include.}
 }
 \value{
-todo
+A plot object generated via the \code{ComplexHeatmap} package.
 }
 \description{
-Title
+Construct a logFC heatmap on a subset of features
 }
 \examples{
 data("de_named_list", package = "DeeDee")

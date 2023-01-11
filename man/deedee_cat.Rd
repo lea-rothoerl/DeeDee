@@ -2,26 +2,30 @@
 % Please edit documentation in R/DeeDee_cat.R
 \name{deedee_cat}
 \alias{deedee_cat}
-\title{Title}
+\title{deedee_cat}
 \usage{
 deedee_cat(dde, ref = 1, maxrank = 1000, mode = "up", pthresh = 0.05)
 }
 \arguments{
-\item{dde}{todo}
+\item{dde}{A \link{DeeDeeExperiment} object.}
 
-\item{ref}{todo}
+\item{ref}{A numeric value, corresponding to the order of the element in the
+\code{dde} object to be used as a reference.}
 
-\item{maxrank}{todo}
+\item{maxrank}{A numeric value. Indicates the maximum ranked feature to
+include when computing the Concordance At the Top. Defaults to 1000.}
 
-\item{mode}{todo}
+\item{mode}{A character value, could be one of "up", "down", or "both". Defines
+which features to include in the computations. Defaults to "up".}
 
-\item{pthresh}{todo}
+\item{pthresh}{Numeric value, corresponding to the p-value to use as a
+threshold to subset the features to include. Defaults sensibly to 0.05.}
 }
 \value{
-todo
+A \code{ggplot} plot object.
 }
 \description{
-Title
+CAT plot - Concordance At the Top
 }
 \examples{
 data("de_named_list", package = "DeeDee")
@@ -41,4 +45,5 @@ dde <- DeeDeeExperiment(
 dde
 
 deedee_cat(dde, ref = 1, maxrank = 1000, mode = "up", pthresh = 0.05)
+
 }

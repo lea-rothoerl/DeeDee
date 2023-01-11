@@ -2,7 +2,7 @@
 % Please edit documentation in R/DeeDee_scatter.R
 \name{deedee_scatter}
 \alias{deedee_scatter}
-\title{Title}
+\title{deedee_scatter}
 \usage{
 deedee_scatter(
   dde,
@@ -13,7 +13,7 @@ deedee_scatter(
 )
 }
 \arguments{
-\item{dde}{todo}
+\item{dde}{A \link{DeeDeeExperiment} object.}
 
 \item{select1}{todo}
 
@@ -21,13 +21,14 @@ deedee_scatter(
 
 \item{color_by}{todo}
 
-\item{pthresh}{todo}
+\item{pthresh}{Numeric value, corresponding to the p-value to use as a
+threshold to subset the features to include.}
 }
 \value{
-todo
+A \code{ggplot} plot object.
 }
 \description{
-Title
+Scatter plot for the log fold change in the different DE analyses
 }
 \examples{
 data("de_named_list", package = "DeeDee")
@@ -50,4 +51,5 @@ deedee_scatter(dde, 1, 3, color_by = "pval2")
 deedee_scatter(dde, 1, 2)
 deedee_scatter(dde, 1, 4)
 deedee_scatter(dde, 3, 2)
+
 }
