@@ -215,6 +215,8 @@ DeeDeeExperiment <- function(se = NULL,
 #' standardized information on the DE analysis, as these are to be used in the
 #' `DeeDee` framework.
 #'
+#' @noRd
+#'
 #' @examples
 #' # TODO example
 .importDE_DESeq2 <- function(se, res_de, de_name) {
@@ -278,6 +280,8 @@ DeeDeeExperiment <- function(se = NULL,
 #' standardized information on the DE analysis, as these are to be used in the
 #' DeeDee framework.
 #'
+#' @noRd
+#'
 #' @examples
 #' # TODO example
 .importDE_edgeR <- function(se, res_de, de_name) {
@@ -332,6 +336,8 @@ DeeDeeExperiment <- function(se = NULL,
 #' @return A list, containing the updated `SummarizedExperiment` object, and the
 #' standardized information on the DE analysis, as these are to be used in the
 #' `DeeDee` framework.
+#'
+#' @noRd
 #'
 #' @examples
 #' # TODO example

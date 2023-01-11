@@ -1,5 +1,3 @@
-#' DeeDeeExperiment
-#'
 #' @rdname DeeDeeExperiment
 #'
 #' @exportClass DeeDeeExperiment
