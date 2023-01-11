@@ -96,8 +96,10 @@ deedee_cat <- function(dde,
 
   names(output) <- nm
 
+  out_aggr <- dplyr::bind_rows(output, .id = "contrast")
+
   res <- ggplot2::ggplot(
-    dplyr::bind_rows(output, .id = "contrast"),
+    out_aggr,
     ggplot2::aes(.data$rank, .data$concordance, colour = .data$contrast)
   ) +
     ggplot2::geom_line() +
@@ -112,17 +114,8 @@ deedee_cat <- function(dde,
                                     sep = ""
                       ),
                       x = maxrank * 0.8,
-                      y = max(output[[i]][["concordance"]]) * 1.1
+                      y = max(out_aggr[["concordance"]]) * 1.1
     )
 
   return(res)
 }
-
-# deedee_cat(dde,
-#            ref = 1,
-#            maxrank = 1000,
-#            mode = "up",
-#            pthresh = 0.05)
-
-
-
