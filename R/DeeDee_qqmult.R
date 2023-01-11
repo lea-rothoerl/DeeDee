@@ -1,10 +1,14 @@
-#' Title
+#' deedee_qqmult
 #'
-#' @param dde todo
-#' @param ref todo
-#' @param pthresh todo
+#' Q-Q plot for multiple comparisons of DE analyses
 #'
-#' @return todo
+#' @param dde A [DeeDeeExperiment] object.
+#' @param ref A numeric value, corresponding to the order of the element in the
+#' `dde` object to be used as a reference.
+#' @param pthresh Numeric value, corresponding to the p-value to use as a
+#' threshold to subset the features to include.
+#'
+#' @return  A `ggplot` plot object.
 #' @export
 #'
 #' @examples
@@ -29,13 +33,15 @@
 deedee_qqmult <- function(dde,
                           ref = 1,
                           pthresh = 0.05) {
+  if (length(dea(dde)) < 2)
+    stop("Please provide a dde object including at least two DE analyses")
 
-  # checkmate::assert_list(data, type = "data.frame", min.len = 2)
-  # for (i in 1:length(data)) {
-  #   checkmate::assert_data_frame(data[[i]], type = "numeric")
-  # }
-  # checkmate::assert_number(pthresh, lower = 0, upper = 1)
-  # checkmate::assert_number(ref, lower = 1, upper = length(data))
+  if (!is.numeric(ref) | !(ref > 0 & ref <= length(dea(dde))))
+    stop("Please specify a valid entry to use as reference")
+
+  if (!is.numeric(pthresh) | !(pthresh > 0 & pthresh <= 1))
+    stop("Please specify a valid p-value threshold")
+
 
   dea_list <- get_dea_list(dde)
 
