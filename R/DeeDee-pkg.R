@@ -40,7 +40,7 @@
 #' @importFrom shinyBS bsCollapse bsCollapsePanel bsModal
 #' @importFrom shinycssloaders withSpinner
 #' @importFrom shinythemes shinytheme
-#' @importFrom stats approx complete.cases
+#' @importFrom stats approx complete.cases na.omit
 #' @importClassesFrom SummarizedExperiment RangedSummarizedExperiment
 #' @importFrom S4Vectors metadata metadata<- DataFrame SimpleList
 #' @importFrom SummarizedExperiment rowData rowData<- mcols
