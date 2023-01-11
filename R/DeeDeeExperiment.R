@@ -15,8 +15,6 @@
 #' store the DE related information.
 #' @param de_results A named list of DE results, in any of the formats supported by
 #' the `DeeDee` package (currently: results from DESeq2, edgeR, limma).
-#' will be handled by other function to split/convert/make uniform
-#' has to have some names, otherwise will override with some defaults - ideally preferring names
 #'
 #' @details
 #' The `se` parameter can be optionally left unspecified. If this is the case,
@@ -204,15 +202,38 @@ DeeDeeExperiment <- function(se = NULL,
 
 
 # extends the rowData slot of the provided SE and returns also metadata
+
+#' Import from `DESeq2` DE results
+#'
+#' @param se A `SummarizedExperiment` object
+#' @param res_de A set of DE results, provided as `DESeqResults` as in the `DESeq2`
+#' framework
+#' @param de_name A character value, describing the contrast of interest. Will be
+#' used to compose the column names in the `rowData` slot.
+#'
+#' @return A list, containing the updated `SummarizedExperiment` object, and the
+#' standardized information on the DE analysis, as these are to be used in the
+#' `DeeDee` framework.
+#'
+#' @examples
+#' # TODO example
 .importDE_DESeq2 <- function(se, res_de, de_name) {
   # checks TODO:
   # correct object format
   stopifnot(
-    is(res_de, "DGEExact") | is(res_de, "DGELRT")
+    is(res_de, "DESeqResults")
   )
   # contain the right columns
+  stopifnot(
+    all(c("log2FoldChange", "pvalue", "padj") %in% colnames(res_de))
+  )
+
   # contain the feature ids
-  # p value respect the 0-1 interval
+
+  # p value different from NA respect the 0-1 interval
+  stopifnot(
+    all(na.omit(res_de$pvalue <= 1)) & all(na.omit(res_de$pvalue > 0))
+  )
 
 
   matched_ids <- match(rownames(res_de), rownames(se))
@@ -245,7 +266,20 @@ DeeDeeExperiment <- function(se = NULL,
 }
 
 
-# as an example, use the converted DEformats
+#' Import from edgeR DE results
+#'
+#' @param se A SummarizedExperiment object
+#' @param res_de A set of DE results, provided by the `edgeR` framework (either a
+#' `DGEExact` or a `DGELRT` object).
+#' @param de_name A character value, describing the contrast of interest. Will be
+#' used to compose the column names in the rowData slot.
+#'
+#' @return A list, containing the updated SummarizedExperiment object, and the
+#' standardized information on the DE analysis, as these are to be used in the
+#' DeeDee framework.
+#'
+#' @examples
+#' # TODO example
 .importDE_edgeR <- function(se, res_de, de_name) {
   # checks object
   stopifnot(
@@ -283,15 +317,26 @@ DeeDeeExperiment <- function(se = NULL,
       dea_contrast = dea_contrast
     )
   )
-
-
-  # returns info (in the standardized manner)
-
 }
 
 
-# ... limma_de <- lmFit
-# will provide the outout of lmFit - see its examples
+
+#' Import from `limma` DE results
+#'
+#' @param se A `SummarizedExperiment` object
+#' @param res_de A set of DE results, provided in the `limma` framework (a `MArrayLM`
+#' object).
+#' @param de_name A character value, describing the contrast of interest. Will be
+#' used to compose the column names in the `rowData` slot.
+#'
+#' @return A list, containing the updated `SummarizedExperiment` object, and the
+#' standardized information on the DE analysis, as these are to be used in the
+#' `DeeDee` framework.
+#'
+#' @examples
+#' # TODO example
+#' # ... limma_de <- lmFit
+#' # will provide the outout of lmFit - see its examples
 .importDE_limma <- function(se, res_de, de_name) {
   # checks object
   stopifnot(is(res_de, "MArrayLM"))
