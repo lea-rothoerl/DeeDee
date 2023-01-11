@@ -1,4 +1,4 @@
-# (re)definition of one of the methods/functions
+# DeeDeeExperiment methods -----------------------------------------------------
 
 #' @export
 setGeneric("dea", function(x, ...) standardGeneric("dea"))

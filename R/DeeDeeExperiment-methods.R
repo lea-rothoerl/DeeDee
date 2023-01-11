@@ -1,6 +1,6 @@
 #' @name DeeDeeExperiment-methods
 #'
-#' @title Methods for DeeDeeExperiment objects
+#' @title Methods for [DeeDeeExperiment] objects
 #'
 #' @aliases
 #' dea
@@ -11,14 +11,30 @@
 #' get_dea_list
 #'
 #' @description
-#' Todo
+#' The [DeeDeeExperiment()] class provides a family of methods to get
+#' and set DE-related information in [DeeDeeExperiment] objects.
 #'
-#' @param x A \code{\link{DeeDeeExperiment}} object
+#' @param x A [DeeDeeExperiment()] object
 #' @param value Replacement value for replacement methods.
-#' @param dea todo
-#' @param dea_name todo
+#' @param dea A named list of DE results, in any of the formats supported by
+#' the `DeeDee` package (currently: results from DESeq2, edgeR, limma).
+#' @param dea_name Character value, specifying the name of the DE analysis to
+#' get or remove
 #'
-#' @return Return value varies depending on method, as described below.
+#' @return Return value varies depending on the individual methods, as described
+#' below.
+#'
+#' @details
+#' * `dea` and `dea<-` are the methods to get and set the `dea` information as a
+#' whole. These methods return `DeeDeeExperiment` objects.
+#' * `add_dea` and `remove_dea` are used to respectively add or remove DE-results
+#' items. These methods also return `DeeDeeExperiment` objects, with updated
+#' content in the `dea` slot.
+#' * `get_dea_df` and `get_dea_list` retrieve the `dea` information and provide
+#' this as a `DataFrame` object (for a specific analysis) or as a list, with one
+#' element for each reported analysis.
+#' * `show` is the method to nicely print out the information of a `DeeDeeExperiment`
+#' object.
 #'
 #' @examples
 #' data("de_named_list", package = "DeeDee")
@@ -120,12 +136,11 @@ setMethod("add_dea",
                 )
               }
             }
+
             # update the deslot
-            ## TODO should be a replacement operator?
             dea(x) <- dea_contrasts
 
-            # here check some validity?
-            # TODO
+            # check here the validity
             validObject(x)
 
             # return the object
