@@ -4,7 +4,9 @@
 #'
 #' @exportClass DeeDeeExperiment
 #'
-#' @slot dea todo
+#' @slot dea This slot is designed to hold the DE-related information. This is
+#' internally being created upon importing from the list of DE results objects,
+#' provided when instantiating the [DeeDeeExperiment].
 #'
 setClass("DeeDeeExperiment",
          contains = "RangedSummarizedExperiment",
@@ -12,5 +14,3 @@ setClass("DeeDeeExperiment",
            dea = "list"
          )
 )
-
-# TODOs in general: provide some corollary info as messages for most functions?
