@@ -2,22 +2,24 @@
 % Please edit documentation in R/DeeDee_venn.R
 \name{deedee_venn}
 \alias{deedee_venn}
-\title{Title}
+\title{deedee_venn}
 \usage{
 deedee_venn(dde, mode = "both", pthresh = 0.05)
 }
 \arguments{
-\item{dde}{todo}
+\item{dde}{A \link{DeeDeeExperiment} object.}
 
-\item{mode}{todo}
+\item{mode}{Character value, one of "both", "up", or "down". Specifies which
+set of features to focus on for the overlap calculations.}
 
-\item{pthresh}{todo}
+\item{pthresh}{Numeric value, corresponding to the p-value to use as a
+threshold to subset the features to include.}
 }
 \value{
-todo
+A \code{ggplot} plot object.
 }
 \description{
-Title
+A Venn diagram on the DE features from different analyses
 }
 \examples{
 data("de_named_list", package = "DeeDee")
@@ -38,4 +40,5 @@ dde
 
 library("dplyr") ## to have the inner_join, needed by ggvenn
 deedee_venn(dde, pthresh = 0.05, mode = "both")
+
 }

@@ -2,24 +2,25 @@
 % Please edit documentation in R/DeeDee_upset.R
 \name{deedee_upset}
 \alias{deedee_upset}
-\title{Title}
+\title{deedee_upset}
 \usage{
 deedee_upset(dde, mode = "both_colored", min_setsize = 10, pthresh = 0.05)
 }
 \arguments{
-\item{dde}{todo}
+\item{dde}{A \link{DeeDeeExperiment} object.}
 
 \item{mode}{todo}
 
 \item{min_setsize}{todo}
 
-\item{pthresh}{todo}
+\item{pthresh}{Numeric value, corresponding to the p-value to use as a
+threshold to subset the features to include.}
 }
 \value{
-todo
+A plot object, drawn with the \code{ComplexUpset} package.
 }
 \description{
-Title
+Upset plot on the sets of DE features for the different analyses included
 }
 \examples{
 data("de_named_list", package = "DeeDee")
@@ -37,5 +38,7 @@ dde <- DeeDeeExperiment(
   de_results = del
 )
 dde
+
 deedee_upset(dde, pthresh = 0.05, mode = "both_colored", min_setsize = 10)
+
 }
