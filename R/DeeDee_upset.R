@@ -1,11 +1,14 @@
-#' Title
+#' deedee_upset
 #'
-#' @param dde todo
+#' Upset plot on the sets of DE features for the different analyses included
+#'
+#' @param dde A [DeeDeeExperiment] object.
 #' @param mode todo
 #' @param min_setsize todo
-#' @param pthresh todo
+#' @param pthresh Numeric value, corresponding to the p-value to use as a
+#' threshold to subset the features to include.
 #'
-#' @return todo
+#' @return A plot object, drawn with the `ComplexUpset` package.
 #' @export
 #'
 #' @examples
@@ -24,20 +27,24 @@
 #'   de_results = del
 #' )
 #' dde
+#'
 #' deedee_upset(dde, pthresh = 0.05, mode = "both_colored", min_setsize = 10)
+#'
 deedee_upset <- function(dde,
                          mode = "both_colored",
                          min_setsize = 10,
                          pthresh = 0.05) {
 
-  # checkmate::assert_list(data, type = "data.frame", min.len = 2)
-  # for (i in 1:length(data)) {
-  #   checkmate::assert_data_frame(data[[i]], type = "numeric")
-  # }
-  # checkmate::assert_number(pthresh, lower = 0, upper = 1)
-  # choices <- c("up", "down", "both", "both_colored")
-  # checkmate::assert_choice(mode, choices)
-  # checkmate::assert_number(min_setsize, lower = 0)
+  if (length(dea(dde)) < 2)
+    stop("Please provide a dde object including at least two DE analyses")
+
+  if (!is.numeric(min_setsize) | !(min_setsize > 0))
+    stop("Please specify a positive integer for the min_setsize parameter")
+
+  if (!is.numeric(pthresh) | !(pthresh > 0 & pthresh <= 1))
+    stop("Please specify a valid p-value threshold")
+
+  mode <- match.arg(mode, c("up", "down", "both", "both_colored"))
 
 
   dea_list <- get_dea_list(dde)

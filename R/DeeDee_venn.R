@@ -1,10 +1,14 @@
-#' Title
+#' deedee_venn
 #'
-#' @param dde todo
-#' @param mode todo
-#' @param pthresh todo
+#' A Venn diagram on the DE features from different analyses
 #'
-#' @return todo
+#' @param dde A [DeeDeeExperiment] object.
+#' @param mode Character value, one of "both", "up", or "down". Specifies which
+#' set of features to focus on for the overlap calculations.
+#' @param pthresh Numeric value, corresponding to the p-value to use as a
+#' threshold to subset the features to include.
+#'
+#' @return A `ggplot` plot object.
 #' @export
 #'
 #' @examples
@@ -26,17 +30,18 @@
 #'
 #' library("dplyr") ## to have the inner_join, needed by ggvenn
 #' deedee_venn(dde, pthresh = 0.05, mode = "both")
+#'
 deedee_venn <- function(dde,
                         mode = "both",
                         pthresh = 0.05) {
 
-  # checkmate::assert_list(data, type = "data.frame", min.len = 2) # , max.len = 4)
-  # for (i in 1:length(data)) {
-  #   checkmate::assert_data_frame(data[[i]], type = "numeric")
-  # }
-  # checkmate::assert_number(pthresh, lower = 0, upper = 1)
-  # choices <- c("up", "down", "both")
-  # checkmate::assert_choice(mode, choices)
+  if (length(dea(dde)) < 2)
+    stop("Please provide a dde object including at least two DE analyses")
+
+  if (!is.numeric(pthresh) | !(pthresh > 0 & pthresh <= 1))
+    stop("Please specify a valid p-value threshold")
+
+  mode <- match.arg(mode, c("up", "down", "both"))
 
 
   dea_list <- get_dea_list(dde)
