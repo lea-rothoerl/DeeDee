@@ -29,9 +29,9 @@ to \code{ComplexHeatmap}. Accordingly, it can be a pre-defined character
 "pearson", "spearman", "kendall").}
 
 \item{clust}{Character value. Defines the method to perform hierarchical
-clustering, passed to hclust, as used in \code{ComplexHeatmap}.}
+clustering, passed to \code{hclust}, as used in \code{ComplexHeatmap}.}
 
-\item{show_na}{Logical value, whether to include features that have NA value
+\item{show_na}{Logical value, whether to include features that have \code{NA} value
 for the log fold change.}
 
 \item{pthresh}{Numeric value, corresponding to the p-value to use as a

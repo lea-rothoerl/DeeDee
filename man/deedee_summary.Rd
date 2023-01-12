@@ -2,7 +2,7 @@
 % Please edit documentation in R/DeeDee_summary.R
 \name{deedee_summary}
 \alias{deedee_summary}
-\title{Title}
+\title{deedee_summary}
 \usage{
 deedee_summary(
   dde,
@@ -31,57 +31,94 @@ deedee_summary(
 )
 }
 \arguments{
-\item{dde}{todo}
+\item{dde}{A \link{DeeDeeExperiment} object.}
 
-\item{template}{todo}
+\item{template}{Character value. Defines the location of the Rmd template to use
+for generating the summary}
 
-\item{output_path}{todo}
+\item{output_path}{Character value, name of the file the report will be saved
+to. Defaults to \code{DeeDeeSummary.html}, in the current working directory.}
 
-\item{overwrite}{todo}
+\item{overwrite}{Logical value, whether to overwrite an existing file if
+choosing the exact same name.}
 
-\item{pthresh}{todo}
+\item{pthresh}{Numeric value, corresponding to the p-value to use as a
+threshold to subset the features to include. This parameter is shared across
+a number of individual \code{DeeDee} functions.}
 
-\item{scatter_select1}{todo}
+\item{scatter_select1}{From \code{\link[=deedee_scatter]{deedee_scatter()}} - Numeric value, corresponding
+to the order of the element in the dde object to be selected first.}
 
-\item{scatter_select2}{todo}
+\item{scatter_select2}{From \code{\link[=deedee_scatter]{deedee_scatter()}} - Numeric value, corresponding
+to the order of the element in the dde object to be selected as second.}
 
-\item{scatter_color_by}{todo}
+\item{scatter_color_by}{From \code{\link[=deedee_scatter]{deedee_scatter()}} - Character value, either
+"pval1" or "pval2" to color the individual points mapping them to the p-value
+of either DE result set.}
 
-\item{heatmap_show_first}{todo}
+\item{heatmap_show_first}{From \code{\link[=deedee_heatmap]{deedee_heatmap()}} - Numeric value, specifying
+the number of features to include.}
 
-\item{heatmap_show_gene_names}{todo}
+\item{heatmap_show_gene_names}{From \code{\link[=deedee_heatmap]{deedee_heatmap()}} - Logical value,
+whether to display the gene names on the heatmap's side.}
 
-\item{heatmap_dist}{todo}
+\item{heatmap_dist}{From \code{\link[=deedee_heatmap]{deedee_heatmap()}} - Character value, specifying the
+distance type to use in the call to ComplexHeatmap.}
 
-\item{heatmap_clust}{todo}
+\item{heatmap_clust}{From \code{\link[=deedee_heatmap]{deedee_heatmap()}} - Character value. Defines the
+method to perform hierarchical clustering, passed to \code{hclust}, as used in
+\code{ComplexHeatmap}.}
 
-\item{heatmap_show_na}{todo}
+\item{heatmap_show_na}{From \code{\link[=deedee_heatmap]{deedee_heatmap()}} - Logical value, whether to
+include features that have \code{NA} value for the log fold change.}
 
-\item{venn_mode}{todo}
+\item{venn_mode}{From \code{\link[=deedee_venn]{deedee_venn()}} - Character value, one of "both", "up",
+or "down". Specifies which set of features to focus on for the overlap
+calculations.}
 
-\item{upset_mode}{todo}
+\item{upset_mode}{From \code{\link[=deedee_upset]{deedee_upset()}} - Character value, specifies which
+subset of features to include in the overlap computations.
+Can be either of the following: "both", "up", "down", or "both_colored".}
 
-\item{upset_min_setsize}{todo}
+\item{upset_min_setsize}{From \code{\link[=deedee_upset]{deedee_upset()}} - Numeric value, specifying
+the minimal number of observations in an intersection for it to be included
+in the upset plot.}
 
-\item{qqmult_ref}{todo}
+\item{qqmult_ref}{From \code{\link[=deedee_qqmult]{deedee_qqmult()}} - A numeric value, corresponding to
+the order of the element in the \code{dde} object to be used as a reference for the
+multi Q-Q plot.}
 
-\item{cat_ref}{todo}
+\item{cat_ref}{From \code{\link[=deedee_cat]{deedee_cat()}} - A numeric value, corresponding to the
+order of the element in the dde object to be used as a reference in the CAT
+plot.}
 
-\item{cat_maxrank}{todo}
+\item{cat_maxrank}{From \code{\link[=deedee_cat]{deedee_cat()}} - A numeric value. Indicates the
+maximum ranked feature to include when computing the Concordance At the Top.}
 
-\item{cat_mode}{todo}
+\item{cat_mode}{From \code{\link[=deedee_cat]{deedee_cat()}} - A character value, could be one of "up",
+"down", or "both". Defines which features to include in the computations.}
 
-\item{render_quiet}{todo}
+\item{render_quiet}{Logical value. Whether to render the report quietly when
+calling \code{rmarkdown::render()}.}
 
-\item{silent}{todo}
+\item{silent}{Logical value, prints a message once completed if set to TRUE.}
 
-\item{open_file}{todo}
+\item{open_file}{Logical value, if set to TRUE opens up the report once
+generated into a browser window.}
 }
 \value{
-todo
+Generates a fully fledged report in the location specified by
+\code{output_path}, and returns (invisibly) the name of the generated report.
 }
 \description{
-Title
+Generates a comprehensive summary on the DE analyses, in one command
+}
+\details{
+Most parameters in this function call are related to a specific function of the
+\code{DeeDee} package. Please refer to the individual help pages for more details,
+reminding that the parameter naming scheme is mirroring the pattern
+\code{function_parameter}, e.g. \code{scatter_color_by} controlling the \code{color_by}
+value in the \code{\link[=deedee_scatter]{deedee_scatter()}} function.
 }
 \examples{
 data("de_named_list", package = "DeeDee")
@@ -101,4 +138,8 @@ dde <- DeeDeeExperiment(
 dde
 
 # deedee_summary(dde)
+}
+\seealso{
+\code{\link[=deedee_cat]{deedee_cat()}}, \code{\link[=deedee_heatmap]{deedee_heatmap()}}, \code{\link[=deedee_qq]{deedee_qq()}}, \code{\link[=deedee_qqmult]{deedee_qqmult()}},
+\code{\link[=deedee_scatter]{deedee_scatter()}}, \code{\link[=deedee_upset]{deedee_upset()}}, and \code{\link[=deedee_venn]{deedee_venn()}}
 }

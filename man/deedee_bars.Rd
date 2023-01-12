@@ -7,10 +7,10 @@
 deedee_bars(dde)
 }
 \arguments{
-\item{dde}{todo}
+\item{dde}{A \link{DeeDeeExperiment} object.}
 }
 \value{
-todo
+A \code{ggplot} plot object.
 }
 \description{
 Title

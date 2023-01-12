@@ -9,9 +9,12 @@ deedee_upset(dde, mode = "both_colored", min_setsize = 10, pthresh = 0.05)
 \arguments{
 \item{dde}{A \link{DeeDeeExperiment} object.}
 
-\item{mode}{todo}
+\item{mode}{Character value, specifies which subset of features to include
+in the overlap computations. Can be either of the following: "both", "up",
+"down", or "both_colored".}
 
-\item{min_setsize}{todo}
+\item{min_setsize}{Numeric value, specifying the minimal number of
+observations in an intersection for it to be included in the upset plot.}
 
 \item{pthresh}{Numeric value, corresponding to the p-value to use as a
 threshold to subset the features to include.}

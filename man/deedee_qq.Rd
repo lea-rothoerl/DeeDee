@@ -16,13 +16,17 @@ deedee_qq(
 \arguments{
 \item{dde}{A \link{DeeDeeExperiment} object.}
 
-\item{select1}{todo}
+\item{select1}{Numeric value, corresponding to the order of the element in the
+\code{dde} object to be selected first.}
 
-\item{select2}{todo}
+\item{select2}{Numeric value, corresponding to the order of the element in the
+\code{dde} object to be selected as second.}
 
-\item{color_by}{todo}
+\item{color_by}{Character value, either "pval1" or "pval2" to color the
+individual points mapping them to the p-value of either DE result set.}
 
-\item{as_line}{todo}
+\item{as_line}{Logical value, whether to plot the Q-Q information as a line -
+defaults to FALSE.}
 
 \item{pthresh}{Numeric value, corresponding to the p-value to use as a
 threshold to subset the features to include.}
