@@ -3,9 +3,12 @@
 #' Scatter plot for the log fold change in the different DE analyses
 #'
 #' @param dde A [DeeDeeExperiment] object.
-#' @param select1 todo
-#' @param select2 todo
-#' @param color_by todo
+#' @param select1 Numeric value, corresponding to the order of the element in the
+#' `dde` object to be selected first.
+#' @param select2 Numeric value, corresponding to the order of the element in the
+#' `dde` object to be selected as second.
+#' @param color_by Character value, either "pval1" or "pval2" to color the
+#' individual points mapping them to the p-value of either DE result set.
 #' @param pthresh Numeric value, corresponding to the p-value to use as a
 #' threshold to subset the features to include.
 #'

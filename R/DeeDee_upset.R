@@ -3,8 +3,11 @@
 #' Upset plot on the sets of DE features for the different analyses included
 #'
 #' @param dde A [DeeDeeExperiment] object.
-#' @param mode todo
-#' @param min_setsize todo
+#' @param mode Character value, specifies which subset of features to include
+#' in the overlap computations. Can be either of the following: "both", "up",
+#' "down", or "both_colored".
+#' @param min_setsize Numeric value, specifying the minimal number of
+#' observations in an intersection for it to be included in the upset plot.
 #' @param pthresh Numeric value, corresponding to the p-value to use as a
 #' threshold to subset the features to include.
 #'

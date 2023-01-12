@@ -12,8 +12,8 @@
 #' ("euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski",
 #' "pearson", "spearman", "kendall").
 #' @param clust Character value. Defines the method to perform hierarchical
-#' clustering, passed to hclust, as used in `ComplexHeatmap`.
-#' @param show_na Logical value, whether to include features that have NA value
+#' clustering, passed to `hclust`, as used in `ComplexHeatmap`.
+#' @param show_na Logical value, whether to include features that have `NA` value
 #' for the log fold change.
 #' @param pthresh Numeric value, corresponding to the p-value to use as a
 #' threshold to subset the features to include.
