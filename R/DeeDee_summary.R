@@ -1,30 +1,72 @@
-#' Title
+#' deedee_summary
 #'
-#' @param dde todo
-#' @param template todo
-#' @param output_path todo
-#' @param overwrite todo
-#' @param pthresh todo
-#' @param scatter_select1 todo
-#' @param scatter_select2 todo
-#' @param scatter_color_by todo
-#' @param heatmap_show_first todo
-#' @param heatmap_show_gene_names todo
-#' @param heatmap_dist todo
-#' @param heatmap_clust todo
-#' @param heatmap_show_na todo
-#' @param venn_mode todo
-#' @param upset_mode todo
-#' @param upset_min_setsize todo
-#' @param qqmult_ref todo
-#' @param cat_ref todo
-#' @param cat_maxrank todo
-#' @param cat_mode todo
-#' @param render_quiet todo
-#' @param silent todo
-#' @param open_file todo
+#' Generates a comprehensive summary on the DE analyses, in one command
 #'
-#' @return todo
+#' Most parameters in this function call are related to a specific function of the
+#' `DeeDee` package. Please refer to the individual help pages for more details,
+#' reminding that the parameter naming scheme is mirroring the pattern
+#' `function_parameter`, e.g. `scatter_color_by` controlling the `color_by`
+#' value in the [deedee_scatter()] function.
+#'
+#' @param dde A [DeeDeeExperiment] object.
+#' @param template Character value. Defines the location of the Rmd template to use
+#' for generating the summary
+#' @param output_path Character value, name of the file the report will be saved
+#' to. Defaults to `DeeDeeSummary.html`, in the current working directory.
+#' @param overwrite Logical value, whether to overwrite an existing file if
+#' choosing the exact same name.
+#' @param pthresh Numeric value, corresponding to the p-value to use as a
+#' threshold to subset the features to include. This parameter is shared across
+#' a number of individual `DeeDee` functions.
+#' @param scatter_select1 From [deedee_scatter()] - Numeric value, corresponding
+#' to the order of the element in the dde object to be selected first.
+#' @param scatter_select2 From [deedee_scatter()] - Numeric value, corresponding
+#' to the order of the element in the dde object to be selected as second.
+#' @param scatter_color_by From [deedee_scatter()] - Character value, either
+#' "pval1" or "pval2" to color the individual points mapping them to the p-value
+#' of either DE result set.
+#' @param heatmap_show_first From [deedee_heatmap()] - Numeric value, specifying
+#' the number of features to include.
+#' @param heatmap_show_gene_names From [deedee_heatmap()] - Logical value,
+#' whether to display the gene names on the heatmap's side.
+#' @param heatmap_dist From [deedee_heatmap()] - Character value, specifying the
+#' distance type to use in the call to ComplexHeatmap.
+#' @param heatmap_clust From [deedee_heatmap()] - Character value. Defines the
+#' method to perform hierarchical clustering, passed to `hclust`, as used in
+#' `ComplexHeatmap`.
+#' @param heatmap_show_na From [deedee_heatmap()] - Logical value, whether to
+#' include features that have `NA` value for the log fold change.
+#' @param venn_mode From [deedee_venn()] - Character value, one of "both", "up",
+#' or "down". Specifies which set of features to focus on for the overlap
+#' calculations.
+#' @param upset_mode From [deedee_upset()] - Character value, specifies which
+#' subset of features to include in the overlap computations.
+#' Can be either of the following: "both", "up", "down", or "both_colored".
+#' @param upset_min_setsize From [deedee_upset()] - Numeric value, specifying
+#' the minimal number of observations in an intersection for it to be included
+#' in the upset plot.
+#' @param qqmult_ref From [deedee_qqmult()] - A numeric value, corresponding to
+#' the order of the element in the `dde` object to be used as a reference for the
+#' multi Q-Q plot.
+#' @param cat_ref From [deedee_cat()] - A numeric value, corresponding to the
+#' order of the element in the dde object to be used as a reference in the CAT
+#' plot.
+#' @param cat_maxrank From [deedee_cat()] - A numeric value. Indicates the
+#' maximum ranked feature to include when computing the Concordance At the Top.
+#' @param cat_mode From [deedee_cat()] - A character value, could be one of "up",
+#' "down", or "both". Defines which features to include in the computations.
+#' @param render_quiet Logical value. Whether to render the report quietly when
+#' calling `rmarkdown::render()`.
+#' @param silent Logical value, prints a message once completed if set to TRUE.
+#' @param open_file Logical value, if set to TRUE opens up the report once
+#' generated into a browser window.
+#'
+#' @seealso
+#' [deedee_cat()], [deedee_heatmap()], [deedee_qq()], [deedee_qqmult()],
+#' [deedee_scatter()], [deedee_upset()], and [deedee_venn()]
+#'
+#' @return Generates a fully fledged report in the location specified by
+#' `output_path`, and returns (invisibly) the name of the generated report.
 #' @export
 #'
 #' @examples
@@ -111,6 +153,8 @@ deedee_summary <- function(dde,
   #                         package = "DeeDee"
   # )
 
+
+
   file.exists(template)
 
   if (file.exists(output_path)) {
@@ -145,8 +189,10 @@ deedee_summary <- function(dde,
   file.remove(output_rmd)
 
   if (silent == FALSE) {
-    message("Your summary has been generated!")
+    message("Your summary has been generated in ", output_path)
   }
+
+  invisible(output_path)
 }
 
 # deedee_summary(dde,
