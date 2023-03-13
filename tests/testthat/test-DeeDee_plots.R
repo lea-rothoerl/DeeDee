@@ -39,6 +39,14 @@ test_that("plotting & plotting", {
   p_cat <- deedee_cat(dde)
   expect_is(p_cat, "gg")
 
+
+  p_bars <- deedee_bars(dde)
+  expect_is(p_bars, "gg")
+
+  p_bars_wnumbers <- deedee_bars(dde, show_DEnumbers = TRUE)
+  expect_is(p_bars_wnumbers, "gg")
+
+
   p_cat_down <- deedee_cat(dde, mode = "down")
   expect_is(p_cat_down, "gg")
   p_cat_both <- deedee_cat(dde, mode = "both")
