@@ -4,13 +4,19 @@
 \alias{deedee_bars}
 \title{Title}
 \usage{
-deedee_bars(dde)
+deedee_bars(dde, p_thresh = 0.05, show_DEnumbers = TRUE)
 }
 \arguments{
 \item{dde}{A \link{DeeDeeExperiment} object.}
+
+\item{p_thresh}{Numeric value, corresponding to the threshold used to call a
+feature as differentially expressed.}
+
+\item{show_DEnumbers}{Logical value;}
 }
 \value{
-A \code{ggplot} plot object.
+A \code{ggplot} plot object, summarizing the amount of DE genes in each
+comparison performed.
 }
 \description{
 Title
@@ -31,4 +37,6 @@ dde <- DeeDeeExperiment(
   de_results = del
 )
 dde
+
+deedee_bars(dde)
 }
