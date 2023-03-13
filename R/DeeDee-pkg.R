@@ -18,8 +18,9 @@
 #' @importFrom dplyr bind_rows full_join inner_join
 #' @importFrom edgeR topTags
 #' @importFrom enrichplot emapplot pairwise_termsim
-#' @importFrom ggplot2 aes annotate coord_cartesian geom_line geom_point ggplot labs
-#' scale_fill_manual theme_light xlab ylab ggplot_build
+#' @importFrom ggplot2 aes annotate coord_cartesian geom_bar geom_line geom_point
+#' geom_text ggplot labs position_dodge scale_fill_manual theme_bw theme_light
+#' xlab ylab ggplot_build
 #' @importFrom ggvenn ggvenn
 #' @importFrom InteractiveComplexHeatmap makeInteractiveComplexHeatmap
 #' InteractiveComplexHeatmapOutput
