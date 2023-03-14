@@ -11,10 +11,11 @@
 #' @importFrom AnnotationDbi keytypes
 #' @importFrom checkmate assert_choice assert_data_frame assert_list assert_logical
 #' assert_number assert_subset assertChoice assertClass assertDataFrame test_subset
+#' @importFrom circlize colorRamp2
 #' @importFrom clusterProfiler enrichGO
-#' @importFrom ComplexHeatmap draw Heatmap
+#' @importFrom ComplexHeatmap draw Heatmap rowAnnotation
 #' @importFrom ComplexUpset intersection_size upset
-#' @importFrom DESeq2 results DESeq
+#' @importFrom DESeq2 results DESeq vst
 #' @importFrom dplyr bind_rows full_join inner_join
 #' @importFrom edgeR topTags
 #' @importFrom enrichplot emapplot pairwise_termsim
@@ -44,7 +45,7 @@
 #' @importFrom stats approx complete.cases na.omit
 #' @importClassesFrom SummarizedExperiment RangedSummarizedExperiment
 #' @importFrom S4Vectors metadata metadata<- DataFrame SimpleList
-#' @importFrom SummarizedExperiment rowData rowData<- mcols
+#' @importFrom SummarizedExperiment rowData rowData<- mcols assays
 #' rowData rowData<- SummarizedExperiment
 #' @importFrom tibble column_to_rownames rownames_to_column
 #' @importFrom tools file_ext

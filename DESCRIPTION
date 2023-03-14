@@ -27,6 +27,7 @@ Depends:
 Imports: 
     AnnotationDbi, 
     checkmate,
+    circlize,
     clusterProfiler,
     ComplexHeatmap,
     ComplexUpset,
