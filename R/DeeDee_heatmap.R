@@ -147,4 +147,86 @@ deedee_heatmap <- function(dde,
 # TODOs: do this by overriding the selection of genes
 # TODOs: add option to return the data frame instead of the plotted object
 
+#' Title
+#'
+#' @param dde TODO
+#' @param assay_name TODO
+#' @param pvalue_threshold TODO
+#' @param logfc_threshold TODO
+#' @param custom_genelist TODO
+#'
+#' @return TODO
+#' @export
+#'
+#' @examples
+#' # TODO
+deedee_deheat <- function(dde,
+                          assay_name = "vst",
+                          pvalue_threshold = 0.05,
+                          logfc_threshold = 5,
+                          custom_genelist = NULL) {
 
+  # checks: need an assay to plot the expression values
+
+  # extract DE genes in any contrast
+  dea_list <- get_dea_list(dde)
+
+  dea_features <- lapply(names(dea_list), function(dea) {
+    this_dea <- dea_list[[dea]]
+
+    this_de_features <-
+      rownames(this_dea[(abs(this_dea$log2FoldChange) >= logfc_threshold) &
+                        (this_dea$padj <= pvalue_threshold), ])
+  })
+  names(dea_features) <- names(dea_list)
+
+  # merge them
+  de_features <- unique(unlist(dea_features))
+
+
+  # also using the custom genelist
+  if (!is.null(custom_genelist)) {
+    custom_genelist_present <- intersect(rownames(dde), custom_genelist)
+    de_features <- unique(c(de_features, custom_genelist_present))
+  }
+
+  # prepare annotation columns
+  logfc_df <- data.frame(matrix(nrow = length(de_features),
+                                ncol = length(dea_list)))
+  rownames(logfc_df) <- de_features
+  colnames(logfc_df) <- names(dea_list)
+
+  # matching the logFC info into it
+  for (i in names(dea_list)) {
+    this_dea <- dea_list[[i]]
+    logfc_vector <- this_dea[rownames(logfc_df), ]$log2FoldChange
+    logfc_df[, i] <- logfc_vector
+  }
+
+  # annotation for the samples as well?
+
+  # take out a sensible assay - and vst that?
+  assay_to_use <- assays(dde)[[assay_name]]
+  assay_to_use <- vst(assay_to_use)
+  assay_to_use_de <- assay_to_use[de_features , ]
+
+  # TODO if centered?
+  assay_to_use_de <- assay_to_use_de - rowMeans(assay_to_use_de)
+
+  # create the heatmap itself
+  # pheatmap(assay_to_use_de, scale = "row", annotation_row = logfc_df)
+
+  max_logfc <- max(abs(logfc_df))
+  col_fun = circlize::colorRamp2(c(-max_logfc, 0, max_logfc), c("blue", "white", "red"))
+
+  col_fun_list <- vector("list", length = length(dea_list))
+  names(col_fun_list) <- names(dea_list)
+  for (i in names(dea_list)) col_fun_list[[i]] <- col_fun
+
+  ha <- Heatmap(assay_to_use_de,
+                name = "Z-score\nexpression\nvalues",
+                left_annotation = rowAnnotation(df = logfc_df, col = col_fun_list),
+                show_row_names = FALSE)
+
+  return(ha)
+}
