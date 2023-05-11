@@ -217,7 +217,7 @@ deedee_deheat <- function(dde,
   # pheatmap(assay_to_use_de, scale = "row", annotation_row = logfc_df)
 
   max_logfc <- max(abs(logfc_df))
-  col_fun = circlize::colorRamp2(c(-max_logfc, 0, max_logfc), c("blue", "white", "red"))
+  col_fun <- circlize::colorRamp2(c(-max_logfc, 0, max_logfc), c("blue", "white", "red"))
 
   col_fun_list <- vector("list", length = length(dea_list))
   names(col_fun_list) <- names(dea_list)
