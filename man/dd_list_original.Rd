@@ -4,6 +4,9 @@
 \name{dd_list_original}
 \alias{dd_list_original}
 \title{dd_list_original}
+\value{
+A list of DE results
+}
 \description{
 A list of \code{deedee_prepare}d DE results.
 }

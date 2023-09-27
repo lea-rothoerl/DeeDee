@@ -10,6 +10,8 @@
 #' The code to create said object can be found in the folder `/inst/scripts` in
 #' the DeeDee package, the file is called `generate_data.R`.
 #'
+#' @return A sample `DESeqResults` object, generated with `DESeq2`
+#'
 #' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
 #' expression indicate a role for enhancer priming in immune response",
 #' Nature Genetics, January 2018 doi: 10.1038/s41588-018-0046-7.
@@ -31,6 +33,8 @@ NULL
 #' The code to create said object can be found in the folder `/inst/scripts` in
 #' the DeeDee package, the file is called `generate_data.R`.
 #'
+#' @return A sample `DESeqResults` object, generated with `DESeq2`
+#'
 #' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
 #' expression indicate a role for enhancer priming in immune response",
 #' Nature Genetics, January 2018 doi: 10.1038/s41588-018-0046-7.
@@ -51,6 +55,8 @@ NULL
 #'
 #' The code to create said object can be found in the folder `/inst/scripts` in
 #' the DeeDee package, the file is called `generate_data.R`.
+#'
+#' @return A sample `DESeqResults` object, generated with `DESeq2`
 #'
 #' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
 #' expression indicate a role for enhancer priming in immune response",
@@ -74,6 +80,8 @@ NULL
 #' The code to create said object can be found in the folder `/inst/scripts` in
 #' the DeeDee package, the file is called `generate_data.R`.
 #'
+#' @return A sample `DESeqResults` object, generated with `DESeq2`
+#'
 #' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
 #' expression indicate a role for enhancer priming in immune response",
 #' Nature Genetics, January 2018 doi: 10.1038/s41588-018-0046-7.
@@ -89,6 +97,8 @@ NULL
 #'
 #' A list of `deedee_prepare`d DE results.
 #'
+#' @return A list of DE results
+#'
 #' @details documented creation in ... script
 #'
 #' @name dd_list_original
@@ -97,13 +107,15 @@ NULL
 
 
 
-#' del
+#' de_named_list
 #'
-#' A named list of DE results, in their original format
-#' to be used
+#' A named list of DE results, in their original format (from DESeq2, edgeR or limma)
 #'
-#' @details documented creation in ... script
+#' @return A named list of DE results, in their original format
 #'
-#' @name del
+#' @details documented creation in the `create_dataset_example.R` script in the
+#' `scripts` package folder
+#'
+#' @name de_named_list
 #' @docType data
 NULL

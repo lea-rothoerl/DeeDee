@@ -42,15 +42,15 @@
 #' data("de_named_list", package = "DeeDee")
 #'
 #' dde_onlyde <- DeeDeeExperiment(
-#'   de_results = del
+#'   de_results = de_named_list
 #' )
 #'
 #' # or, with a SE object as support - even without assay data available
 #' library("SummarizedExperiment")
 #'
 #' rd_macrophage <- DataFrame(
-#'   gene_id = rownames(del$ifng_vs_naive))
-#' rownames(rd_macrophage) <- rownames(del$ifng_vs_naive)
+#'   gene_id = rownames(de_named_list$ifng_vs_naive))
+#' rownames(rd_macrophage) <- rownames(de_named_list$ifng_vs_naive)
 #' se_macrophage_noassays <- SummarizedExperiment(
 #'   assays = SimpleList(),
 #'   rowData = rd_macrophage
@@ -58,7 +58,7 @@
 #'
 #' dde <- DeeDeeExperiment(
 #'   se_macrophage_noassays,
-#'   de_results = del
+#'   de_results = de_named_list
 #' )
 DeeDeeExperiment <- function(se = NULL,
                              de_results = NULL) {

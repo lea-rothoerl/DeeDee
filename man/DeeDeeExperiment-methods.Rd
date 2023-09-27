@@ -66,8 +66,8 @@ data("de_named_list", package = "DeeDee")
 library("SummarizedExperiment")
 
 rd_macrophage <- DataFrame(
-  gene_id = rownames(del$ifng_vs_naive))
-rownames(rd_macrophage) <- rownames(del$ifng_vs_naive)
+  gene_id = rownames(de_named_list$ifng_vs_naive))
+rownames(rd_macrophage) <- rownames(de_named_list$ifng_vs_naive)
 se_macrophage_noassays <- SummarizedExperiment(
   assays = SimpleList(),
   rowData = rd_macrophage
@@ -76,13 +76,13 @@ se_macrophage_noassays <- SummarizedExperiment(
 # creating a `DeeDeeExperiment`
 dde <- DeeDeeExperiment(
   se_macrophage_noassays,
-  de_results = del
+  de_results = de_named_list
 )
 dde
 
 new_del <- list(
-  ifng2 = del$ifng_vs_naive,
-  ifngsalmo2 = del$ifngsalmo_vs_naive
+  ifng2 = de_named_list$ifng_vs_naive,
+  ifngsalmo2 = de_named_list$ifngsalmo_vs_naive
 )
 
 # add a new (set of) DE result(s)

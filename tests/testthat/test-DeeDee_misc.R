@@ -2,7 +2,7 @@
 test_that("summary report", {
   dde <- DeeDeeExperiment(
     se_macrophage_noassays,
-    de_results = del
+    de_results = de_named_list
   )
 
   temp_output_file <- "test_report.html"

@@ -1,6 +1,6 @@
 dde <- DeeDeeExperiment(
   se_macrophage_noassays,
-  de_results = del
+  de_results = de_named_list
 )
 
 # needed for bad handling of namespace by ggvenn

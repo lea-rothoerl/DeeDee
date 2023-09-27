@@ -26,15 +26,15 @@
 #' library("SummarizedExperiment")
 #'
 #' rd_macrophage <- DataFrame(
-#'   gene_id = rownames(del$ifng_vs_naive))
-#' rownames(rd_macrophage) <- rownames(del$ifng_vs_naive)
+#'   gene_id = rownames(de_named_list$ifng_vs_naive))
+#' rownames(rd_macrophage) <- rownames(de_named_list$ifng_vs_naive)
 #' se_macrophage_noassays <- SummarizedExperiment(
 #'   assays = SimpleList(),
 #'   rowData = rd_macrophage
 #' )
 #' dde <- DeeDeeExperiment(
 #'   se_macrophage_noassays,
-#'   de_results = del
+#'   de_results = de_named_list
 #' )
 #' dde
 #'
@@ -160,6 +160,7 @@ deedee_heatmap <- function(dde,
 #'
 #' @examples
 #' # TODO
+#' NULL ## TODO: this needs to be fully in
 deedee_deheat <- function(dde,
                           assay_name = "vst",
                           pvalue_threshold = 0.05,

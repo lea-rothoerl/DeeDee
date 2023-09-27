@@ -115,15 +115,15 @@ Salm_both
 data("dd_list_original", package = "DeeDee")
 
 # for the new version
-del <- list(
+de_named_list <- list(
   ifng_vs_naive = IFNg_naive,
   ifngsalmo_vs_naive = IFNg_both,
   salmonella_vs_naive = Salm_naive,
   salmo_both = Salm_both
 )
 
-# save(del, file = "data/de_named_list.RData", compress = "xz")
+# save(de_named_list, file = "data/de_named_list.RData", compress = "xz")
 data("de_named_list", package = "DeeDee")
 
-dde <- DeeDeeExperiment(se_macrophage_noassays, de_results = del)
+dde <- DeeDeeExperiment(se_macrophage_noassays, de_results = de_named_list)
 
