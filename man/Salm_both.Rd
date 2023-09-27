@@ -4,6 +4,9 @@
 \name{Salm_both}
 \alias{Salm_both}
 \title{A sample \code{DESeqResults} object}
+\value{
+A sample \code{DESeqResults} object, generated with \code{DESeq2}
+}
 \description{
 A sample \code{DESeqResults} object, generated with \code{DESeq2}
 }
