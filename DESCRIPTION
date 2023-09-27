@@ -61,6 +61,7 @@ Imports:
 Suggests: 
     macrophage,
     knitr,
+    BiocStyle,
     org.Hs.eg.db,
     org.Mm.eg.db,
     org.Rn.eg.db,
