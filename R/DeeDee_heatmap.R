@@ -160,6 +160,7 @@ deedee_heatmap <- function(dde,
 #'
 #' @examples
 #' # TODO
+#' NULL ## TODO: this needs to be fully in
 deedee_deheat <- function(dde,
                           assay_name = "vst",
                           pvalue_threshold = 0.05,
