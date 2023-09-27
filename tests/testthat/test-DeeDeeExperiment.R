@@ -1,7 +1,7 @@
 test_that("creating", {
   dde <- DeeDeeExperiment(
     se_macrophage_noassays,
-    de_results = del
+    de_results = de_named_list
   )
 
   print(dde)
@@ -9,7 +9,7 @@ test_that("creating", {
   expect_is(dde, "DeeDeeExperiment")
 
   dde_only_de <- DeeDeeExperiment(
-    de_results = del
+    de_results = de_named_list
   )
   expect_is(dde, "DeeDeeExperiment")
 
@@ -36,14 +36,14 @@ test_that("creating", {
   expect_error(
     DeeDeeExperiment(
       rowData(se_macrophage_noassays),
-      de_results = del
+      de_results = de_named_list
     )
   )
 
   expect_error(
     DeeDeeExperiment(
       assay(se_macrophage),
-      de_results = del
+      de_results = de_named_list
     )
   )
 
@@ -56,12 +56,12 @@ test_that("creating", {
 test_that("adding and removing", {
   dde <- DeeDeeExperiment(
     se_macrophage_noassays,
-    de_results = del
+    de_results = de_named_list
   )
 
   new_del <- list(
-    ifng2 = del$ifng_vs_naive,
-    ifngsalmo2 = del$ifngsalmo_vs_naive
+    ifng2 = de_named_list$ifng_vs_naive,
+    ifngsalmo2 = de_named_list$ifngsalmo_vs_naive
   )
   # add a new (set of) DE result(s)
   dde_new <- add_dea(dde, new_del)
@@ -78,7 +78,7 @@ test_that("adding and removing", {
 test_that("validity and so", {
   dde2 <- DeeDeeExperiment(
     se_macrophage_noassays,
-    de_results = del
+    de_results = de_named_list
   )
 
   expect_true(validObject(dde2))
@@ -88,7 +88,7 @@ test_that("validity and so", {
 
   dde3 <- DeeDeeExperiment(
     se_macrophage_noassays,
-    de_results = del
+    de_results = de_named_list
   )
 
   # invalid replacements
