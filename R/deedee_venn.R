@@ -3,11 +3,13 @@
 #' @description `deedee_venn` creates a Venn diagram depicting the overlaps of
 #' differentially expressed genes in the input datasets.
 #'
-#' @param data named list of results from deedee_prepare()
+#' @param data instance of the DeeDeeExperiment class;
+#'             supported legacy: named list of results from deedee_prepare()
 #' @param mode show all overlapping DE genes (`both`, default),
 #'             only conjointly up-regulated (`up`)
 #'             or only conjointly down-regulated (`down`) genes
 #' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
+#' @param select vector of DEA slot indexes to use for plotting, must be 2 to 4
 #'
 #' @return ggplot object (plottable with show()/print())
 #'
@@ -36,16 +38,44 @@
 
 deedee_venn <- function(data,
                         mode = "both",
-                        pthresh = 0.05) {
+                        pthresh = 0.05,
+                        select = NULL) {
 
   # ----------------------------- argument check ------------------------------
-  checkmate::assert_list(data, type = "data.frame", min.len = 2) # , max.len = 4)
-  for (i in 1:length(data)) {
-    checkmate::assert_data_frame(data[[i]], type = "numeric")
+  if (inherits(data, "DeeDeeExperiment")) {
+    checkmate::assert(length(names(data@dea)) >= 2)
+    data <- deedee_from_dde(data)
+  } else {
+    # legacy: list of DeeDee tables
+    checkmate::assert_list(data, type = "data.frame", min.len = 2)
+    for (i in seq_along(data)) {
+      checkmate::assert_data_frame(data[[i]], type = "numeric")
+    }
   }
   checkmate::assert_number(pthresh, lower = 0, upper = 1)
   choices <- c("up", "down", "both")
   checkmate::assert_choice(mode, choices)
+
+  n_contrasts <- length(data)
+
+  # --------------------------- selection handling ----------------------------
+  if (is.null(select)) {
+
+    if (n_contrasts >= 4) {
+      select <- seq_len(4)
+    } else {
+      select <- seq_len(n_contrasts)
+    }
+
+  } else {
+
+    checkmate::assert_integerish(select, lower = 1)
+    checkmate::assert_true(length(select) >= 2 && length(select) <= 4)
+    checkmate::assert_true(length(unique(select)) == length(select))
+    checkmate::assert_true(all(select <= n_contrasts))
+  }
+
+  data <- data[select]
 
   # ---------------------------- data preparation -----------------------------
   for (i in 1:length(data)) {
