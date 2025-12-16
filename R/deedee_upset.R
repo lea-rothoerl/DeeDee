@@ -3,7 +3,8 @@
 #' @description `deedee_upset` creates an UpSet plot depicting the overlaps of
 #' differentially expressed genes in the input datasets.
 #'
-#' @param data named list of results from deedee_prepare()
+#' @param data instance of the DeeDeeExperiment class;
+#'             supported legacy: named list of results from deedee_prepare()
 #' @param mode show all overlapping DE genes (`both`),
 #'             all overlapping genes colored by DE direction (`both_colored`,
 #'             default),
@@ -44,9 +45,14 @@ deedee_upset <- function(data,
                          pthresh = 0.05) {
 
   # ----------------------------- argument check ------------------------------
-  checkmate::assert_list(data, type = "data.frame", min.len = 2)
-  for (i in 1:length(data)) {
-    checkmate::assert_data_frame(data[[i]], type = "numeric")
+  if (inherits(data, "DeeDeeExperiment")) {
+    data <- deedee_from_dde(data)
+  } else {
+    # legacy: list of DeeDee tables
+    checkmate::assert_list(data, type = "data.frame", min.len = 2)
+    for (i in seq_along(data)) {
+      checkmate::assert_data_frame(data[[i]], type = "numeric")
+    }
   }
   checkmate::assert_number(pthresh, lower = 0, upper = 1)
   choices <- c("up", "down", "both", "both_colored")

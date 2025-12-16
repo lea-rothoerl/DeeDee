@@ -5,7 +5,8 @@
 #' to a contrast chosen from the input data. For a Q-Q plot comparing two
 #' contrasts in a p-value-colored manner, have a look at `deedee_qq`.
 #'
-#' @param data named list of results from deedee_prepare()
+#' @param data instance of the DeeDeeExperiment class;
+#'             supported legacy: named list of results from deedee_prepare()
 #' @param ref index of the contrast in data to be used as reference contrast
 #'            (default = 1)
 #' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
@@ -40,9 +41,14 @@ deedee_qqmult <- function(data,
                           pthresh = 0.05) {
 
   # ----------------------------- argument check ------------------------------
-  checkmate::assert_list(data, type = "data.frame", min.len = 2)
-  for (i in 1:length(data)) {
-    checkmate::assert_data_frame(data[[i]], type = "numeric")
+  if (inherits(data, "DeeDeeExperiment")) {
+    data <- deedee_from_dde(data)
+  } else {
+    # legacy: list of DeeDee tables
+    checkmate::assert_list(data, type = "data.frame", min.len = 2)
+    for (i in seq_along(data)) {
+      checkmate::assert_data_frame(data[[i]], type = "numeric")
+    }
   }
   checkmate::assert_number(pthresh, lower = 0, upper = 1)
   checkmate::assert_number(ref, lower = 1, upper = length(data))

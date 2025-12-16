@@ -5,7 +5,8 @@
 #' for the given (non-reference) input contrasts against a chosen reference
 #' contrast from the input list.
 #'
-#' @param data named list of results from deedee_prepare()
+#' @param data instance of the DeeDeeExperiment class;
+#'             supported legacy: named list of results from deedee_prepare()
 #' @param ref index of the contrast in data to be used as reference contrast
 #'            (default = 1)
 #' @param mode sort by highest logFC (`up`, default), lowest logFC (`down`) or
@@ -45,9 +46,15 @@ deedee_cat <- function(data,
                        pthresh = 0.05) {
 
   # ----------------------------- argument check ------------------------------
-  checkmate::assert_list(data, type = "data.frame", min.len = 2)
-  for (i in 1:length(data)) {
-    checkmate::assert_data_frame(data[[i]], type = "numeric")
+
+  if (inherits(data, "DeeDeeExperiment")) {
+    data <- deedee_from_dde(data)
+  } else {
+    # legacy: list of DeeDee tables
+    checkmate::assert_list(data, type = "data.frame", min.len = 2)
+    for (i in seq_along(data)) {
+      checkmate::assert_data_frame(data[[i]], type = "numeric")
+    }
   }
   checkmate::assert_number(ref, lower = 1, upper = length(data))
   checkmate::assert_number(pthresh, lower = 0, upper = 1)

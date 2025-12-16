@@ -3,7 +3,8 @@
 #' @description `deedee_scatter` creates a scatterplot of the genes in two input
 #' datasets based on their logFC values.
 #'
-#' @param data named list of results from deedee_prepare()
+#' @param data instance of the DeeDeeExperiment class;
+#'             supported legacy: named list of results from deedee_prepare()
 #' @param select1 index of first data-list element to be used (default = 1)
 #' @param select2 index of second data-list element to be used (default = 2)
 #' @param color_by indicates which set of values the output should be colored by
@@ -47,9 +48,14 @@ deedee_scatter <- function(data,
                            pthresh = 0.05) {
 
   # ----------------------------- argument check ------------------------------
-  checkmate::assert_list(data, type = "data.frame", min.len = 2)
-  for (i in 1:length(data)) {
-    checkmate::assert_data_frame(data[[i]], type = "numeric")
+  if (inherits(data, "DeeDeeExperiment")) {
+    data <- deedee_from_dde(data)
+  } else {
+    # legacy: list of DeeDee tables
+    checkmate::assert_list(data, type = "data.frame", min.len = 2)
+    for (i in seq_along(data)) {
+      checkmate::assert_data_frame(data[[i]], type = "numeric")
+    }
   }
   checkmate::assert_number(pthresh, lower = 0, upper = 1)
   checkmate::assert_number(select1, lower = 1, upper = length(data))
