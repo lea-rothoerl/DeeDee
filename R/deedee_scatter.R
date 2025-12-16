@@ -49,6 +49,7 @@ deedee_scatter <- function(data,
 
   # ----------------------------- argument check ------------------------------
   if (inherits(data, "DeeDeeExperiment")) {
+    checkmate::assert(length(names(data@dea)) >= 2)
     data <- deedee_from_dde(data)
   } else {
     # legacy: list of DeeDee tables
