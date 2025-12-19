@@ -1,6 +1,7 @@
 #' DeeDee Summary
 #'
-#' @param deedee_list named list of results from deedee_prepare()
+#' @param data instance of the DeeDeeExperiment class;
+#'             supported legacy: named list of results from deedee_prepare()
 #' @param output_path the path to save the resulting report in. must end with
 #'                    a filename.html (default = "DeeDee_Summary.html" in the
 #'                    working directory)
@@ -74,7 +75,7 @@
 #' deedee_summary(dd_list)
 #' }
 #'
-deedee_summary <- function(deedee_list,
+deedee_summary <- function(data,
                            output_path = "DeeDee_Summary.html",
                            overwrite = FALSE,
                            pthresh = 0.05,
@@ -97,16 +98,22 @@ deedee_summary <- function(deedee_list,
                            open_file = TRUE) {
 
   # ----------------------------- argument check ------------------------------
-  checkmate::assert_list(deedee_list, type = "data.frame", min.len = 2)
-  for (i in 1:length(deedee_list)) {
-    checkmate::assert_data_frame(deedee_list[[i]], type = "numeric")
+  if (inherits(data, "DeeDeeExperiment")) {
+    checkmate::assert(length(names(data@dea)) >= 2)
+    data <- deedee_from_dde(data)
+  } else {
+    # legacy: list of DeeDee tables
+    checkmate::assert_list(data, type = "data.frame", min.len = 2)
+    for (i in seq_along(data)) {
+      checkmate::assert_data_frame(data[[i]], type = "numeric")
+    }
   }
   checkmate::assert_number(pthresh, lower = 0, upper = 1)
 
   checkmate::assert_logical(overwrite)
 
-  checkmate::assert_number(scatter_select1, lower = 1, upper = length(deedee_list))
-  checkmate::assert_number(scatter_select2, lower = 1, upper = length(deedee_list))
+  checkmate::assert_number(scatter_select1, lower = 1, upper = length(data))
+  checkmate::assert_number(scatter_select2, lower = 1, upper = length(data))
   choices <- c("pval1", "pval2")
   checkmate::assert_choice(scatter_color_by, choices)
 
@@ -125,9 +132,9 @@ deedee_summary <- function(deedee_list,
   checkmate::assert_choice(upset_mode, choices)
   checkmate::assert_number(upset_min_setsize, lower = 0)
 
-  checkmate::assert_number(qqmult_ref, lower = 1, upper = length(deedee_list))
+  checkmate::assert_number(qqmult_ref, lower = 1, upper = length(data))
 
-  checkmate::assert_number(cat_ref, lower = 1, upper = length(deedee_list))
+  checkmate::assert_number(cat_ref, lower = 1, upper = length(data))
   checkmate::assert_number(cat_maxrank, lower = 1)
   choices <- c("up", "down", "both")
   checkmate::assert_choice(cat_mode, choices)
