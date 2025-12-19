@@ -31,5 +31,3 @@ deedee_from_dde <- function(dde) {
   names(deedee_list) <- dea_names
   deedee_list
 }
-
-deedee_obj_limma <- deedee_from_dde(dde_limma)
