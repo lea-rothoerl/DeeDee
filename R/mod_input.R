@@ -11,7 +11,7 @@ mod_input_ui <- function(id) {
       shiny::tableOutput(ns("inp_infobox"))
     ),
     bslib::card(
-      bslib::card_header("Contrasts"),
+      bslib::card_header("Contrasts to Analyze"),
       shiny::uiOutput(ns("datasets"))
     )
   )
