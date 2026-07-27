@@ -57,16 +57,8 @@ deedee_heatmap <- function(data,
                            pthresh = 0.05) {
 
   # ----------------------------- argument check ------------------------------
-  if (inherits(data, "DeeDeeExperiment")) {
-    checkmate::assert(length(names(data@dea)) >= 2)
-    data <- deedee_from_dde(data)
-  } else {
-    # legacy: list of DeeDee tables
-    checkmate::assert_list(data, type = "data.frame", min.len = 2)
-    for (i in seq_along(data)) {
-      checkmate::assert_data_frame(data[[i]], type = "numeric")
-    }
-  }
+  checkmate::assert(length(names(data@dea)) >= 2)
+  data <- deedee_from_dde(data)
   checkmate::assert_number(pthresh, lower = 0, upper = 1)
   checkmate::assert_number(show_first, lower = 1)
   checkmate::assert_logical(show_gene_names)
