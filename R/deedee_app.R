@@ -7,7 +7,7 @@ deedee_app <- function(deedee_obj = NULL) {
     bslib::nav_menu("TODO groups",
 #                    bslib::nav_panel("Venn", mod_venn_ui("venn")),
                     bslib::nav_panel("UpSet", mod_upset_ui("upset")),
-#                    bslib::nav_panel("CAT", mod_cat_ui("cat")),
+                    bslib::nav_panel("CAT", mod_cat_ui("cat")),
 #                    bslib::nav_panel("RRHO", mod_rrho_ui("rrho"))
                     bslib::nav_panel("Scatter", mod_scatter_ui("scatter")),
                     bslib::nav_panel("QQ", mod_qq_ui("qq")),
@@ -20,7 +20,7 @@ deedee_app <- function(deedee_obj = NULL) {
 
 #    mod_venn_server("venn", dde)
     mod_upset_server("upset", dde)
-#    mod_cat_server("cat", dde)
+    mod_cat_server("cat", dde)
 #    mod_rrho_server("rrho", dde)
     mod_scatter_server("scatter", dde)
     mod_qq_server("qq", dde)
