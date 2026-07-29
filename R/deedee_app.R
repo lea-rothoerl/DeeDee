@@ -11,7 +11,7 @@ deedee_app <- function(deedee_obj = NULL) {
 #                    bslib::nav_panel("RRHO", mod_rrho_ui("rrho"))
                     bslib::nav_panel("Scatter", mod_scatter_ui("scatter")),
                     bslib::nav_panel("QQ", mod_qq_ui("qq")),
-#                    bslib::nav_panel("Heatmap", mod_heatmap_ui("heatmap")),
+                    bslib::nav_panel("Heatmap", mod_heatmap_ui("heatmap")),
     )
   )
 
@@ -24,7 +24,7 @@ deedee_app <- function(deedee_obj = NULL) {
 #    mod_rrho_server("rrho", dde)
     mod_scatter_server("scatter", dde)
     mod_qq_server("qq", dde)
-#    mod_heatmap_server("heatmap", dde)
+    mod_heatmap_server("heatmap", dde)
   }
 
   shiny::shinyApp(ui, server)

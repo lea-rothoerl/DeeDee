@@ -41,16 +41,18 @@ deedee_qqmult <- function(data,
                           pthresh = 0.05) {
 
   # ----------------------------- argument check ------------------------------
-  checkmate::assert(length(names(data@dea)) >= 2)
-  data <- deedee_from_dde(data)
+  checkmate::assertClass(data, "DeeDeeExperiment")
+  data_list <- deedee_from_dde(data)
+  contrasts <- names(data_list)
+  checkmate::assert(length(contrasts) >= 2)
   checkmate::assert_number(pthresh, lower = 0, upper = 1)
-  checkmate::assert_number(ref, lower = 1, upper = length(data))
+  checkmate::assert_number(ref, lower = 1, upper = length(contrasts))
 
   # ------------------- creation of the resulting qq plot ---------------------
   output <- list()
   nm <- c()
 
-  for (i in 1:length(data)) {
+  for (i in seq_along(contrasts)) {
     if (i != ref) {
       output[[i]] <- data.frame(ggplot2::ggplot_build(deedee_qq(
         data = data,
@@ -58,7 +60,7 @@ deedee_qqmult <- function(data,
         select2 = i,
         as_line = TRUE
       ))$plot$data)
-      nm[[i]] <- names(data[i])
+      nm[[i]] <- contrasts[i]
     }
   }
 
