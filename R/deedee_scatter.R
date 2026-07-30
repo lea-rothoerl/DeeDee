@@ -61,12 +61,14 @@ deedee_scatter <- function(data,
   res <- ggplot2::ggplot(data = comp, ggplot2::aes(logFC1, logFC2,
     col = get(color_by)
   )) +
-    ggplot2::geom_point() +
+    ggplot2::geom_point(ggplot2::aes(text = rowname)) +
     viridis::scale_color_viridis(option = "magma") +
     ggplot2::xlab(names(data)[select1]) +
     ggplot2::ylab(names(data)[select2]) +
     ggplot2::labs(color = color_by) +
     ggplot2::theme_light()
+
+  res <- plotly::ggplotly(res, tooltip = "text")
 
   # --------------------------------- return ----------------------------------
   return(res)
