@@ -2,8 +2,7 @@
 #'
 #' @description
 #'
-#' @param data instance of the DeeDeeExperiment class;
-#'             supported legacy: named list of results from deedee_prepare()
+#' @param data instance of the DeeDeeExperiment class
 #' @param select1 index of the 1st contrast to be compared (default = 1)
 #' @param select2 index of the 2nd contrast to be compared (default = 2)
 #' @param alternative `"two.sided"` (default) for concordant and discordant
@@ -11,9 +10,11 @@
 #' @param corr boolean, apply Benjamini-Yekutieli FDR correction to the map
 #'           (default = FALSE)
 #'
-#' @return
+#' @return plottable RRHO object
 #'
 #' @examples
+#'
+#' TODO
 #'
 #' @export
 #'

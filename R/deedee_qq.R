@@ -1,11 +1,10 @@
 #' DeeDee QQ Plot
 #'
-#' @description `deedee_qq` creates a Q-Q-plot comparing the statistical
+#' @description DEPRECATED `deedee_qq` creates a Q-Q-plot comparing the statistical
 #' distribution of the logFC of the genes in two input datasets. To compare more
 #' than two contrasts against a reference, have a look at `deedee_qqmult`.
 #'
-#' @param data instance of the DeeDeeExperiment class;
-#'             supported legacy: named list of results from deedee_prepare()
+#' @param data instance of the DeeDeeExperiment class
 #' @param select1 index of first data-list element to be used (default = 1)
 #' @param select2 index of second data-list element to be used (default = 2)
 #' @param color_by indicates which set of values the output should be colored by
@@ -18,25 +17,7 @@
 #'
 #' @examples
 #'
-#' data(DE_results_IFNg_naive, package = "DeeDee")
-#' IFNg_naive <- deedee_prepare(IFNg_naive, "DESeq2")
-#'
-#' data(DE_results_IFNg_both, package = "DeeDee")
-#' IFNg_both <- deedee_prepare(IFNg_both, "DESeq2")
-#'
-#' data(DE_results_Salm_naive, package = "DeeDee")
-#' Salm_naive <- deedee_prepare(Salm_naive, "DESeq2")
-#'
-#' data(DE_results_Salm_both, package = "DeeDee")
-#' Salm_both <- deedee_prepare(Salm_both, "DESeq2")
-#'
-#' dd_list <- list(
-#'   IFNg_naive = IFNg_naive, IFNg_both = IFNg_both,
-#'   Salm_naive = Salm_naive, Salm_both = Salm_both
-#' )
-#'
-#' deedee_qq(dd_list, pthresh = 0.05, select = 1, select2 = 2, color_by = "pval1")
-#' @export
+#' TODO
 #'
 
 deedee_qq <- function(data,
