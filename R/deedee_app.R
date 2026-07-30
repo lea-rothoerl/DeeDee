@@ -5,7 +5,7 @@ deedee_app <- function(deedee_obj = NULL) {
     theme = bslib::bs_theme(version = 5, bootswatch = "flatly"),
     bslib::nav_panel("Input", mod_input_ui("input")),
     bslib::nav_menu("TODO groups",
-#                    bslib::nav_panel("Venn", mod_venn_ui("venn")),
+                    bslib::nav_panel("Venn", mod_venn_ui("venn")),
                     bslib::nav_panel("UpSet", mod_upset_ui("upset")),
                     bslib::nav_panel("CAT", mod_cat_ui("cat")),
                     bslib::nav_panel("RRHO", mod_rrho_ui("rrho")),
@@ -18,7 +18,7 @@ deedee_app <- function(deedee_obj = NULL) {
   server <- function(input, output, session) {
     dde <- mod_input_server("input", dde_arg = deedee_obj)
 
-#    mod_venn_server("venn", dde)
+    mod_venn_server("venn", dde)
     mod_upset_server("upset", dde)
     mod_cat_server("cat", dde)
     mod_rrho_server("rrho", dde)
