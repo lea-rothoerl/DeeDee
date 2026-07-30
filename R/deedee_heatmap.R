@@ -22,7 +22,8 @@
 #'
 #' @examples
 #'
-#' TODO
+#' data(dde_macrophage, package = "DeeDee")
+#' deedee_heatmap(dde_macrophage, show_first = 20, dist = "manhattan")
 #'
 #' @export
 #'

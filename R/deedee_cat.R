@@ -17,7 +17,8 @@
 #'
 #' @examples
 #'
-#' TODO
+#' data(dde_macrophage, package = "DeeDee")
+#' deedee_cat(dde_macrophage, maxrank = 500)
 #'
 #' @export
 #'

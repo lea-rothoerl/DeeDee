@@ -14,7 +14,8 @@
 #'
 #' @examples
 #'
-#' TODO
+#' data(dde_macrophage, package = "DeeDee")
+#' deedee_rrho(dde_macrophage, select1 = 1, select2 = 2)
 #'
 #' @export
 #'

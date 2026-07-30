@@ -1,3 +1,18 @@
+#' DeeDee App
+#'
+#' @description `deedee_app` opens the DeeDee Shiny web application, combining
+#' the functionalities of all other DeeDee functions with a user-friendly
+#' graphical user interface.
+#'
+#' @param deedee_obj An object of the class DeeDeeObject to be analyzed.
+#'
+#' @return A shiny app
+#' @export
+#'
+#' @examples
+#'
+#' data(dde_macrophage, package = "DeeDee")
+#' deedee_app(dde_macrophage)
 deedee_app <- function(deedee_obj = NULL) {
 
   ui <- bslib::page_navbar(

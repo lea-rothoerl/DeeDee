@@ -1,9 +1,8 @@
 library("macrophage")
 library("DESeq2")
-source("~/Development/DeeDee_wip/deedee_prepare.R")
+library("DeeDeeExperiment")
 
-data(gse, "macrophage")
-
+data("gse", package = "macrophage")
 dds_macrophage <- DESeqDataSet(gse, design = ~ line + condition)
 rownames(dds_macrophage) <- substr(rownames(dds_macrophage), 1, 15)
 
@@ -16,28 +15,29 @@ IFNg_naive <- results(dds_macrophage,
   lfcThreshold = 1, alpha = 0.05
 )
 
-save(IFNg_naive, file = "data/DE_results_IFNg_naive.RData", compress = "xz")
-
-
 IFNg_both <- results(dds_macrophage,
   contrast = c("condition", "IFNg_SL1344", "IFNg"),
   lfcThreshold = 1, alpha = 0.05
 )
-
-save(IFNg_both, file = "data/DE_results_IFNg_both.RData", compress = "xz")
-
 
 Salm_naive <- results(dds_macrophage,
   contrast = c("condition", "SL1344", "naive"),
   lfcThreshold = 1, alpha = 0.05
 )
 
-save(Salm_naive, file = "data/DE_results_Salm_naive.RData", compress = "xz")
-
-
 Salm_both <- results(dds_macrophage,
   contrast = c("condition", "IFNg_SL1344", "SL1344"),
   lfcThreshold = 1, alpha = 0.05
 )
 
-save(Salm_both, file = "data/DE_results_Salm_both.RData", compress = "xz")
+dde_macrophage <- DeeDeeExperiment(
+  sce = dds_macrophage,
+  de_results = list(
+    IFNg_naive = IFNg_naive,
+    IFNg_both  = IFNg_both,
+    Salm_naive = Salm_naive,
+    Salm_both  = Salm_both
+  )
+)
+
+save(dde_macrophage, file = "data/dde_macrophage.RData", compress = "xz")

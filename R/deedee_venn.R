@@ -14,7 +14,8 @@
 #'
 #' @examples
 #'
-#' TODO
+#' data(dde_macrophage, package = "DeeDee")
+#' deedee_venn(dde_macrophage, mode = "both", pthresh = 0.05)
 #'
 #' @export
 #'

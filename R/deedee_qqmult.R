@@ -13,7 +13,8 @@
 #'
 #' @examples
 #'
-#' TODO
+#' data(dde_macrophage, package = "DeeDee")
+#' deedee_qqmult(dde_macrophage)
 #'
 #' @export
 #'

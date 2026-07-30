@@ -17,7 +17,8 @@
 #'
 #' @examples
 #'
-#' TODO
+#' data(dde_macrophage, package = "DeeDee")
+#' deedee_upset(dde_macrophage, mode = "both_colored")
 #'
 #' @export
 #'
