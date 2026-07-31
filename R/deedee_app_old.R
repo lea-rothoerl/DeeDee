@@ -7,7 +7,6 @@
 #' @param deedee_obj An object of the class DeeDeeObject to be analyzed.
 #'
 #' @return A shiny app
-#' @export
 #'
 #' @examples
 #'
@@ -31,7 +30,7 @@
 #' if (interactive()) {
 #'   deedee_app(dd_list)
 #' }
-deedee_app <- function(deedee_obj = NULL) {
+deedee_app_deprecated <- function(deedee_obj = NULL) {
 
   # ----------------------------------------------------------------------------
   # --------------------------------- U I --------------------------------------
