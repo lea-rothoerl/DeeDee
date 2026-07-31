@@ -47,9 +47,9 @@ mod_cat_server <- function(id, dde) {
       shiny::req(ref_idx)
 
       res <- deedee_cat(dde(),
-                        ref     = ref_idx,
+                        ref = ref_idx,
                         maxrank = input$maxrank,
-                        mode    = input$mode,
+                        mode = input$mode,
                         pthresh = input$pthresh
       )
 

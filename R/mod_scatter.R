@@ -48,10 +48,10 @@ mod_scatter_server <- function(id, dde) {
       shiny::req(sel1, sel2)
 
       deedee_scatter(dde(),
-                     select1  = sel1,
-                     select2  = sel2,
+                     select1 = sel1,
+                     select2 = sel2,
                      color_by = input$color_by,
-                     pthresh  = input$pthresh
+                     pthresh = input$pthresh
       )
     })
 

@@ -50,9 +50,9 @@ mod_venn_server <- function(id, dde) {
       shiny::req(sel)
 
       res <- deedee_venn(dde(),
-                         mode    = input$mode,
+                         mode = input$mode,
                          pthresh = input$pthresh,
-                         select  = sel
+                         select = sel
       )
 
       shiny::validate(shiny::need(

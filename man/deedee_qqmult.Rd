@@ -7,7 +7,7 @@
 deedee_qqmult(data, ref = 1, pthresh = 0.05)
 }
 \arguments{
-\item{data}{named list of results from deedee_prepare()}
+\item{data}{instance of the DeeDeeExperiment class}
 
 \item{ref}{index of the contrast in data to be used as reference contrast
 (default = 1)}
@@ -20,27 +20,11 @@ ggplot object (plottable with show()/print())
 \description{
 \code{deedee_qqmult} creates a plot containing Q-Q-lines comparing
 the statistical distribution of the logFC of the genes in each input datasets
-to a contrast chosen from the input data. For a Q-Q plot comparing two
-contrasts in a p-value-colored manner, have a look at \code{deedee_qq}.
+to a contrast chosen from the input data.
 }
 \examples{
 
-data(DE_results_IFNg_naive, package = "DeeDee")
-IFNg_naive <- deedee_prepare(IFNg_naive, "DESeq2")
+data(dde_macrophage, package = "DeeDee")
+deedee_qqmult(dde_macrophage)
 
-data(DE_results_IFNg_both, package = "DeeDee")
-IFNg_both <- deedee_prepare(IFNg_both, "DESeq2")
-
-data(DE_results_Salm_naive, package = "DeeDee")
-Salm_naive <- deedee_prepare(Salm_naive, "DESeq2")
-
-data(DE_results_Salm_both, package = "DeeDee")
-Salm_both <- deedee_prepare(Salm_both, "DESeq2")
-
-dd_list <- list(
-  IFNg_naive = IFNg_naive, IFNg_both = IFNg_both,
-  Salm_naive = Salm_naive, Salm_both = Salm_both
-)
-
-deedee_qqmult(dd_list, pthresh = 0.05, ref = 1)
 }

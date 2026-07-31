@@ -40,7 +40,7 @@ mod_input_server <- function(id, dde_arg = NULL) {
       all_names <- DeeDeeExperiment::getDEANames(dde_raw())
       shiny::checkboxGroupInput(session$ns("select_contrasts"),
                                 "Select contrasts to use",
-                                choices  = all_names,
+                                choices = all_names,
                                 selected = all_names
       )
     })
@@ -49,7 +49,7 @@ mod_input_server <- function(id, dde_arg = NULL) {
       shiny::req(dde_raw(), input$select_contrasts)
 
       all_names <- DeeDeeExperiment::getDEANames(dde_raw())
-      to_drop   <- setdiff(all_names, input$select_contrasts)
+      to_drop <- setdiff(all_names, input$select_contrasts)
 
       if (length(to_drop) == 0) {
         dde_raw()

@@ -13,7 +13,7 @@ deedee_scatter(
 )
 }
 \arguments{
-\item{data}{named list of results from deedee_prepare()}
+\item{data}{instance of the DeeDeeExperiment class}
 
 \item{select1}{index of first data-list element to be used (default = 1)}
 
@@ -33,27 +33,7 @@ datasets based on their logFC values.
 }
 \examples{
 
-data(DE_results_IFNg_naive, package = "DeeDee")
-IFNg_naive <- deedee_prepare(IFNg_naive, "DESeq2")
+data(dde_macrophage, package = "DeeDee")
+deedee_scatter(dde_macrophage, select1 = 1, select2 = 2)
 
-data(DE_results_IFNg_both, package = "DeeDee")
-IFNg_both <- deedee_prepare(IFNg_both, "DESeq2")
-
-data(DE_results_Salm_naive, package = "DeeDee")
-Salm_naive <- deedee_prepare(Salm_naive, "DESeq2")
-
-data(DE_results_Salm_both, package = "DeeDee")
-Salm_both <- deedee_prepare(Salm_both, "DESeq2")
-
-dd_list <- list(
-  IFNg_naive = IFNg_naive,
-  IFNg_both = IFNg_both,
-  Salm_naive = Salm_naive,
-  Salm_both = Salm_both
-)
-
-deedee_scatter(dd_list,
-  pthresh = 0.05, select1 = 1, select2 = 2,
-  color_by = "pval1"
-)
 }
