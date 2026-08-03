@@ -173,8 +173,8 @@ deedee_app()
 ```
 To explore a dataset with the app, one can either call the function with the DDE as an argument, or upload the DDE as an RDS in the App's input tab. 
 
-The App entails one tab for each of the above presented functions. The respective parameters can be set via self-explanatory input boxes in each tab. Additional interactive functionality, namely the [interactive heatmap](#deedee-heatmap), a brushing (area selection) of points in the Q-Q and scatter plot and (TODO decide ORA fate) the possibility to run an over-representation on the brushed points in the scatter plot are implemented.
-(TODO add info panels back) More information on the usage can be found in the `INFO` panel in each respective tab.
+The App entails one tab for each of the above presented functions. The respective parameters can be set via self-explanatory input boxes in each tab and outputs are delivered in an interactive manner.
+More information on the usage of each DeeDee function can be found in the `INFO` panel in each respective tab.
 
 # Session Info {-}
 
