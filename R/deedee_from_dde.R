@@ -17,7 +17,7 @@ deedee_from_dde <- function(dde) {
   dea_names <- names(dde@dea)
 
   deedee_list <- lapply(dea_names, function(name) {
-    res <- getDEA(dde, name)
+    res <- DeeDeeExperiment::getDEA(dde, name)
     df <- data.frame(
       logFC = res[[1]],
       pval  = res[[2]],
