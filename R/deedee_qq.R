@@ -20,6 +20,8 @@
 #' data(dde_macrophage, package = "DeeDee")
 #' deedee_qq(dde_macrophage, select1 = 1, select2 = 2)
 #'
+#' @export
+#'
 
 deedee_qq <- function(data,
                       select1 = 1,
