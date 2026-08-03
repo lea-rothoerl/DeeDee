@@ -17,8 +17,3 @@ DeeDee functions
 \code{deedee_from_dde} prepares an instance of the DeeDeeExperiment
 class for the usage in other DeeDee functions.
 }
-\examples{
-
-deedee_table <- deedee_from_dde(dde)
-
-}

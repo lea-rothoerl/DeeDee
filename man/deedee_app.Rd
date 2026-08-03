@@ -21,4 +21,5 @@ graphical user interface.
 
 data(dde_macrophage, package = "DeeDee")
 deedee_app(dde_macrophage)
+
 }
