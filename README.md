@@ -14,7 +14,7 @@ remotes::install_github("lea-rothoerl/DeeDee",
 
 ### Example
 
-Save your DEA results as .RDS files or convert them DeeDee tables by running `deedee_prepare()` and save those to .RDS, .txt or .xlsx files. Open the DeeDee App by running 
+Save your DEA results in a [DeeDeeExperiment](https://bioconductor.org/packages/release/bioc/html/DeeDeeExperiment.html) object. Open the DeeDee App by running 
 ```
 deedee_app()
 ```
@@ -23,4 +23,4 @@ and use the interactive graphical user interface to analyze your data.
 
 ### License
 
-MIT &copy; Lea Rothörl
+MIT &copy; Lea Schwarz
