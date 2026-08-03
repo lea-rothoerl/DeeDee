@@ -8,10 +8,6 @@
 #' @return list of DeeDee tables, to be used as part of the input for the other
 #' DeeDee functions
 #'
-#' @examples
-#'
-#' deedee_table <- deedee_from_dde(dde)
-#'
 
 deedee_from_dde <- function(dde) {
   dea_names <- names(dde@dea)
