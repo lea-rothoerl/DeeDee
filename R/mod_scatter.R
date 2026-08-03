@@ -18,6 +18,15 @@ mod_scatter_ui <- function(id) {
       shinycssloaders::withSpinner(
         shiny::uiOutput(ns("scatter_out"))
       )
+    ),
+    bslib::accordion(
+      open = FALSE,
+      bslib::accordion_panel(
+        "INFO",
+        shiny::includeMarkdown(system.file("extdata",
+                                           "scatter.md",
+                                           package = "DeeDee"))
+      )
     )
   )
 }

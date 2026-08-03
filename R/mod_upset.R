@@ -23,6 +23,15 @@ mod_upset_ui <- function(id) {
       shinycssloaders::withSpinner(
         shiny::uiOutput(ns("upset_out"))
       )
+    ),
+    bslib::accordion(
+      open = FALSE,
+      bslib::accordion_panel(
+        "INFO",
+        shiny::includeMarkdown(system.file("extdata",
+                                           "upset.md",
+                                           package = "DeeDee"))
+      )
     )
   )
 }

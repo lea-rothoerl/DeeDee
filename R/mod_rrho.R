@@ -16,6 +16,15 @@ mod_rrho_ui <- function(id) {
       shinycssloaders::withSpinner(
         shiny::plotOutput(ns("rrho"))
       )
+    ),
+    bslib::accordion(
+      open = FALSE,
+      bslib::accordion_panel(
+        "INFO",
+        shiny::includeMarkdown(system.file("extdata",
+                                           "rrho.md",
+                                           package = "DeeDee"))
+      )
     )
   )
 }

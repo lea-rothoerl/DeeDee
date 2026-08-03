@@ -60,6 +60,15 @@ deedee_app <- function(deedee_obj = NULL) {
                          shinycssloaders::withSpinner(
                            InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput("heatmap_ht")
                          )
+                       ),
+                       bslib::accordion(
+                         open = FALSE,
+                         bslib::accordion_panel(
+                           "INFO",
+                           shiny::includeMarkdown(system.file("extdata",
+                                                              "heatmap.md",
+                                                              package = "DeeDee"))
+                         )
                        )
                      )
     )

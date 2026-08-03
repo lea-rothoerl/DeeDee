@@ -1,6 +1,6 @@
 ---
 title: "upset.md"
-author: "Lea Rothörl"
+author: "Lea Schwarz"
 date: "7/12/2021"
 output: html_document
 ---

@@ -18,6 +18,15 @@ mod_cat_ui <- function(id) {
       shinycssloaders::withSpinner(
         shiny::uiOutput(ns("cat_out"))
       )
+    ),
+    bslib::accordion(
+      open = FALSE,
+      bslib::accordion_panel(
+        "INFO",
+        shiny::includeMarkdown(system.file("extdata",
+                                           "cat.md",
+                                           package = "DeeDee"))
+      )
     )
   )
 }

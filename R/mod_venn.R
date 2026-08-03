@@ -17,6 +17,15 @@ mod_venn_ui <- function(id) {
       shinycssloaders::withSpinner(
         shiny::plotOutput(ns("venn"))
       )
+    ),
+    bslib::accordion(
+      open = FALSE,
+      bslib::accordion_panel(
+        "INFO",
+        shiny::includeMarkdown(system.file("extdata",
+                                           "venn.md",
+                                           package = "DeeDee"))
+      )
     )
   )
 }
