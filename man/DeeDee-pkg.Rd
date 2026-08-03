@@ -17,11 +17,11 @@ similarities and differences in the expression profiles. The functions are
 contained individually as well as included in an interactive Shiny Web App.
 }
 \author{
-\strong{Maintainer}: Lea Rothörl \email{lea.rothoerl@posteo.de} (\href{https://orcid.org/0000-0003-2554-0583}{ORCID})
+\strong{Maintainer}: Lea Schwarz \email{lea-schwarz@posteo.de} (\href{https://orcid.org/0009-0006-1290-1553}{ORCID})
 
 Authors:
 \itemize{
-  \item Lea Rothörl \email{lea.rothoerl@posteo.de} (\href{https://orcid.org/0000-0003-2554-0583}{ORCID})
+  \item Lea Schwarz \email{lea-schwarz@posteo.de} (\href{https://orcid.org/0009-0006-1290-1553}{ORCID})
   \item Federico Marini \email{marinif@uni-mainz.de} (\href{https://orcid.org/0000-0003-3252-7758}{ORCID})
 }
 
