@@ -4,8 +4,8 @@ Title: Comparative Evaluation and Visualization of Differential Expression
 Version: 0.1.0
 Authors@R: 
     c(
-        person(given = "Lea", family = "Rothörl", role = c("aut", "cre"),
-           email = "lea.rothoerl@posteo.de", comment = c(ORCID = "0000-0003-2554-0583")
+        person(given = "Lea", family = "Schwarz", role = c("aut", "cre"),
+           email = "lea-schwarz@posteo.de", comment = c(ORCID = "0009-0006-1290-1553")
         ),
         person(
             given = "Federico", family = "Marini", role = c("aut"), 
@@ -17,7 +17,7 @@ Description: DeeDee is a collection of functions to compare the results of two
     forms of graphic output, DeeDee has your back. Aside from a data preparation 
     function and six graphical-output producing functions, the package contains
     a Shiny web application that contains the package's full functionality and 
-    more.
+    more. TODO get up to date
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -29,6 +29,7 @@ Imports:
     clusterProfiler,
     ComplexHeatmap,
     ComplexUpset,
+    DeeDeeExperiment,
     DESeq2,
     dplyr,
     enrichplot, 
