@@ -13,6 +13,7 @@
 #'
 #' data(dde_macrophage, package = "DeeDee")
 #' deedee_app(dde_macrophage)
+#'
 deedee_app <- function(deedee_obj = NULL) {
 
   ui <- bslib::page_navbar(
@@ -29,7 +30,39 @@ deedee_app <- function(deedee_obj = NULL) {
                     bslib::nav_panel("QQ", mod_qq_ui("qq")),
     ),
     bslib::nav_panel("Scatter", mod_scatter_ui("scatter")),
-    bslib::nav_panel("Heatmap", mod_heatmap_ui("heatmap")),
+
+    bslib::nav_panel("Heatmap",
+                     bslib::layout_columns(
+                       col_widths = c(4, 8),
+                       bslib::card(
+                         shiny::numericInput("heatmap_show_first", "Show first", value = 25, min = 1),
+                         shiny::checkboxInput("heatmap_show_gene_names", "Show gene names", FALSE),
+                         shiny::checkboxInput("heatmap_show_na", "Show NA", FALSE),
+                         shiny::selectInput("heatmap_dist", "Distance measure",
+                                            choices = c("Euclidean" = "euclidean",
+                                                        "Manhattan" = "manhattan",
+                                                        "Pearson" = "pearson",
+                                                        "Spearman" = "spearman"),
+                                            selected = "euclidean"
+                         ),
+                         shiny::selectInput("heatmap_clust", "Clustering method",
+                                            choices = c("Single" = "single",
+                                                        "Complete" = "complete",
+                                                        "Average" = "average",
+                                                        "Centroid" = "centroid"),
+                                            selected = "average"
+                         ),
+                         shiny::numericInput("heatmap_pthresh", "P-value threshold",
+                                             value = 0.05, min = 0.01, max = 1, step = 0.01
+                         )
+                       ),
+                       bslib::card(
+                         shinycssloaders::withSpinner(
+                           InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput("heatmap_ht")
+                         )
+                       )
+                     )
+    )
   )
 
   server <- function(input, output, session) {
@@ -41,7 +74,32 @@ deedee_app <- function(deedee_obj = NULL) {
     mod_rrho_server("rrho", dde)
     mod_scatter_server("scatter", dde)
     mod_qq_server("qq", dde)
-    mod_heatmap_server("heatmap", dde)
+
+    heatmap_output <- shiny::reactive({
+      shiny::req(dde(), input$heatmap_show_first)
+      shiny::validate(shiny::need(
+        length(DeeDeeExperiment::getDEANames(dde())) >= 2,
+        "Please select at least two contrasts."
+      ))
+      res <- deedee_heatmap(dde(),
+                            show_first = input$heatmap_show_first,
+                            show_gene_names = input$heatmap_show_gene_names,
+                            dist = input$heatmap_dist,
+                            clust = input$heatmap_clust,
+                            pthresh = input$heatmap_pthresh,
+                            show_na = input$heatmap_show_na
+      )
+      shiny::validate(shiny::need(!is.null(res),
+                                  "No common genes in input datasets."))
+      ComplexHeatmap::draw(res)
+    })
+
+    shiny::observe({
+      shiny::req(heatmap_output())
+      InteractiveComplexHeatmap::makeInteractiveComplexHeatmap(
+        input, output, session, heatmap_output()
+      )
+    })
   }
 
   shiny::shinyApp(ui, server)
