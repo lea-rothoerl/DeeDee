@@ -23,6 +23,7 @@ deedee_app <- function(deedee_obj = NULL) {
     bslib::nav_menu("Overlap",
                     bslib::nav_panel("Venn", mod_venn_ui("venn")),
                     bslib::nav_panel("UpSet", mod_upset_ui("upset")),
+                    bslib::nav_panel("Overlap List", mod_overlap_ui("overlap")),
     ),
     bslib::nav_menu("Concordance",
                     bslib::nav_panel("CAT", mod_cat_ui("cat")),
@@ -79,6 +80,7 @@ deedee_app <- function(deedee_obj = NULL) {
 
     mod_venn_server("venn", dde)
     mod_upset_server("upset", dde)
+    mod_overlap_server("overlap", dde)
     mod_cat_server("cat", dde)
     mod_rrho_server("rrho", dde)
     mod_scatter_server("scatter", dde)

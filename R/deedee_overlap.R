@@ -70,12 +70,12 @@ deedee_overlap <- function(data,
         data[i][[1]]$logFC < 0
       )
     }
+  }
 
-    common_genes <- Reduce(intersect, lapply(data, rownames))
+  common_genes <- Reduce(intersect, lapply(data, rownames))
 
-    if (length(common_genes) == 0) {
-      return(NULL)
-    }
+  if (length(common_genes) == 0) {
+    return(NULL)
   }
 
   # --------------------- creation of the resulting list ----------------------

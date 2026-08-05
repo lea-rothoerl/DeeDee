@@ -3,6 +3,7 @@
 export(deedee_app)
 export(deedee_cat)
 export(deedee_heatmap)
+export(deedee_overlap)
 export(deedee_qq)
 export(deedee_qqmult)
 export(deedee_rrho)
