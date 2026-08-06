@@ -34,7 +34,8 @@ deedee_heatmap <- function(data,
                            dist = "euclidean",
                            clust = "average",
                            show_na = FALSE,
-                           pthresh = 0.05) {
+                           pthresh = 0.05,
+                           show_symbols = TRUE) {
 
   # ----------------------------- argument check ------------------------------
   checkmate::assert(length(names(data@dea)) >= 2)
@@ -47,12 +48,13 @@ deedee_heatmap <- function(data,
   choices2 <- c("single", "complete", "average", "centroid")
   checkmate::assert_choice(clust, choices2)
   checkmate::assert_logical(show_na)
+  checkmate::assert_logical(show_symbols)
 
   # ---------------------------- data preparation -----------------------------
   for (i in 1:length(data)) {
     data[i][[1]] <- subset(data[i][[1]], data[i][[1]]$pval < pthresh) # pthresh
-    data[i][[1]] <- data[i][[1]]["logFC"] # removing p-value column
-    colnames(data[i][[1]]) <- names(data)[i] # creating unique colnames
+    data[i][[1]] <- data[i][[1]][, c("logFC", "symbol")] # removing p-value column
+    colnames(data[i][[1]])[1] <- names(data)[i] # creating unique colnames
     data[i][[1]] <- tibble::rownames_to_column(data[i][[1]])
   }
 
@@ -69,11 +71,17 @@ deedee_heatmap <- function(data,
   }
 
   row.names(comp) <- comp$rowname
-  comp <- subset(comp, select = -c(rowname)) # removing column with rownames
+  symbols <- comp$symbol.x
+  names(symbols) <- comp$rowname
+  comp <- subset(comp, select=-c(rowname))
+  comp <- comp[, !grepl("symbol", names(comp)), drop = FALSE]
   comp <- comp[rowSums(!is.na(comp)) >= floor(length(comp) / 2) + 1, ]
   if (show_na == FALSE) {
     comp <- comp[stats::complete.cases(comp[colnames(comp)]), ]
   }
+
+  ensembl_ids <- rownames(comp)
+  symbols <- symbols[rownames(comp)]
   comp <- as.matrix(comp)
 
   if (length(comp[, 1]) == 0) {
@@ -81,8 +89,15 @@ deedee_heatmap <- function(data,
   }
 
   # ------------------- creation of the resulting heatmap ---------------------
-  if (show_gene_names == FALSE) {
-    rownames(comp) <- c()
+  if (show_gene_names) {
+    if (show_symbols) {
+      rownames(comp) <- symbols[rownames(comp)]
+    } else {
+      rownames(comp) <- ensembl_ids
+    }
+
+  } else {
+    rownames(comp) <- NULL
   }
 
   col <- viridis::viridis(n = 15, option = "magma")

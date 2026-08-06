@@ -37,7 +37,7 @@ deedee_app <- function(deedee_obj = NULL) {
                        col_widths = c(4, 8),
                        bslib::card(
                          shiny::numericInput("heatmap_show_first", "Show first", value = 25, min = 1),
-                         shiny::checkboxInput("heatmap_show_gene_names", "Show gene names", FALSE),
+                         shiny::checkboxInput("heatmap_show_gene_names", "Show gene identifiers", FALSE),
                          shiny::checkboxInput("heatmap_show_na", "Show NA", FALSE),
                          shiny::selectInput("heatmap_dist", "Distance measure",
                                             choices = c("Euclidean" = "euclidean",
@@ -102,7 +102,8 @@ deedee_app <- function(deedee_obj = NULL) {
                             dist = input$heatmap_dist,
                             clust = input$heatmap_clust,
                             pthresh = input$heatmap_pthresh,
-                            show_na = input$heatmap_show_na
+                            show_na = input$heatmap_show_na,
+                            show_symbols = show_symbols()
       )
       shiny::validate(shiny::need(!is.null(res),
                                   "No common genes in input datasets."))

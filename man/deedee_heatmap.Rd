@@ -11,7 +11,8 @@ deedee_heatmap(
   dist = "euclidean",
   clust = "average",
   show_na = FALSE,
-  pthresh = 0.05
+  pthresh = 0.05,
+  show_symbols = TRUE
 )
 }
 \arguments{
