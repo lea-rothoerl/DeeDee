@@ -8,7 +8,21 @@ mod_input_ui <- function(id) {
       shiny::fileInput(ns("dde_file"), "Upload a DeeDeeExperiment (.rds)",
                        accept = ".rds", placeholder = "No file selected"
       ),
-      shiny::tableOutput(ns("inp_infobox"))
+      shiny::tableOutput(ns("inp_infobox")),
+      bslib::input_switch(
+        ns("show_symbols"),
+        "Show gene symbols instead of Ensembl IDs",
+        value = FALSE
+      ),
+      shiny::selectInput(
+        ns("species"),
+        "Species",
+        choices = c(
+          "Human" = "Homo_sapiens",
+          "Mouse" = "Mus_musculus"
+        ),
+        selected = "Homo_sapiens"
+      ),
     ),
     bslib::card(
       bslib::card_header("Contrasts to Analyze"),
@@ -45,7 +59,7 @@ mod_input_server <- function(id, dde_arg = NULL) {
       )
     })
 
-    shiny::reactive({
+    dde <- shiny::reactive({
       shiny::req(dde_raw(), input$select_contrasts)
 
       all_names <- DeeDeeExperiment::getDEANames(dde_raw())
@@ -57,5 +71,11 @@ mod_input_server <- function(id, dde_arg = NULL) {
         DeeDeeExperiment::removeDEA(dde_raw(), to_drop)
       }
     })
+
+    list(
+      dde = dde,
+      show_symbols = shiny::reactive(input$show_symbols),
+      species = shiny::reactive({input$species})
+    )
   })
 }

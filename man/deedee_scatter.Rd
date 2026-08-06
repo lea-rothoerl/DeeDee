@@ -9,7 +9,9 @@ deedee_scatter(
   select1 = 1,
   select2 = 2,
   color_by = "pval1",
-  pthresh = 0.05
+  pthresh = 0.05,
+  show_symbols = TRUE,
+  species = "Homo_sapiens"
 )
 }
 \arguments{
@@ -23,6 +25,12 @@ deedee_scatter(
 (possible values = \code{pval1} (default), \code{pval2})}
 
 \item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
+
+\item{show_symbols}{boolean whether to show gene symbols instead of Ensembl
+.                    IDs, \code{TRUE} by default}
+
+\item{species}{species the data comes from (for clickable IDs),
+\code{Homo_sapiens} by default}
 }
 \value{
 ggplot object (plottable with show()/print())

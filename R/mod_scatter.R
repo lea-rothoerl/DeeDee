@@ -33,7 +33,7 @@ mod_scatter_ui <- function(id) {
 
 #' @keywords internal
 #' @param dde reactive DeeDeeExperiment from mod_input_server()
-mod_scatter_server <- function(id, dde) {
+mod_scatter_server <- function(id, dde, show_symbols, species) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -60,7 +60,9 @@ mod_scatter_server <- function(id, dde) {
                      select1 = sel1,
                      select2 = sel2,
                      color_by = input$color_by,
-                     pthresh = input$pthresh
+                     pthresh = input$pthresh,
+                     show_symbols = show_symbols(),
+                     species = species()
       )
     })
 

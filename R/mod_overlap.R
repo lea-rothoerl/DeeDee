@@ -41,7 +41,7 @@ mod_overlap_ui <- function(id) {
 
 #' @keywords internal
 #' @param dde reactive DeeDeeExperiment from mod_input_server()
-mod_overlap_server <- function(id, dde) {
+mod_overlap_server <- function(id, dde, show_symbols, species) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -75,10 +75,16 @@ mod_overlap_server <- function(id, dde) {
 
     output$table <- DT::renderDT({
       tbl <- overlap_tbl()
-      shiny::req(input$species)
+      shiny::req(species())
 
-      tbl$Ensembl <- mosdef::create_link_ENSEMBL(tbl$gene, species = input$species)
-      tbl <- tbl[, c("Ensembl", setdiff(names(tbl), c("gene", "Ensembl"))), drop = FALSE]
+      if (show_symbols()) {
+        tbl$Gene <- mosdef::create_link_NCBI(tbl$symbol)
+      } else {
+        tbl$Gene <- mosdef::create_link_ENSEMBL(tbl$gene, species = species())
+      }
+
+      tbl <- tbl[, c("Gene", setdiff(names(tbl), c("gene", "symbol", "Gene"))),
+                 drop = FALSE]
 
       DT::datatable(tbl,
                     escape = FALSE,

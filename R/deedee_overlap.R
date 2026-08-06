@@ -79,7 +79,9 @@ deedee_overlap <- function(data,
   }
 
   # --------------------- creation of the resulting list ----------------------
-  res <- data.frame(gene = common_genes, stringsAsFactors = FALSE)
+  res <- data.frame(gene = common_genes,
+                    symbol = data[[1]][common_genes, "symbol"],
+                    stringsAsFactors = FALSE)
   for (i in seq_along(data)) {
     nm <- names(data)[i]
     res[[paste0(nm, "_logFC")]] <- data[[i]][common_genes, "logFC"]
