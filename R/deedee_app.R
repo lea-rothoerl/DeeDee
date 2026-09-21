@@ -27,7 +27,7 @@ deedee_app <- function(deedee_obj = NULL) {
     ),
     bslib::nav_menu("Concordance",
                     bslib::nav_panel("CAT", mod_cat_ui("cat")),
-                    bslib::nav_panel("RRHO", mod_rrho_ui("rrho")),
+   #                 bslib::nav_panel("RRHO", mod_rrho_ui("rrho")),
                     bslib::nav_panel("QQ", mod_qq_ui("qq")),
     ),
     bslib::nav_panel("Scatter", mod_scatter_ui("scatter")),
