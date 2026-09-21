@@ -1,6 +1,6 @@
 #' DeeDee RRHO Plot
 #'
-#' @description
+#' @description RRHO plot TODO
 #'
 #' @param data instance of the DeeDeeExperiment class
 #' @param select1 index of the 1st contrast to be compared (default = 1)

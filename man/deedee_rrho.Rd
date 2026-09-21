@@ -29,7 +29,7 @@ regions, or \code{"enrichment"} for a one-sided test}
 plottable RRHO object
 }
 \description{
-DeeDee RRHO Plot
+RRHO plot TODO
 }
 \examples{
 
