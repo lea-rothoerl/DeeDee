@@ -76,6 +76,20 @@ deedee_scatter <- function(data,
       species = species)
   }
 
+  # additional hover text
+  contrast1_name <- names(data)[select1]
+  contrast2_name <- names(data)[select2]
+
+  comp$hover_text <- paste0(
+    "Symbol: ", comp$symbol1, "<br>",
+    "Ensembl ID: ", comp$rowname, "<br>",
+    contrast1_name, ": logFC = ", round(comp$logFC1, 2),
+    ", p = ", formatC(comp$pval1, format = "e", digits = 2), "<br>",
+    contrast2_name, ": logFC = ", round(comp$logFC2, 2),
+    ", p = ", formatC(comp$pval2, format = "e", digits = 2), "<br>",
+    comp$label
+  )
+
   axis_range <- range(c(comp$logFC1, comp$logFC2), finite = TRUE)
   axis_pad <- max(diff(axis_range) * 0.05, 0.05)
   axis_range <- axis_range + c(-axis_pad, axis_pad)
@@ -91,8 +105,7 @@ deedee_scatter <- function(data,
     ggplot2::scale_x_continuous(limits = axis_range) +
     ggplot2::scale_y_continuous(limits = axis_range) +
     ggplot2::labs(color = color_by) +
-    ggplot2::theme_light() +
-    ggplot2::theme(aspect.ratio = 1)
+    ggplot2::theme_light()
 
 
   res <- plotly::ggplotly(res, tooltip = "text")

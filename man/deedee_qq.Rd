@@ -41,4 +41,5 @@ than two contrasts against a reference, have a look at \code{deedee_qqmult}.
 data(dde_macrophage, package = "DeeDee")
 deedee_qq(dde_macrophage, select1 = 1, select2 = 2)
 
+
 }

@@ -65,7 +65,6 @@ deedee_qqmult <- function(data,
     ggplot2::scale_x_continuous(limits = axis_range) +
     ggplot2::scale_y_continuous(limits = axis_range) +
     ggplot2::theme_light() +
-    ggplot2::theme(aspect.ratio = 1) +
     viridis::scale_color_viridis(
       option = "magma", discrete = TRUE,
       begin = 0, end = 0.9
