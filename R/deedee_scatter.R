@@ -96,15 +96,16 @@ deedee_scatter <- function(data,
 
   # ----------------- creation of the resulting scatter plot ------------------
   res <- ggplot2::ggplot(data = comp, ggplot2::aes(logFC1, logFC2,
-    col = get(color_by)
+     fill = -log10(get(color_by))
   )) +
-    ggplot2::geom_point(ggplot2::aes(text = hover_text)) +
-    viridis::scale_color_viridis(option = "magma") +
+    ggplot2::geom_point(ggplot2::aes(text = hover_text),
+                        shape = 21, color = "black", stroke = 0.3, size = 2.5) +
+    viridis::scale_fill_viridis(option = "magma") +
     ggplot2::xlab(names(data)[select1]) +
     ggplot2::ylab(names(data)[select2]) +
+    ggplot2::labs(fill = paste0("-log10(", color_by, ")")) +
     ggplot2::scale_x_continuous(limits = axis_range) +
     ggplot2::scale_y_continuous(limits = axis_range) +
-    ggplot2::labs(color = color_by) +
     ggplot2::theme_light()
 
 
