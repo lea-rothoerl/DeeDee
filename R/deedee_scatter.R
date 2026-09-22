@@ -76,6 +76,10 @@ deedee_scatter <- function(data,
       species = species)
   }
 
+  axis_range <- range(c(comp$logFC1, comp$logFC2), finite = TRUE)
+  axis_pad <- max(diff(axis_range) * 0.05, 0.05)
+  axis_range <- axis_range + c(-axis_pad, axis_pad)
+
   # ----------------- creation of the resulting scatter plot ------------------
   res <- ggplot2::ggplot(data = comp, ggplot2::aes(logFC1, logFC2,
     col = get(color_by)
@@ -84,8 +88,12 @@ deedee_scatter <- function(data,
     viridis::scale_color_viridis(option = "magma") +
     ggplot2::xlab(names(data)[select1]) +
     ggplot2::ylab(names(data)[select2]) +
+    ggplot2::scale_x_continuous(limits = axis_range) +
+    ggplot2::scale_y_continuous(limits = axis_range) +
     ggplot2::labs(color = color_by) +
-    ggplot2::theme_light()
+    ggplot2::theme_light() +
+    ggplot2::theme(aspect.ratio = 1)
+
 
   res <- plotly::ggplotly(res, tooltip = "text")
 

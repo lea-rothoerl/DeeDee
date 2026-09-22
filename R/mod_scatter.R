@@ -68,7 +68,7 @@ mod_scatter_server <- function(id, dde, show_symbols, species) {
 
     output$scatter_plotly <- plotly::renderPlotly({
       shiny::req(plot_obj())
-      plotly::ggplotly(plot_obj(), tooltip = c("text", "x", "y"))
+      plot_obj()
     })
 
     output$scatter_out <- shiny::renderUI({
