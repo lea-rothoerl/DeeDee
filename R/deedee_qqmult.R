@@ -49,14 +49,23 @@ deedee_qqmult <- function(data,
 
   names(output) <- nm
 
+  qq_data <- dplyr::bind_rows(output, .id = "contrast")
+
+  axis_range <- range(c(qq_data$x, qq_data$y), finite = TRUE)
+  axis_pad <- max(diff(axis_range) * 0.05, 0.05)
+  axis_range <- axis_range + c(-axis_pad, axis_pad)
+
   res <- ggplot2::ggplot(
-    dplyr::bind_rows(output, .id = "contrast"),
+    qq_data,
     ggplot2::aes_string("x", "y", colour = "contrast")
   ) +
-    ggplot2::xlab(names(data)[ref]) +
-    ggplot2::ylab("see legend") +
+    ggplot2::xlab(paste0("reference ", contrasts[ref], " (logFC)")) +
+    ggplot2::ylab("logFC (other contrasts, see legend)") +
     ggplot2::geom_line() +
+    ggplot2::scale_x_continuous(limits = axis_range) +
+    ggplot2::scale_y_continuous(limits = axis_range) +
     ggplot2::theme_light() +
+    ggplot2::theme(aspect.ratio = 1) +
     viridis::scale_color_viridis(
       option = "magma", discrete = TRUE,
       begin = 0, end = 0.9
