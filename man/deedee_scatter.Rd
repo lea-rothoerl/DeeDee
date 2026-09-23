@@ -11,7 +11,8 @@ deedee_scatter(
   color_by = "pval1",
   pthresh = 0.05,
   show_symbols = TRUE,
-  species = "Homo_sapiens"
+  species = "Homo_sapiens",
+  source = "deedee_scatter"
 )
 }
 \arguments{
