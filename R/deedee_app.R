@@ -19,7 +19,7 @@ deedee_app <- function(deedee_obj = NULL) {
   ui <- bslib::page_navbar(
     title = "DeeDee",
     theme = bslib::bs_theme(version = 5, bootswatch = "flatly"),
-    bslib::nav_panel("Input", mod_input_ui("input")),
+    bslib::nav_panel("Input", mod_input_ui("input", collapse_upload = !is.null(deedee_obj))),
     bslib::nav_menu("Overlap",
                     bslib::nav_panel("Venn", mod_venn_ui("venn")),
                     bslib::nav_panel("UpSet", mod_upset_ui("upset")),
@@ -58,6 +58,9 @@ deedee_app <- function(deedee_obj = NULL) {
                          )
                        ),
                        bslib::card(
+                         shiny::tags$style(
+                           shiny::HTML("#heatmap_ht_show_code { display: none !important; }")
+                         ),
                          shinycssloaders::withSpinner(
                            InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput("heatmap_ht")
                          )

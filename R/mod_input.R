@@ -1,28 +1,33 @@
 #' @keywords internal
-mod_input_ui <- function(id) {
+mod_input_ui <- function(id, collapse_upload = FALSE) {
   ns <- shiny::NS(id)
   bslib::layout_columns(
     col_widths = c(8, 4),
-    bslib::card(
-      bslib::card_header("Load data"),
-      shiny::fileInput(ns("dde_file"), "Upload a DeeDeeExperiment (.rds)",
-                       accept = ".rds", placeholder = "No file selected"
+    bslib::accordion(
+      open = !collapse_upload,
+      bslib::accordion_panel(
+        "Load data",
+        shiny::fileInput(ns("dde_file"), "Upload a DeeDeeExperiment (.rds)",
+                         accept = ".rds", placeholder = "No file selected"
+        )
       ),
-      shiny::tableOutput(ns("inp_infobox")),
-      bslib::input_switch(
-        ns("show_symbols"),
-        "Show gene symbols instead of Ensembl IDs",
-        value = FALSE
-      ),
-      shiny::selectInput(
-        ns("species"),
-        "Species",
-        choices = c(
-          "Human" = "Homo_sapiens",
-          "Mouse" = "Mus_musculus"
+      bslib::card(
+        shiny::tableOutput(ns("inp_infobox")),
+        bslib::input_switch(
+          ns("show_symbols"),
+          "Show gene symbols instead of Ensembl IDs",
+          value = FALSE
         ),
-        selected = "Homo_sapiens"
-      ),
+        shiny::selectInput(
+          ns("species"),
+          "Species",
+          choices = c(
+            "Human" = "Homo_sapiens",
+            "Mouse" = "Mus_musculus"
+          ),
+          selected = "Homo_sapiens"
+        ),
+      )
     ),
     bslib::card(
       bslib::card_header("Contrasts to Analyze"),
