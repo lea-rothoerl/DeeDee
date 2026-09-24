@@ -17,7 +17,8 @@ mod_scatter_ui <- function(id) {
     bslib::card(
       shinycssloaders::withSpinner(
         shiny::uiOutput(ns("scatter_out"))
-      )
+      ),
+      .deedee_download_ui(ns)
     ),
     bslib::accordion(
       open = FALSE,
@@ -65,7 +66,7 @@ mod_scatter_ui <- function(id) {
 
 #' @keywords internal
 #' @param dde reactive DeeDeeExperiment from mod_input_server()
-mod_scatter_server <- function(id, dde, show_symbols, species) {
+mod_scatter_server <- function(id, dde, show_symbols, species, source_label) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -189,5 +190,22 @@ mod_scatter_server <- function(id, dde, show_symbols, species) {
     output$scatter_out <- shiny::renderUI({
       plotly::plotlyOutput(ns("scatter_plotly"))
     })
+
+    .deedee_download_server(input, output,
+                            filename_prefix = "deedee_scatter",
+                            draw_fn = function() {
+                              sel1 <- match(input$s1, names(dde()@dea))
+                              sel2 <- match(input$s2, names(dde()@dea))
+                              print(.deedee_scatter_plot(dde(),
+                                                         select1 = sel1,
+                                                         select2 = sel2,
+                                                         color_by = input$color_by,
+                                                         pthresh = input$pthresh,
+                                                         show_symbols = show_symbols(),
+                                                         species = species()
+                              ))
+                            },
+                            source_label = source_label
+    )
   })
 }

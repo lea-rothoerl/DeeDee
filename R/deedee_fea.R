@@ -46,9 +46,8 @@ deedee_fea <- function(data,
         "but not installed."
       )
     }
-    if (!paste0("package:", pkg) %in% search()) {
-      suppressPackageStartupMessages(library(pkg, character.only = TRUE))
-    }
+    library(org.Hs.eg.db)
+    library(org.Mm.eg.db)
   }
 
   # --------------------------------- universe --------------------------------

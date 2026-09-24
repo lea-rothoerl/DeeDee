@@ -43,36 +43,16 @@ deedee_scatter <- function(data,
   checkmate::assert_logical(show_symbols)
   checkmate::assert_choice(species,c("Homo_sapiens", "Mus_musculus"))
 
-  # --------------------------------- get data ---------------------------------
-  prep <- .deedee_scatter_data(data,
+  # -------------------------------- build plot --------------------------------
+  p <- .deedee_scatter_plot(data,
                                select1 = select1, select2 = select2, pthresh = pthresh,
                                show_symbols = show_symbols, species = species
   )
-  if (is.null(prep)) {
+  if (is.null(p)) {
     return(NULL)
   }
-  comp <- prep$comp
 
-  # ----------------- creation of the resulting scatter plot ------------------
-  axis_range <- range(c(comp$logFC1, comp$logFC2), finite = TRUE)
-  axis_pad <- max(diff(axis_range) * 0.05, 0.05)
-  axis_range <- axis_range + c(-axis_pad, axis_pad)
-
-  res <- ggplot2::ggplot(data = comp, ggplot2::aes(logFC1, logFC2,
-     fill = -log10(get(color_by)), key = rowname
-  )) +
-    ggplot2::geom_point(ggplot2::aes(text = hover_text),
-                        shape = 21, color = "black", stroke = 0.3, size = 2.5) +
-    viridis::scale_fill_viridis(option = "magma") +
-    ggplot2::xlab(names(data)[select1]) +
-    ggplot2::ylab(names(data)[select2]) +
-    ggplot2::labs(fill = paste0("-log10(", color_by, ")")) +
-    ggplot2::scale_x_continuous(limits = axis_range) +
-    ggplot2::scale_y_continuous(limits = axis_range) +
-    ggplot2::theme_light()
-
-
-  res <- plotly::ggplotly(res, tooltip = "text", source = source)
+  res <- plotly::ggplotly(p, tooltip = "text", source = source)
 
   # --------------------------------- return ----------------------------------
   return(res)
@@ -149,6 +129,45 @@ deedee_scatter <- function(data,
 
 }
 
+# --- HELPER / PLOTTING FUNCTION ---
+.deedee_scatter_plot <- function(data,
+                                 select1 = 1,
+                                 select2 = 2,
+                                 color_by = "pval1",
+                                 pthresh = 0.05,
+                                 show_symbols = TRUE,
+                                 species = "Homo_sapiens") {
 
+  choices <- c("pval1", "pval2")
+  checkmate::assert_choice(color_by, choices)
 
+  prep <- .deedee_scatter_data(data,
+                               select1 = select1, select2 = select2, pthresh = pthresh,
+                               show_symbols = show_symbols, species = species
+  )
+  if (is.null(prep)) {
+    return(NULL)
+  }
+  comp <- prep$comp
 
+  # ----------------- creation of the resulting scatter plot ------------------
+  axis_range <- range(c(comp$logFC1, comp$logFC2), finite = TRUE)
+  axis_pad <- max(diff(axis_range) * 0.05, 0.05)
+  axis_range <- axis_range + c(-axis_pad, axis_pad)
+
+  suppressWarnings(
+    ggplot2::ggplot(data = comp, ggplot2::aes(logFC1, logFC2,
+                                              fill = -log10(get(color_by)), key = rowname
+    )) +
+      ggplot2::geom_point(ggplot2::aes(text = hover_text),
+                          shape = 21, color = "black", stroke = 0.3, size = 2.5
+      ) +
+      viridis::scale_fill_viridis(option = "magma") +
+      ggplot2::xlab(prep$contrast1_name) +
+      ggplot2::ylab(prep$contrast2_name) +
+      ggplot2::labs(fill = paste0("-log10(", color_by, ")")) +
+      ggplot2::scale_x_continuous(limits = axis_range) +
+      ggplot2::scale_y_continuous(limits = axis_range) +
+      ggplot2::theme_light()
+  )
+}
