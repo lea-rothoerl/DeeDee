@@ -104,8 +104,10 @@ deedee_cat <- function(data,
         names(data)[ref],
         sep = ""
       ),
-      x = maxrank * 0.8,
-      y = max(output[[i]][["concordance"]]) * 1.1
+      x = maxrank,
+      size = 4,
+      y = max(output[[i]][["concordance"]]) * 1.1,
+      hjust = 1
     )
 
   # --------------------------------- return ----------------------------------
