@@ -8,6 +8,7 @@ mod_qq_ui <- function(id) {
       shiny::numericInput(ns("pthresh"), "P-value threshold",
                           value = 0.05, min = 0.01, max = 1, step = 0.01
       ),
+      shiny::checkboxInput(ns("ref_line"), "Show reference line", TRUE),
     ),
     bslib::card(
       shinycssloaders::withSpinner(
@@ -51,7 +52,10 @@ mod_qq_server <- function(id, dde, source_label) {
       ref_idx <- match(input$ref, DeeDeeExperiment::getDEANames(dde()))
       shiny::req(ref_idx)
 
-      res <- deedee_qqmult(dde(), ref = ref_idx, pthresh = input$pthresh)
+      res <- deedee_qqmult(dde(),
+                           ref = ref_idx,
+                           pthresh = input$pthresh,
+                           ref_line = input$ref_line)
 
       shiny::validate(shiny::need(
         !is.null(res),

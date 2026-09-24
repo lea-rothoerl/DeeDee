@@ -4,7 +4,7 @@
 \alias{deedee_qqmult}
 \title{DeeDee QQ Plot with Multiple Contrasts}
 \usage{
-deedee_qqmult(data, ref = 1, pthresh = 0.05)
+deedee_qqmult(data, ref = 1, pthresh = 0.05, ref_line = TRUE)
 }
 \arguments{
 \item{data}{instance of the DeeDeeExperiment class}

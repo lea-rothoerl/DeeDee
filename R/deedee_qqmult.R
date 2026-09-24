@@ -21,7 +21,8 @@
 
 deedee_qqmult <- function(data,
                           ref = 1,
-                          pthresh = 0.05) {
+                          pthresh = 0.05,
+                          ref_line = TRUE) {
 
   # ----------------------------- argument check ------------------------------
   checkmate::assertClass(data, "DeeDeeExperiment")
@@ -30,6 +31,7 @@ deedee_qqmult <- function(data,
   checkmate::assert(length(contrasts) >= 2)
   checkmate::assert_number(pthresh, lower = 0, upper = 1)
   checkmate::assert_number(ref, lower = 1, upper = length(contrasts))
+  checkmate::assert_logical(ref_line)
 
   # ------------------- creation of the resulting qq plot ---------------------
   output <- list()
@@ -55,6 +57,7 @@ deedee_qqmult <- function(data,
   axis_pad <- max(diff(axis_range) * 0.05, 0.05)
   axis_range <- axis_range + c(-axis_pad, axis_pad)
 
+
   res <- ggplot2::ggplot(
     qq_data,
     ggplot2::aes_string("x", "y", colour = "contrast")
@@ -68,7 +71,11 @@ deedee_qqmult <- function(data,
     viridis::scale_color_viridis(
       option = "magma", discrete = TRUE,
       begin = 0, end = 0.9
-    )
+  )
+  if (ref_line) {
+     res <- res +
+      ggplot2::geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "grey")
+  }
 
 
   # --------------------------------- return ----------------------------------
