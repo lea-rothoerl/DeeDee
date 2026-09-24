@@ -31,7 +31,8 @@ deedee_scatter <- function(data,
                            pthresh = 0.05,
                            show_symbols = TRUE,
                            species = "Homo_sapiens",
-                           source = "deedee_scatter") {
+                           source = "deedee_scatter",
+                           ref_lines = TRUE) {
 
   # ----------------------------- argument check ------------------------------
   checkmate::assert(length(names(data@dea)) >= 2)
@@ -42,11 +43,13 @@ deedee_scatter <- function(data,
   checkmate::assert_choice(color_by, choices)
   checkmate::assert_logical(show_symbols)
   checkmate::assert_choice(species,c("Homo_sapiens", "Mus_musculus"))
+  checkmate::assert_logical(ref_lines)
 
   # -------------------------------- build plot --------------------------------
   p <- .deedee_scatter_plot(data,
                                select1 = select1, select2 = select2, pthresh = pthresh,
-                               show_symbols = show_symbols, species = species
+                               show_symbols = show_symbols, species = species,
+                            ref_lines = ref_lines
   )
   if (is.null(p)) {
     return(NULL)
@@ -136,10 +139,12 @@ deedee_scatter <- function(data,
                                  color_by = "pval1",
                                  pthresh = 0.05,
                                  show_symbols = TRUE,
-                                 species = "Homo_sapiens") {
+                                 species = "Homo_sapiens",
+                                 ref_lines) {
 
   choices <- c("pval1", "pval2")
   checkmate::assert_choice(color_by, choices)
+  checkmate::assert_logical(ref_lines)
 
   prep <- .deedee_scatter_data(data,
                                select1 = select1, select2 = select2, pthresh = pthresh,
@@ -156,7 +161,7 @@ deedee_scatter <- function(data,
   axis_range <- axis_range + c(-axis_pad, axis_pad)
 
   suppressWarnings(
-    ggplot2::ggplot(data = comp, ggplot2::aes(logFC1, logFC2,
+    res <- ggplot2::ggplot(data = comp, ggplot2::aes(logFC1, logFC2,
                                               fill = -log10(get(color_by)), key = rowname
     )) +
       ggplot2::geom_point(ggplot2::aes(text = hover_text),
@@ -170,4 +175,12 @@ deedee_scatter <- function(data,
       ggplot2::scale_y_continuous(limits = axis_range) +
       ggplot2::theme_light()
   )
+
+  if (ref_lines) {
+    res <- res +
+      ggplot2::geom_hline(yintercept = 0, linetype = "dashed", color = "grey")+
+      ggplot2::geom_vline(xintercept = 0, linetype = "dashed", color = "grey")
+  }
+
+  return(res)
 }

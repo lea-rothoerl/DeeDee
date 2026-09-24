@@ -12,7 +12,8 @@ deedee_scatter(
   pthresh = 0.05,
   show_symbols = TRUE,
   species = "Homo_sapiens",
-  source = "deedee_scatter"
+  source = "deedee_scatter",
+  ref_lines = TRUE
 )
 }
 \arguments{

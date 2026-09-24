@@ -13,6 +13,7 @@ mod_scatter_ui <- function(id) {
       shiny::numericInput(ns("pthresh"), "P-value threshold",
                           value = 0.05, min = 0.01, max = 1, step = 0.01
       ),
+      shiny::checkboxInput(ns("ref_lines"), "Show reference lines", TRUE),
     ),
     bslib::card(
       shinycssloaders::withSpinner(
@@ -99,7 +100,8 @@ mod_scatter_server <- function(id, dde, show_symbols, species, source_label) {
                      pthresh = input$pthresh,
                      show_symbols = show_symbols(),
                      species = species(),
-                     source = scatter_src
+                     source = scatter_src,
+                     ref_lines = input$ref_lines
       )
     })
 
@@ -208,7 +210,8 @@ mod_scatter_server <- function(id, dde, show_symbols, species, source_label) {
                                                          color_by = input$color_by,
                                                          pthresh = input$pthresh,
                                                          show_symbols = show_symbols(),
-                                                         species = species()
+                                                         species = species(),
+                                                         ref_lines = input$ref_lines
                               ))
                             },
                             source_label = source_label
