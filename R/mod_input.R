@@ -39,7 +39,7 @@ mod_input_ui <- function(id, collapse_upload = FALSE) {
 #' @keywords internal
 #' @param dde_arg a DeeDeeExperiment passed in the call of deedee_app(),
 #'   or NULL if the user will upload one instead
-mod_input_server <- function(id, dde_arg = NULL) {
+mod_input_server <- function(id, dde_arg = NULL, arg_label = NULL) {
   shiny::moduleServer(id, function(input, output, session) {
 
     dde_raw <- shiny::reactive({
@@ -52,6 +52,16 @@ mod_input_server <- function(id, dde_arg = NULL) {
       obj <- readRDS(input$dde_file$datapath)
       checkmate::assertClass(obj, "DeeDeeExperiment")
       obj
+    })
+
+    source_label <- shiny::reactive({
+      if (!is.null(dde_arg)) {
+        arg_label
+      } else if (shiny::isTruthy(input$dde_file)) {
+        input$dde_file$name
+      } else {
+        NULL
+      }
     })
 
     output$datasets <- shiny::renderUI({
@@ -80,7 +90,9 @@ mod_input_server <- function(id, dde_arg = NULL) {
     list(
       dde = dde,
       show_symbols = shiny::reactive(input$show_symbols),
-      species = shiny::reactive({input$species})
+      species = shiny::reactive({input$species}),
+      source_label = source_label
     )
   })
 }
+

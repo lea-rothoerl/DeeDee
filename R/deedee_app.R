@@ -4,7 +4,7 @@
 #' the functionalities of all other DeeDee functions with a user-friendly
 #' graphical user interface.
 #'
-#' @param deedee_obj An object of the class DeeDeeObject to be analyzed.
+#' @param deedee_obj An object of the class DeeDeeExperiment to be analyzed.
 #'
 #' @return A shiny app
 #' @export
@@ -15,6 +15,8 @@
 #' deedee_app(dde_macrophage)
 #'
 deedee_app <- function(deedee_obj = NULL) {
+
+  arg_label <- deparse(substitute(deedee_obj))
 
   ui <- bslib::page_navbar(
     title = "DeeDee",
@@ -63,7 +65,8 @@ deedee_app <- function(deedee_obj = NULL) {
                          ),
                          shinycssloaders::withSpinner(
                            InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput("heatmap_ht")
-                         )
+                         ),
+                         .deedee_download_ui(identity, id_prefix = "heatmap_")
                        ),
                        bslib::accordion(
                          open = FALSE,
@@ -79,21 +82,22 @@ deedee_app <- function(deedee_obj = NULL) {
   )
 
   server <- function(input, output, session) {
-    input_mod <- mod_input_server("input", dde_arg = deedee_obj)
+    input_mod <- mod_input_server("input", dde_arg = deedee_obj, arg_label = arg_label)
 
     dde <- input_mod$dde
     show_symbols <- input_mod$show_symbols
     species <- input_mod$species
+    source_label <- input_mod$source_label
 
-    mod_venn_server("venn", dde)
-    mod_upset_server("upset", dde)
+    mod_venn_server("venn", dde)#, source_label)
+    mod_upset_server("upset", dde)#, source_label)
     mod_overlap_server("overlap", dde, show_symbols, species)
-    mod_cat_server("cat", dde)
-    mod_rrho_server("rrho", dde)
-    mod_scatter_server("scatter", dde, show_symbols, species)
-    mod_qq_server("qq", dde)
+    mod_cat_server("cat", dde)#, source_label)
+    mod_rrho_server("rrho", dde)#, source_label)
+    mod_scatter_server("scatter", dde, show_symbols, species)#, source_label)
+    mod_qq_server("qq", dde)#, source_label)
 
-    heatmap_output <- shiny::reactive({
+    heatmap_obj <- shiny::reactive({
       shiny::req(dde(), input$heatmap_show_first)
       shiny::validate(shiny::need(
         length(DeeDeeExperiment::getDEANames(dde())) >= 2,
@@ -110,7 +114,12 @@ deedee_app <- function(deedee_obj = NULL) {
       )
       shiny::validate(shiny::need(!is.null(res),
                                   "No common genes in input datasets."))
-      ComplexHeatmap::draw(res)
+      res
+    })
+
+    heatmap_output <- shiny::reactive({
+      shiny::req(heatmap_obj())
+      ComplexHeatmap::draw(heatmap_obj())
     })
 
     shiny::observe({
@@ -119,6 +128,14 @@ deedee_app <- function(deedee_obj = NULL) {
         input, output, session, heatmap_output()
       )
     })
+
+    .deedee_download_server(input, output,
+                            id_prefix = "heatmap_",
+                            filename_prefix = "deedee_heatmap",
+                            draw_fn = function() ComplexHeatmap::draw(heatmap_obj()),
+                            source_label = source_label,
+                            width = 8, height = 8
+    )
   }
 
   shiny::shinyApp(ui, server)
