@@ -56,6 +56,7 @@ mod_scatter_ui <- function(id) {
             shiny::actionButton(ns("run_fea"), "Run enrichment analysis")
           )
         ),
+        shiny::downloadButton(ns("download_table"), "Download table (XLSX)"),
         shinycssloaders::withSpinner(
           DT::DTOutput(ns("fea_table"))
         )
@@ -181,6 +182,11 @@ mod_scatter_server <- function(id, dde, show_symbols, species, source_label) {
                     options = list(scrollX = TRUE, pageLength = 10)
       )
     })
+
+    .deedee_download_table_server(output,
+                                  filename_prefix = "deedee_fea",
+                                  table_fn = fea_result
+    )
 
     output$scatter_plotly <- plotly::renderPlotly({
       shiny::req(plot_obj())

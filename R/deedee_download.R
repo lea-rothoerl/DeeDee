@@ -41,3 +41,17 @@
     }
   )
 }
+
+#' @keywords internal
+.deedee_download_table_server <- function(output, filename_prefix, table_fn) {
+  output$download_table <- shiny::downloadHandler(
+    filename = function() {
+      paste0(filename_prefix, "_", format(Sys.Date(), "%Y%m%d"), ".xlsx")
+    },
+    content = function(file) {
+      tbl <- shiny::isolate(table_fn())
+      shiny::req(tbl)
+      writexl::write_xlsx(tbl, path = file)
+    }
+  )
+}

@@ -22,6 +22,7 @@ mod_overlap_ui <- function(id) {
       )
     ),
     bslib::card(
+      shiny::downloadButton(ns("download_table"), "Download table (XLSX)"),
       bslib::card_header("Overlapping genes"),
       shinycssloaders::withSpinner(
         DT::DTOutput(ns("table"))
@@ -94,5 +95,10 @@ mod_overlap_server <- function(id, dde, show_symbols, species) {
         DT::formatRound(columns = grep("_logFC$", names(tbl), value = TRUE), digits = 3) |>
         DT::formatSignif(columns = grep("_pval$", names(tbl), value = TRUE), digits = 3)
     })
+
+    .deedee_download_table_server(output,
+                                  filename_prefix = "deedee_overlap",
+                                  table_fn = overlap_tbl
+    )
   })
 }
