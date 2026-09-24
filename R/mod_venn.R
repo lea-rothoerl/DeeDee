@@ -16,7 +16,8 @@ mod_venn_ui <- function(id) {
     bslib::card(
       shinycssloaders::withSpinner(
         shiny::plotOutput(ns("venn"))
-      )
+      ),
+      .deedee_download_ui(ns)
     ),
     bslib::accordion(
       open = FALSE,
@@ -32,7 +33,7 @@ mod_venn_ui <- function(id) {
 
 #' @keywords internal
 #' @param dde reactive DeeDeeExperiment from mod_input_server()
-mod_venn_server <- function(id, dde) {
+mod_venn_server <- function(id, dde, source_label) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -47,7 +48,7 @@ mod_venn_server <- function(id, dde) {
       )
     })
 
-    output$venn <- shiny::renderPlot({
+    plot_obj <- shiny::reactive({
       shiny::req(dde(), input$contrasts, input$mode)
       shiny::validate(shiny::need(
         length(input$contrasts) >= 2,
@@ -70,5 +71,16 @@ mod_venn_server <- function(id, dde) {
       ))
       res
     })
+
+    output$venn <- shiny::renderPlot({
+      shiny::req(plot_obj())
+      plot_obj()
+    })
+
+    .deedee_download_server(input, output,
+                            filename_prefix = "deedee_venn",
+                            draw_fn = function() print(plot_obj()),
+                            source_label = source_label
+    )
   })
 }
