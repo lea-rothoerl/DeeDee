@@ -22,7 +22,8 @@ mod_upset_ui <- function(id) {
     bslib::card(
       shinycssloaders::withSpinner(
         shiny::uiOutput(ns("upset_out"))
-      )
+      ),
+      .deedee_download_ui(ns)
     ),
     bslib::accordion(
       open = FALSE,
@@ -38,7 +39,7 @@ mod_upset_ui <- function(id) {
 
 #' @keywords internal
 #' @param dde reactive DeeDeeExperiment from mod_input_server()
-mod_upset_server <- function(id, dde) {
+mod_upset_server <- function(id, dde, source_label) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -76,5 +77,11 @@ mod_upset_server <- function(id, dde) {
     output$upset_out <- shiny::renderUI({
       shiny::plotOutput(ns("upset_static"))
     })
+
+    .deedee_download_server(input, output,
+                            filename_prefix = "deedee_upset",
+                            draw_fn = function() print(plot_obj()),
+                            source_label = source_label
+    )
   })
 }

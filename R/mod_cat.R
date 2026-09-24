@@ -17,7 +17,8 @@ mod_cat_ui <- function(id) {
     bslib::card(
       shinycssloaders::withSpinner(
         shiny::uiOutput(ns("cat_out"))
-      )
+      ),
+      .deedee_download_ui(ns)
     ),
     bslib::accordion(
       open = FALSE,
@@ -33,7 +34,7 @@ mod_cat_ui <- function(id) {
 
 #' @keywords internal
 #' @param dde reactive DeeDeeExperiment from mod_input_server()
-mod_cat_server <- function(id, dde) {
+mod_cat_server <- function(id, dde, source_label) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -77,5 +78,11 @@ mod_cat_server <- function(id, dde) {
     output$cat_out <- shiny::renderUI({
       plotly::plotlyOutput(ns("cat_plotly"))
     })
+
+    .deedee_download_server(input, output,
+                            filename_prefix = "deedee_cat",
+                            draw_fn = function() print(plot_obj()),
+                            source_label = source_label
+    )
   })
 }

@@ -89,13 +89,13 @@ deedee_app <- function(deedee_obj = NULL) {
     species <- input_mod$species
     source_label <- input_mod$source_label
 
-    mod_venn_server("venn", dde)#, source_label)
-    mod_upset_server("upset", dde)#, source_label)
+    mod_venn_server("venn", dde, source_label)
+    mod_upset_server("upset", dde, source_label)
     mod_overlap_server("overlap", dde, show_symbols, species)
-    mod_cat_server("cat", dde)#, source_label)
-    mod_rrho_server("rrho", dde)#, source_label)
-    mod_scatter_server("scatter", dde, show_symbols, species)#, source_label)
-    mod_qq_server("qq", dde)#, source_label)
+    mod_cat_server("cat", dde, source_label)
+#    mod_rrho_server("rrho", dde, source_label)
+    mod_scatter_server("scatter", dde, show_symbols, species, source_label)
+    mod_qq_server("qq", dde, source_label)
 
     heatmap_obj <- shiny::reactive({
       shiny::req(dde(), input$heatmap_show_first)
