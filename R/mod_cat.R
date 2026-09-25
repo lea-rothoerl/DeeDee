@@ -72,7 +72,22 @@ mod_cat_server <- function(id, dde, source_label) {
 
     output$cat_plotly <- plotly::renderPlotly({
       shiny::req(plot_obj())
-      plotly::ggplotly(plot_obj())
+      p <- plot_obj()
+
+      p$layers[[length(p$layers)]] <- NULL
+
+      fig <- plotly::ggplotly(p)
+      plotly::layout(fig,
+                     annotations = list(
+                       x = 1, y = 1,
+                       xref = "paper", yref = "paper",
+                       xanchor = "right", yanchor = "top",
+                       xshift = -5, yshift = -5,
+                       text = paste0("reference: ", input$ref),
+                       showarrow = FALSE,
+                       font = list(size = 12)
+                     )
+      )
     })
 
     output$cat_out <- shiny::renderUI({
