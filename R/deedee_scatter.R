@@ -13,6 +13,8 @@
 #'.                    IDs, `TRUE` by default
 #' @param species species the data comes from (for clickable IDs),
 #'                `Homo_sapiens` by default
+#' @param ref_lines boolean whether to show reference lines at x=0 and y=0,
+#'                  `TRUE` by default
 #'
 #' @return ggplot object (plottable with show()/print())
 #'
@@ -123,7 +125,7 @@ deedee_scatter <- function(data,
     ", p = ", formatC(comp$pval1, format = "e", digits = 2), "<br>",
     contrast2_name, ": logFC = ", round(comp$logFC2, 2),
     ", p = ", formatC(comp$pval2, format = "e", digits = 2), "<br>",
-    comp$label
+    "(click point for gene links)"
   )
 
   list(comp = comp,

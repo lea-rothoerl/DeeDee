@@ -33,6 +33,9 @@ deedee_scatter(
 
 \item{species}{species the data comes from (for clickable IDs),
 \code{Homo_sapiens} by default}
+
+\item{ref_lines}{boolean whether to show reference lines at x=0 and y=0,
+\code{TRUE} by default}
 }
 \value{
 ggplot object (plottable with show()/print())

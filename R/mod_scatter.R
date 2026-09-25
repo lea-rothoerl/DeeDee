@@ -19,6 +19,7 @@ mod_scatter_ui <- function(id) {
       shinycssloaders::withSpinner(
         shiny::uiOutput(ns("scatter_out"))
       ),
+      shiny::uiOutput(ns("gene_info")),
       .deedee_download_ui(ns)
     ),
     bslib::accordion(
@@ -117,6 +118,44 @@ mod_scatter_server <- function(id, dde, show_symbols, species, source_label) {
                            pthresh = input$pthresh,
                            show_symbols = show_symbols(),
                            species = species()
+      )
+    })
+
+    clicked_gene <- shiny::reactive({
+      ed <- plotly::event_data("plotly_click", source = scatter_src)
+      prep <- scatter_data()
+      if (is.null(ed) || nrow(ed) == 0 || is.null(prep)) {
+        return(NULL)
+      }
+      comp <- prep$comp
+      row <- comp[match(ed$key[1], comp$rowname), ]
+      if (nrow(row) == 0 || is.na(row$rowname)) {
+        return(NULL)
+      }
+      row
+    })
+
+    output$gene_info <- shiny::renderUI({
+      row <- clicked_gene()
+      if (is.null(row)) {
+        return(shiny::tags$p(
+          shiny::em("Click a point on the plot to see gene details and links here."),
+          class = "text-muted"
+        ))
+      }
+      shiny::div(
+        class = "border rounded p-2 mb-2",
+        shiny::tags$strong(row$symbol1), shiny::tags$span(paste0(" (", row$rowname, ")")),
+        shiny::tags$br(),
+        sprintf("%s: logFC = %.2f, p = %s", input$s1, row$logFC1,
+                formatC(row$pval1, format = "e", digits = 2)
+        ),
+        shiny::tags$br(),
+        sprintf("%s: logFC = %.2f, p = %s", input$s2, row$logFC2,
+                formatC(row$pval2, format = "e", digits = 2)
+        ),
+        shiny::tags$br(),
+        shiny::HTML(row$label)
       )
     })
 
