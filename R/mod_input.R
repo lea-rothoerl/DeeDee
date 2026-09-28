@@ -3,35 +3,53 @@ mod_input_ui <- function(id, collapse_upload = FALSE) {
   ns <- shiny::NS(id)
   bslib::layout_columns(
     col_widths = c(8, 4),
-    bslib::accordion(
-      open = !collapse_upload,
-      bslib::accordion_panel(
-        "Load data",
-        shiny::fileInput(ns("dde_file"), "Upload a DeeDeeExperiment (.rds)",
-                         accept = ".rds", placeholder = "No file selected"
+
+    # LEFT
+    bslib::card(
+      bslib::accordion(
+        open = !collapse_upload,
+        bslib::accordion_panel(
+          "",
+          shiny::fileInput(
+            ns("dde_file"),
+            "Upload a DeeDeeExperiment (.rds)",
+            accept = ".rds",
+            placeholder = "No file selected"
+          )
         )
       ),
-      bslib::card(
-        shiny::tableOutput(ns("inp_infobox")),
-        bslib::input_switch(
-          ns("show_symbols"),
-          "Show gene symbols instead of Ensembl IDs",
-          value = FALSE
-        ),
-        shiny::selectInput(
-          ns("species"),
-          "Species",
-          choices = c(
-            "Human" = "Homo_sapiens",
-            "Mouse" = "Mus_musculus"
-          ),
-          selected = "Homo_sapiens"
-        ),
-      )
+
+      bslib::card_header("Overview of your DDE"),
+      shiny::tableOutput(ns("inp_overview")),
+      shiny::uiOutput(ns("inp_barplot"))
     ),
+
+    # RIGHT
     bslib::card(
       bslib::card_header("Contrasts to Analyze"),
-      shiny::uiOutput(ns("datasets"))
+      shiny::uiOutput(ns("datasets")),
+
+      bslib::input_switch(
+        ns("show_symbols"),
+        "Show gene symbols instead of Ensembl IDs",
+        value = FALSE
+      ),
+
+      shiny::selectInput(
+        ns("species"),
+        "Species",
+        choices = c(
+          "Human" = "Homo_sapiens",
+          "Mouse" = "Mus_musculus"
+        ),
+        selected = "Homo_sapiens"
+      ),
+
+      shiny::numericInput(
+        ns("overview_pthresh"),
+        "P-value threshold (for the DE count overview)",
+        value = 0.05, min = 0.01, max = 1, step = 0.01
+      )
     )
   )
 }
@@ -85,6 +103,27 @@ mod_input_server <- function(id, dde_arg = NULL, arg_label = NULL) {
       } else {
         DeeDeeExperiment::removeDEA(dde_raw(), to_drop)
       }
+    })
+
+    output$inp_overview <- shiny::renderTable({
+      shiny::req(dde())
+      deedee_overview(
+        data = dde(),
+        pthresh = input$overview_pthresh
+      )
+    })
+
+    output$inp_barplot <- shiny::renderUI({
+      shiny::req(dde())
+      shiny::plotOutput(session$ns("overview_plot"), height = "350px")
+    })
+
+    output$overview_plot <- shiny::renderPlot({
+      shiny::req(dde())
+      deedee_overview_plot(
+        data = dde(),
+        pthresh = input$overview_pthresh
+      )
     })
 
     list(
