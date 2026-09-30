@@ -138,5 +138,5 @@ deedee_app <- function(deedee_obj = NULL) {
     )
   }
 
-  shiny::shinyApp(ui, server)
+  shiny::shinyApp(ui, server, options = list(launch.browser = TRUE))
 }
