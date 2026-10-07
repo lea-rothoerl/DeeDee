@@ -48,6 +48,7 @@ deedee_fea <- function(data,
     }
     library(org.Hs.eg.db)
     library(org.Mm.eg.db)
+    library(topGO)
   }
 
   # --------------------------------- universe --------------------------------

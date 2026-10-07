@@ -35,15 +35,7 @@ mod_input_ui <- function(id, collapse_upload = FALSE) {
         value = FALSE
       ),
 
-      shiny::selectInput(
-        ns("species"),
-        "Species",
-        choices = c(
-          "Human" = "Homo_sapiens",
-          "Mouse" = "Mus_musculus"
-        ),
-        selected = "Homo_sapiens"
-      ),
+      shiny::textOutput(ns("species_detected")),
 
       shiny::numericInput(
         ns("overview_pthresh"),
@@ -126,10 +118,30 @@ mod_input_server <- function(id, dde_arg = NULL, arg_label = NULL) {
       )
     })
 
+    species <- shiny::reactive({
+      shiny::req(dde_raw())
+      ids <- rownames(deedee_from_dde(dde_raw())[[1]])
+      if (any(grepl("^ENSMUSG", ids))) {
+        "Mus_musculus"
+      } else if (any(grepl("^ENSG", ids))) {
+        "Homo_sapiens"
+      } else {
+        NA_character_
+      }
+    })
+
+    output$species_detected <- shiny::renderText({
+      sp <- species()
+      shiny::validate(shiny::need(!is.na(sp),
+          "Could not detect species from gene IDs (expected ENSG... or ENSMUSG...)."
+      ))
+      paste("Detected species:", sp)
+    })
+
     list(
       dde = dde,
       show_symbols = shiny::reactive(input$show_symbols),
-      species = shiny::reactive({input$species}),
+      species = species,
       source_label = source_label
     )
   })
