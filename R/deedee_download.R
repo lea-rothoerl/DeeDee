@@ -1,7 +1,9 @@
 #' @keywords internal
 .deedee_download_ui <- function(ns, label = "Download plot (PNG)", id_prefix = "") {
-  shiny::tagList(
+  shiny::div(
+    class = "d-flex flex-wrap align-items-center gap-3",
     shiny::downloadButton(ns(paste0(id_prefix, "download_plot")), label),
+    shiny::actionButton(ns(paste0(id_prefix, "show_code")), "Show code"),
     bslib::input_switch(
       ns(paste0(id_prefix, "show_footer")),
       "Include data source in downloaded image",

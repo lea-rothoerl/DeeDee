@@ -97,6 +97,31 @@ mod_input_server <- function(id, dde_arg = NULL, arg_label = NULL) {
       }
     })
 
+    code_data <- shiny::reactive({
+      shiny::req(dde_raw(), input$select_contrasts)
+      fmt <- function(x) paste(deparse(x, width.cutoff = 500L), collapse = "")
+
+      if (!is.null(dde_arg)) {
+        data <- arg_label
+        preamble <- character(0)
+      } else {
+        shiny::req(input$dde_file)
+        data <- "dde"
+        preamble <- paste0("dde <- readRDS(", fmt(input$dde_file$name), ")")
+      }
+
+      to_drop <- setdiff(DeeDeeExperiment::getDEANames(dde_raw()),
+                         input$select_contrasts)
+      if (length(to_drop) > 0) {
+        preamble <- c(preamble, paste0(
+          "dde <- DeeDeeExperiment::removeDEA(", data, ", ", fmt(to_drop), ")"
+        ))
+        data <- "dde"
+      }
+
+      list(data = data, preamble = preamble)
+    })
+
     output$inp_overview <- shiny::renderTable({
       shiny::req(dde())
       deedee_overview(
@@ -142,7 +167,8 @@ mod_input_server <- function(id, dde_arg = NULL, arg_label = NULL) {
       dde = dde,
       show_symbols = shiny::reactive(input$show_symbols),
       species = species,
-      source_label = source_label
+      source_label = source_label,
+      code_data = code_data
     )
   })
 }

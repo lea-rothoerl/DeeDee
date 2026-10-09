@@ -33,7 +33,7 @@ mod_venn_ui <- function(id) {
 
 #' @keywords internal
 #' @param dde reactive DeeDeeExperiment from mod_input_server()
-mod_venn_server <- function(id, dde, source_label) {
+mod_venn_server <- function(id, dde, source_label, code_data) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -81,6 +81,23 @@ mod_venn_server <- function(id, dde, source_label) {
                             filename_prefix = "deedee_venn",
                             draw_fn = function() print(plot_obj()),
                             source_label = source_label
+    )
+
+    .deedee_code_server(input, session,
+                        code_fn = function() {
+                          cd <- code_data()
+                          contrasts <- DeeDeeExperiment::getDEANames(dde())
+                          sel <- match(input$contrasts, contrasts)
+                          .deedee_code_text("deedee_venn", cd$data,
+                                            args = list(
+                                              mode = input$mode,
+                                              pthresh = input$pthresh,
+                                              select = as.numeric(sel)
+                                            ),
+                                            comments = list(select = paste(input$contrasts, collapse = ", ")),
+                                            preamble = cd$preamble
+                          )
+                        }
     )
   })
 }

@@ -39,7 +39,7 @@ mod_upset_ui <- function(id) {
 
 #' @keywords internal
 #' @param dde reactive DeeDeeExperiment from mod_input_server()
-mod_upset_server <- function(id, dde, source_label) {
+mod_upset_server <- function(id, dde, source_label, code_data) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -82,6 +82,25 @@ mod_upset_server <- function(id, dde, source_label) {
                             filename_prefix = "deedee_upset",
                             draw_fn = function() print(plot_obj()),
                             source_label = source_label
+    )
+
+    .deedee_code_server(input, session,
+                        code_fn = function() {
+                          cd <- code_data()
+                          mode <- if (input$mode == "both" && isTRUE(input$colored)) {
+                            "both_colored"
+                          } else {
+                            input$mode
+                          }
+                          .deedee_code_text("deedee_upset", cd$data,
+                                            args = list(
+                                              mode = mode,
+                                              pthresh = input$pthresh,
+                                              min_setsize = input$min_setsize
+                                            ),
+                                            preamble = cd$preamble
+                          )
+                        }
     )
   })
 }

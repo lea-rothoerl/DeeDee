@@ -69,7 +69,7 @@ mod_scatter_ui <- function(id) {
 
 #' @keywords internal
 #' @param dde reactive DeeDeeExperiment from mod_input_server()
-mod_scatter_server <- function(id, dde, show_symbols, species, source_label) {
+mod_scatter_server <- function(id, dde, show_symbols, species, source_label, code_data) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -254,6 +254,27 @@ mod_scatter_server <- function(id, dde, show_symbols, species, source_label) {
                               ))
                             },
                             source_label = source_label
+    )
+
+    .deedee_code_server(input, session,
+                        code_fn = function() {
+                          cd <- code_data()
+                          sel1 <- match(input$s1, names(dde()@dea))
+                          sel2 <- match(input$s2, names(dde()@dea))
+                          .deedee_code_text("deedee_scatter", cd$data,
+                                            args = list(
+                                              select1 = as.numeric(sel1),
+                                              select2 = as.numeric(sel2),
+                                              color_by = input$color_by,
+                                              pthresh = input$pthresh,
+                                              show_symbols = show_symbols(),
+                                              species = species(),
+                                              ref_lines = input$ref_lines
+                                            ),
+                                            comments = list(select1 = input$s1, select2 = input$s2),
+                                            preamble = cd$preamble
+                          )
+                        }
     )
   })
 }

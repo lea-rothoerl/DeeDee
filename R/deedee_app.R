@@ -16,11 +16,32 @@
 #'
 deedee_app <- function(deedee_obj = NULL) {
 
-  arg_label <- deparse(substitute(deedee_obj))
+  arg_label <- paste(deparse(substitute(deedee_obj)), collapse = " ")
 
   ui <- bslib::page_navbar(
     title = "DeeDee",
     theme = bslib::bs_theme(version = 5, bootswatch = "flatly"),
+    header = shiny::tags$head(shiny::tags$script(shiny::HTML(
+      "function copyDeeDeeCode(elId, btn) {
+         var text = document.getElementById(elId).innerText;
+         var done = function() {
+           var old = btn.innerText;
+           btn.innerText = 'Copied!';
+           setTimeout(function() { btn.innerText = old; }, 1500);
+         };
+         if (navigator.clipboard && navigator.clipboard.writeText) {
+           navigator.clipboard.writeText(text).then(done);
+         } else {
+           var ta = document.createElement('textarea');
+           ta.value = text;
+           document.body.appendChild(ta);
+           ta.select();
+           document.execCommand('copy');
+           document.body.removeChild(ta);
+           done();
+         }
+       }"
+    ))),
     bslib::nav_panel("Input", mod_input_ui("input", collapse_upload = !is.null(deedee_obj))),
     bslib::nav_menu("Overlap",
                     bslib::nav_panel("Venn", mod_venn_ui("venn")),
@@ -88,14 +109,15 @@ deedee_app <- function(deedee_obj = NULL) {
     show_symbols <- input_mod$show_symbols
     species <- input_mod$species
     source_label <- input_mod$source_label
+    code_data <- input_mod$code_data
 
-    mod_venn_server("venn", dde, source_label)
-    mod_upset_server("upset", dde, source_label)
+    mod_venn_server("venn", dde, source_label, code_data)
+    mod_upset_server("upset", dde, source_label, code_data)
     mod_overlap_server("overlap", dde, show_symbols, species)
-    mod_cat_server("cat", dde, source_label)
+    mod_cat_server("cat", dde, source_label, code_data)
 #    mod_rrho_server("rrho", dde, source_label)
-    mod_scatter_server("scatter", dde, show_symbols, species, source_label)
-    mod_qq_server("qq", dde, source_label)
+    mod_scatter_server("scatter", dde, show_symbols, species, source_label, code_data)
+    mod_qq_server("qq", dde, source_label, code_data)
 
     heatmap_obj <- shiny::reactive({
       shiny::req(dde(), input$heatmap_show_first)
@@ -135,6 +157,25 @@ deedee_app <- function(deedee_obj = NULL) {
                             draw_fn = function() ComplexHeatmap::draw(heatmap_obj()),
                             source_label = source_label,
                             width = 8, height = 8
+    )
+
+    .deedee_code_server(input, session, id_prefix = "heatmap_",
+                        code_fn = function() {
+                          cd <- code_data()
+                          .deedee_code_text("deedee_heatmap", cd$data,
+                                            args = list(
+                                              show_first = input$heatmap_show_first,
+                                              show_gene_names = input$heatmap_show_gene_names,
+                                              dist = input$heatmap_dist,
+                                              clust = input$heatmap_clust,
+                                              pthresh = input$heatmap_pthresh,
+                                              show_na = input$heatmap_show_na,
+                                              show_symbols = show_symbols()
+                                            ),
+                                            preamble = cd$preamble,
+                                            show = "ComplexHeatmap::draw(p)"
+                          )
+                        }
     )
   }
 

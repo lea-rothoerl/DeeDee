@@ -30,7 +30,7 @@ mod_qq_ui <- function(id) {
 
 #' @keywords internal
 #' @param dde reactive DeeDeeExperiment from mod_input_server()
-mod_qq_server <- function(id, dde, source_label) {
+mod_qq_server <- function(id, dde, source_label, code_data) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -77,6 +77,22 @@ mod_qq_server <- function(id, dde, source_label) {
                             filename_prefix = "deedee_qq",
                             draw_fn = function() print(plot_obj()),
                             source_label = source_label
+    )
+
+    .deedee_code_server(input, session,
+                        code_fn = function() {
+                          cd <- code_data()
+                          ref_idx <- match(input$ref, DeeDeeExperiment::getDEANames(dde()))
+                          .deedee_code_text("deedee_qqmult", cd$data,
+                                            args = list(
+                                              ref = as.numeric(ref_idx),
+                                              pthresh = input$pthresh,
+                                              ref_line = input$ref_line
+                                            ),
+                                            comments = list(ref = input$ref),
+                                            preamble = cd$preamble
+                          )
+                        }
     )
   })
 }
