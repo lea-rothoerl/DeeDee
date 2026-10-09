@@ -59,7 +59,8 @@ mod_qq_server <- function(id, dde, source_label, code_data) {
 
       shiny::validate(shiny::need(
         !is.null(res),
-        "No genes in your datasets. Maybe your specified p-value threshold is too low?"
+        "No genes in your datasets.
+        Maybe your specified p-value threshold is too low?"
       ))
       res
     })
@@ -82,7 +83,8 @@ mod_qq_server <- function(id, dde, source_label, code_data) {
     .deedee_code_server(input, session,
                         code_fn = function() {
                           cd <- code_data()
-                          ref_idx <- match(input$ref, DeeDeeExperiment::getDEANames(dde()))
+                          ref_idx <- match(input$ref,
+                                           DeeDeeExperiment::getDEANames(dde()))
                           .deedee_code_text("deedee_qqmult", cd$data,
                                             args = list(
                                               ref = as.numeric(ref_idx),

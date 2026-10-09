@@ -6,7 +6,9 @@ mod_venn_ui <- function(id) {
     bslib::card(
       shiny::uiOutput(ns("select_contrasts")),
       shiny::selectInput(ns("mode"), "Mode",
-                         choices = c("Up" = "up", "Down" = "down", "Both" = "both"),
+                         choices = c("Up" = "up",
+                                     "Down" = "down",
+                                     "Both" = "both"),
                          selected = "both"
       ),
       shiny::numericInput(ns("pthresh"), "P-value threshold",
@@ -67,7 +69,8 @@ mod_venn_server <- function(id, dde, source_label, code_data) {
 
       shiny::validate(shiny::need(
         !is.null(res),
-        "No genes in your datasets. Maybe your specified p-value threshold is too low?"
+        "No genes in your datasets.
+        Maybe your specified p-value threshold is too low?"
       ))
       res
     })
@@ -94,7 +97,8 @@ mod_venn_server <- function(id, dde, source_label, code_data) {
                                               pthresh = input$pthresh,
                                               select = as.numeric(sel)
                                             ),
-                                            comments = list(select = paste(input$contrasts, collapse = ", ")),
+                                            comments = list(select = paste(input$contrasts,
+                                                                           collapse = ", ")),
                                             preamble = cd$preamble
                           )
                         }

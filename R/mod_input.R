@@ -158,7 +158,8 @@ mod_input_server <- function(id, dde_arg = NULL, arg_label = NULL) {
     output$species_detected <- shiny::renderText({
       sp <- species()
       shiny::validate(shiny::need(!is.na(sp),
-          "Could not detect species from gene IDs (expected ENSG... or ENSMUSG...)."
+          "Could not detect species from gene IDs
+          (expected ENSG... or ENSMUSG...)."
       ))
       paste("Detected species:", sp)
     })

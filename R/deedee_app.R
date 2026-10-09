@@ -4,7 +4,9 @@
 #' the functionalities of all other DeeDee functions with a user-friendly
 #' graphical user interface.
 #'
-#' @param deedee_obj An object of the class DeeDeeExperiment to be analyzed.
+#' @param deedee_obj An object of the class DeeDeeExperiment to be analyzed. If
+#'                   None, uploading a DeeDeeExperiment object as RDS via the
+#'                   GUI is still possible.
 #'
 #' @return A shiny app
 #' @export
@@ -42,7 +44,9 @@ deedee_app <- function(deedee_obj = NULL) {
          }
        }"
     ))),
-    bslib::nav_panel("Input", mod_input_ui("input", collapse_upload = !is.null(deedee_obj))),
+    bslib::nav_panel("Input",
+                     mod_input_ui("input",
+                                  collapse_upload = !is.null(deedee_obj))),
     bslib::nav_menu("Overlap",
                     bslib::nav_panel("Venn", mod_venn_ui("venn")),
                     bslib::nav_panel("UpSet", mod_upset_ui("upset")),
@@ -59,10 +63,18 @@ deedee_app <- function(deedee_obj = NULL) {
                      bslib::layout_columns(
                        col_widths = c(4, 8),
                        bslib::card(
-                         shiny::numericInput("heatmap_show_first", "Show first", value = 25, min = 1),
-                         shiny::checkboxInput("heatmap_show_gene_names", "Show gene identifiers", FALSE),
-                         shiny::checkboxInput("heatmap_show_na", "Show NA", FALSE),
-                         shiny::selectInput("heatmap_dist", "Distance measure",
+                         shiny::numericInput("heatmap_show_first",
+                                             "Show first",
+                                             value = 25,
+                                             min = 1),
+                         shiny::checkboxInput("heatmap_show_gene_names",
+                                              "Show gene identifiers",
+                                              FALSE),
+                         shiny::checkboxInput("heatmap_show_na",
+                                              "Show NA",
+                                              FALSE),
+                         shiny::selectInput("heatmap_dist",
+                                            "Distance measure",
                                             choices = c("Euclidean" = "euclidean",
                                                         "Manhattan" = "manhattan",
                                                         "Pearson" = "pearson",
@@ -76,8 +88,12 @@ deedee_app <- function(deedee_obj = NULL) {
                                                         "Centroid" = "centroid"),
                                             selected = "average"
                          ),
-                         shiny::numericInput("heatmap_pthresh", "P-value threshold",
-                                             value = 0.05, min = 0.01, max = 1, step = 0.01
+                         shiny::numericInput("heatmap_pthresh",
+                                             "P-value threshold",
+                                             value = 0.05,
+                                             min = 0.01,
+                                             max = 1,
+                                             step = 0.01
                          )
                        ),
                        bslib::card(
@@ -103,7 +119,9 @@ deedee_app <- function(deedee_obj = NULL) {
   )
 
   server <- function(input, output, session) {
-    input_mod <- mod_input_server("input", dde_arg = deedee_obj, arg_label = arg_label)
+    input_mod <- mod_input_server("input",
+                                  dde_arg = deedee_obj,
+                                  arg_label = arg_label)
 
     dde <- input_mod$dde
     show_symbols <- input_mod$show_symbols
@@ -115,8 +133,12 @@ deedee_app <- function(deedee_obj = NULL) {
     mod_upset_server("upset", dde, source_label, code_data)
     mod_overlap_server("overlap", dde, show_symbols, species)
     mod_cat_server("cat", dde, source_label, code_data)
-#    mod_rrho_server("rrho", dde, source_label)
-    mod_scatter_server("scatter", dde, show_symbols, species, source_label, code_data)
+    mod_scatter_server("scatter",
+                       dde,
+                       show_symbols,
+                       species,
+                       source_label,
+                       code_data)
     mod_qq_server("qq", dde, source_label, code_data)
 
     heatmap_obj <- shiny::reactive({
@@ -162,7 +184,8 @@ deedee_app <- function(deedee_obj = NULL) {
     .deedee_code_server(input, session, id_prefix = "heatmap_",
                         code_fn = function() {
                           cd <- code_data()
-                          .deedee_code_text("deedee_heatmap", cd$data,
+                          .deedee_code_text("deedee_heatmap",
+                                            cd$data,
                                             args = list(
                                               show_first = input$heatmap_show_first,
                                               show_gene_names = input$heatmap_show_gene_names,

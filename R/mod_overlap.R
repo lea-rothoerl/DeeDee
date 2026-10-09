@@ -64,12 +64,17 @@ mod_overlap_server <- function(id, dde, show_symbols, species) {
 
     overlap_tbl <- shiny::reactive({
       shiny::req(sel(), input$mode, input$pthresh)
-      shiny::validate(shiny::need(length(sel()) >= 2, "Please select at least two contrasts."))
+      shiny::validate(shiny::need(length(sel()) >= 2,
+                                  "Please select at least two contrasts."))
 
-      res <- deedee_overlap(dde(), mode = input$mode, pthresh = input$pthresh, select = sel())
+      res <- deedee_overlap(dde(),
+                            mode = input$mode,
+                            pthresh = input$pthresh,
+                            select = sel())
       shiny::validate(shiny::need(
         !is.null(res),
-        "No overlapping genes found. Maybe your specified p-value threshold is too low?"
+        "No overlapping genes found.
+        Maybe your specified p-value threshold is too low?"
       ))
       res
     })
@@ -92,8 +97,10 @@ mod_overlap_server <- function(id, dde, show_symbols, species) {
                     rownames = FALSE,
                     options = list(scrollX = TRUE, pageLength = 25)
       ) |>
-        DT::formatRound(columns = grep("_logFC$", names(tbl), value = TRUE), digits = 3) |>
-        DT::formatSignif(columns = grep("_pval$", names(tbl), value = TRUE), digits = 3)
+        DT::formatRound(columns = grep("_logFC$", names(tbl), value = TRUE),
+                        digits = 3) |>
+        DT::formatSignif(columns = grep("_pval$", names(tbl), value = TRUE),
+                         digits = 3)
     })
 
     .deedee_download_table_server(output,

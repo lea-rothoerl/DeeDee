@@ -1,5 +1,7 @@
 #' @keywords internal
-.deedee_download_ui <- function(ns, label = "Download plot (PNG)", id_prefix = "") {
+.deedee_download_ui <- function(ns,
+                                label = "Download plot (PNG)",
+                                id_prefix = "") {
   shiny::div(
     class = "d-flex flex-wrap align-items-center gap-3",
     shiny::downloadButton(ns(paste0(id_prefix, "download_plot")), label),
@@ -22,7 +24,11 @@
     },
     content = function(file) {
       shiny::isolate({
-        grDevices::png(file, width = width, height = height, units = "in", res = 300)
+        grDevices::png(file,
+                       width = width,
+                       height = height,
+                       units = "in",
+                       res = 300)
         on.exit(grDevices::dev.off(), add = TRUE)
 
         draw_fn()

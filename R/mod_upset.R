@@ -5,7 +5,9 @@ mod_upset_ui <- function(id) {
     col_widths = c(4, 8),
     bslib::card(
       shiny::selectInput(ns("mode"), "Mode",
-                         choices = c("Up" = "up", "Down" = "down", "Both" = "both"),
+                         choices = c("Up" = "up",
+                                     "Down" = "down",
+                                     "Both" = "both"),
                          selected = "both"
       ),
       shiny::conditionalPanel(
@@ -64,7 +66,8 @@ mod_upset_server <- function(id, dde, source_label, code_data) {
 
       shiny::validate(shiny::need(
         !is.null(res),
-        "No genes in your datasets. Maybe your specified p-value threshold is too low?"
+        "No genes in your datasets.
+        Maybe your specified p-value threshold is too low?"
       ))
       res
     })
@@ -87,7 +90,8 @@ mod_upset_server <- function(id, dde, source_label, code_data) {
     .deedee_code_server(input, session,
                         code_fn = function() {
                           cd <- code_data()
-                          mode <- if (input$mode == "both" && isTRUE(input$colored)) {
+                          mode <- if (input$mode == "both"
+                                      && isTRUE(input$colored)) {
                             "both_colored"
                           } else {
                             input$mode

@@ -13,6 +13,8 @@
 #'.                    IDs, `TRUE` by default
 #' @param species species the data comes from (for clickable IDs),
 #'                `Homo_sapiens` by default
+#' @param source helper parameter for the DeeDeeApp, not relevant for standalone
+#'               use
 #' @param ref_lines boolean whether to show reference lines at x=0 and y=0,
 #'                  `TRUE` by default
 #'
@@ -49,8 +51,11 @@ deedee_scatter <- function(data,
 
   # -------------------------------- build plot --------------------------------
   p <- .deedee_scatter_plot(data,
-                               select1 = select1, select2 = select2, pthresh = pthresh,
-                               show_symbols = show_symbols, species = species,
+                            select1 = select1,
+                            select2 = select2,
+                            pthresh = pthresh,
+                            show_symbols = show_symbols,
+                            species = species,
                             ref_lines = ref_lines
   )
   if (is.null(p)) {
@@ -149,8 +154,11 @@ deedee_scatter <- function(data,
   checkmate::assert_logical(ref_lines)
 
   prep <- .deedee_scatter_data(data,
-                               select1 = select1, select2 = select2, pthresh = pthresh,
-                               show_symbols = show_symbols, species = species
+                               select1 = select1,
+                               select2 = select2,
+                               pthresh = pthresh,
+                               show_symbols = show_symbols,
+                               species = species
   )
   if (is.null(prep)) {
     return(NULL)
@@ -164,7 +172,8 @@ deedee_scatter <- function(data,
 
   suppressWarnings(
     res <- ggplot2::ggplot(data = comp, ggplot2::aes(logFC1, logFC2,
-                                              fill = -log10(get(color_by)), key = rowname
+                                              fill = -log10(get(color_by)),
+                                              key = rowname
     )) +
       ggplot2::geom_point(ggplot2::aes(text = hover_text),
                           shape = 21, color = "black", stroke = 0.3, size = 2.5

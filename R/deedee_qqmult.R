@@ -8,6 +8,8 @@
 #' @param ref index of the contrast in data to be used as reference contrast
 #'            (default = 1)
 #' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
+#' @param ref_line boolean, draws a line on the angle bisector as reference for
+#'                 optimal agreement (default = TRUE)
 #'
 #' @return ggplot object (plottable with show()/print())
 #'
@@ -74,7 +76,10 @@ deedee_qqmult <- function(data,
   )
   if (ref_line) {
      res <- res +
-      ggplot2::geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "grey")
+      ggplot2::geom_abline(intercept = 0,
+                           slope = 1,
+                           linetype = "dashed",
+                           color = "grey")
   }
 
 

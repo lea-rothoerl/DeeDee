@@ -69,7 +69,12 @@ mod_scatter_ui <- function(id) {
 
 #' @keywords internal
 #' @param dde reactive DeeDeeExperiment from mod_input_server()
-mod_scatter_server <- function(id, dde, show_symbols, species, source_label, code_data) {
+mod_scatter_server <- function(id,
+                               dde,
+                               show_symbols,
+                               species,
+                               source_label,
+                               code_data) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
@@ -80,7 +85,8 @@ mod_scatter_server <- function(id, dde, show_symbols, species, source_label, cod
     })
     output$select2 <- shiny::renderUI({
       shiny::selectInput(ns("s2"), "2nd contrast",
-                         choices = names(dde()@dea), selected = names(dde()@dea)[2]
+                         choices = names(dde()@dea),
+                         selected = names(dde()@dea)[2]
       )
     })
 
@@ -145,7 +151,8 @@ mod_scatter_server <- function(id, dde, show_symbols, species, source_label, cod
       }
       shiny::div(
         class = "border rounded p-2 mb-2",
-        shiny::tags$strong(row$symbol1), shiny::tags$span(paste0(" (", row$rowname, ")")),
+        shiny::tags$strong(row$symbol1),
+        shiny::tags$span(paste0(" (", row$rowname, ")")),
         shiny::tags$br(),
         sprintf("%s: logFC = %.2f, p = %s", input$s1, row$logFC1,
                 formatC(row$pval1, format = "e", digits = 2)
@@ -214,7 +221,8 @@ mod_scatter_server <- function(id, dde, show_symbols, species, source_label, cod
       res <- fea_result()
       shiny::validate(shiny::need(
         !is.null(res),
-        "No enrichment results yet. Select genes on the plot and click 'Run enrichment analysis'."
+        "No enrichment results yet.
+        Select genes on the plot and click 'Run enrichment analysis'."
       ))
       res <- beautify_GO_table(res)
       DT::datatable(res,
@@ -271,7 +279,8 @@ mod_scatter_server <- function(id, dde, show_symbols, species, source_label, cod
                                               species = species(),
                                               ref_lines = input$ref_lines
                                             ),
-                                            comments = list(select1 = input$s1, select2 = input$s2),
+                                            comments = list(select1 = input$s1,
+                                                            select2 = input$s2),
                                             preamble = cd$preamble
                           )
                         }

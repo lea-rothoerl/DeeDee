@@ -8,9 +8,9 @@
 #' @param data instance of the DeeDeeExperiment class
 #' @param ref index of the contrast in data to be used as reference contrast
 #'            (default = 1)
+#' @param maxrank highest rank that should be displayed (default = 1000)
 #' @param mode sort by highest logFC (`up`, default), lowest logFC (`down`) or
 #'             greatest deviation from zero (`both`)
-#' @param maxrank highest rank that should be displayed (default = 1000)
 #' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
 #'
 #' @return ggplot object (plottable with show()/print())

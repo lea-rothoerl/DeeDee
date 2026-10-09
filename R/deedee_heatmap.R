@@ -15,6 +15,9 @@
 #' @param show_na boolean, include genes with NA values in heatmap
 #'                (default = FALSE)
 #' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
+#' @param show_symbols boolean, relevant if `show_gene_names` is TRUE, if TRUE
+#'                     gene symbols are depicted instead of Ensembl IDs
+#'                     (default = TRUE)
 #'
 #' @return Heatmap object (plottable with show()/print()). The resulting heatmap
 #' (`res`) can be opened in a Shiny App with interactive functionality by

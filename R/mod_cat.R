@@ -5,7 +5,9 @@ mod_cat_ui <- function(id) {
     col_widths = c(4, 8),
     bslib::card(
       shiny::selectInput(ns("mode"), "Mode",
-                         choices = c("Up" = "up", "Down" = "down", "Both" = "both"),
+                         choices = c("Up" = "up",
+                                     "Down" = "down",
+                                     "Both" = "both"),
                          selected = "up"
       ),
       shiny::numericInput(ns("maxrank"), "Max rank", value = 1000, min = 1),
@@ -65,7 +67,8 @@ mod_cat_server <- function(id, dde, source_label, code_data) {
 
       shiny::validate(shiny::need(
         !is.null(res),
-        "No genes in your datasets. Maybe your specified p-value threshold is too low?"
+        "No genes in your datasets.
+        Maybe your specified p-value threshold is too low?"
       ))
       res
     })
@@ -103,7 +106,8 @@ mod_cat_server <- function(id, dde, source_label, code_data) {
     .deedee_code_server(input, session,
                         code_fn = function() {
                           cd <- code_data()
-                          ref_idx <- match(input$ref, DeeDeeExperiment::getDEANames(dde()))
+                          ref_idx <- match(input$ref,
+                                           DeeDeeExperiment::getDEANames(dde()))
                           .deedee_code_text("deedee_cat", cd$data,
                                             args = list(
                                               ref = as.numeric(ref_idx),

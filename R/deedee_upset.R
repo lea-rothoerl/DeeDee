@@ -13,7 +13,7 @@
 #'                    UpSet plot (default = 10)
 #' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
 #'
-#' @return upset element (plottable with show()/print())
+#' @return ggplot element (plottable with show()/print())
 #'
 #' @examples
 #'
