@@ -36,29 +36,78 @@ deedee_qqmult <- function(data,
   checkmate::assert_logical(ref_line)
 
   # ------------------- creation of the resulting qq plot ---------------------
+  ref <- as.integer(ref)
+
   output <- list()
-  nm <- c()
+
+  ref_data <- data_list[[ref]]
+  ref_data <- ref_data[!is.na(ref_data$logFC), , drop = FALSE]
 
   for (i in seq_along(contrasts)) {
-    if (i != ref) {
-      output[[i]] <- data.frame(ggplot2::ggplot_build(deedee_qq(
-        data = data,
-        select1 = ref,
-        select2 = i,
-        as_line = TRUE
-      ))$plot$data)
-      nm[[i]] <- contrasts[i]
+
+    if (i == ref) {
+      next
     }
+
+    other_data <- data_list[[i]]
+    other_data <- other_data[!is.na(other_data$logFC), , drop = FALSE]
+
+    # Sort logFC values independently, as in deedee_qq()
+    x <- sort(ref_data$logFC)
+    y <- sort(other_data$logFC)
+
+    pval1 <- ref_data$pval[order(ref_data$logFC)]
+    pval2 <- other_data$pval[order(other_data$logFC)]
+
+    lenx <- length(x)
+    leny <- length(y)
+
+    # Handle contrasts with different numbers of genes
+    if (lenx == 0 || leny == 0) {
+      next
+    }
+
+    if (leny < lenx) {
+      pval1 <- stats::approx(seq_along(pval1), pval1,
+                             n = leny)$y
+      x <- stats::approx(seq_along(x), x, n = leny)$y
+    }
+
+    if (leny > lenx) {
+      pval2 <- stats::approx(seq_along(pval2), pval2,
+                             n = lenx)$y
+      y <- stats::approx(seq_along(y), y, n = lenx)$y
+    }
+
+    # Retain points significant in either contrast
+    qq <- data.frame(
+      x = x,
+      y = y,
+      pval1 = pval1,
+      pval2 = pval2
+    )
+
+    qq <- qq[!is.na(qq$pval1) & !is.na(qq$pval2) &
+               (qq$pval1 <= pthresh | qq$pval2 <= pthresh), ,
+             drop = FALSE]
+
+    if (nrow(qq) == 0) {
+      next
+    }
+
+    output[[contrasts[i]]] <- qq[, c("x", "y"), drop = FALSE]
   }
 
-  names(output) <- nm
+  if (length(output) == 0) {
+    stop("No Q-Q lines to plot: no contrasts contain points passing pthresh.",
+         call. = FALSE)
+  }
 
   qq_data <- dplyr::bind_rows(output, .id = "contrast")
 
   axis_range <- range(c(qq_data$x, qq_data$y), finite = TRUE)
   axis_pad <- max(diff(axis_range) * 0.05, 0.05)
   axis_range <- axis_range + c(-axis_pad, axis_pad)
-
 
   res <- ggplot2::ggplot(
     qq_data,
