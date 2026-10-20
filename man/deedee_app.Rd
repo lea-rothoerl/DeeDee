@@ -7,7 +7,9 @@
 deedee_app(deedee_obj = NULL)
 }
 \arguments{
-\item{deedee_obj}{An object of the class DeeDeeExperiment to be analyzed.}
+\item{deedee_obj}{An object of the class DeeDeeExperiment to be analyzed. If
+None, uploading a DeeDeeExperiment object as RDS via the
+GUI is still possible.}
 }
 \value{
 A shiny app

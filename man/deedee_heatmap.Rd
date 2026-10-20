@@ -33,6 +33,10 @@ deedee_heatmap(
 (default = FALSE)}
 
 \item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
+
+\item{show_symbols}{boolean, relevant if \code{show_gene_names} is TRUE, if TRUE
+gene symbols are depicted instead of Ensembl IDs
+(default = TRUE)}
 }
 \value{
 Heatmap object (plottable with show()/print()). The resulting heatmap

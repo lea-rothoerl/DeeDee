@@ -21,7 +21,7 @@ UpSet plot (default = 10)}
 \item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
 }
 \value{
-upset element (plottable with show()/print())
+ggplot element (plottable with show()/print())
 }
 \description{
 \code{deedee_upset} creates an UpSet plot depicting the overlaps of

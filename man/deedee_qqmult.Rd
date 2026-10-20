@@ -13,6 +13,9 @@ deedee_qqmult(data, ref = 1, pthresh = 0.05, ref_line = TRUE)
 (default = 1)}
 
 \item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
+
+\item{ref_line}{boolean, draws a line on the angle bisector as reference for
+optimal agreement (default = TRUE)}
 }
 \value{
 ggplot object (plottable with show()/print())
