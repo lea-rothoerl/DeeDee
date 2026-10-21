@@ -31,8 +31,7 @@ knitr::opts_chunk$set(
 
 # What DeeDee is for
 
-When you want to compare results from multiple Differential Expression Analyses (DEAs), the DeeDee package is your friend. It contains various functions, and a Shiny App combining them all, that help shed light on the similarities and differences between the experiments in question. DeeDee is designed to be used after the application of a DE analysis program (like DESeq2, edgeR or limma) on the single DEAs and is closely intertwined with the DeeDeeExperiment package and its objects. 
-
+When you want to compare results from multiple Differential Expression Analyses (DEAs), the DeeDee package is your friend. It contains various functions, and a Shiny App combining them all, that help shed light on the similarities and differences between the experiments in question. DeeDee is designed to be used after the application of a DE analysis program (like DESeq2, edgeR or limma) on a collective DeeDeeExperiment object. 
 
 # How to Install
 
@@ -46,8 +45,7 @@ remotes::install_github("lea-rothoerl/DeeDee",
 
 # Example Dataset Used in this Vignette
 
-The examples in the following chapters utilize the data from the Bioconductor package `macrophage`([Human macrophage immune response](https://bioconductor.org/packages/release/data/experiment/html/macrophage.html "Bioconductor - macrophage")). The macrophage dataset includes data from 24 RNA-seq samples of human macrophages exposed to different conditions: naive, associated with IFNg (an interferon), SL1344 (a strain of Salmonella), or both. The preprocessing of the data was done using DESeq2, obtaining the following four DEAs: naive vs. IFNg, IFNg vs. both, naive vs. Salmonella, and Salmonella vs. both. 
-
+The examples in the following chapters utilize the data from the Bioconductor package `macrophage`([Human macrophage immune response](https://bioconductor.org/packages/release/data/experiment/html/macrophage.html "Bioconductor - macrophage")). The macrophage dataset includes data from 24 RNA-seq samples of human macrophages exposed to different conditions: naive, associated with IFNg (an interferon), SL1344 (a strain of Salmonella), or both. The preprocessing of the data was done using DESeq2, obtaining the following four DEAs: naive vs. IFNg, IFNg vs. both, naive vs. Salmonella, and Salmonella vs. both. All contrasts are weaved into a DeeDeeExperiment, on which DeeDee operates.
 
 # What to Provide
 
@@ -55,11 +53,59 @@ As a part of the DeeDee universe, all functions as well as the Shiny App in this
 
 Beside the DeeDeeExperiment object, each < [DeeDee main function](#main-functions) takes a threshold for p-values that can be specified with the parameter `pthresh` (default = 0.05). Further, most functions have additional parameters that will be explained in the respective sections below. All functions produce colorblind-friendly output.
 
-For our example, we use `dde_macrophage` given in the package data, which contains DEA results for four contrasts from the [macrophage](#example-dataset-used-in-this-vignette) data package (naive vs. IFNg, IFNg vs. both, naive vs. Salmonella, and Salmonella vs. both).
+For our example, we use `dde_macrophage` given in the package data, which contains DEA results for four contrasts from the [macrophage](#example-dataset-used-in-this-vignette) data package (naive vs. IFNg, IFNg vs. both, naive vs. Salmonella, and Salmonella vs. both), all combined into one DeeDeeExperiment object.
 
 ```{r, warning = FALSE, message = FALSE, results = "hide"}
 library("DeeDee")
 data(dde_macrophage, package = "DeeDee")
+```
+
+If you're interested in how the example dataset was built:
+
+```{r, warning = FALSE, message = FALSE, code-fold = TRUE, eval = FALSE}
+library("macrophage")
+library("DESeq2")
+library("DeeDeeExperiment")
+
+data("gse", package = "macrophage")
+dds_macrophage <- DESeqDataSet(gse, design = ~ line + condition)
+rownames(dds_macrophage) <- substr(rownames(dds_macrophage), 1, 15)
+
+keep <- rowSums(counts(dds_macrophage) >= 10) >= 6
+dds_macrophage <- dds_macrophage[keep, ]
+dds_macrophage <- DESeq(dds_macrophage)
+
+IFNg_naive <- results(dds_macrophage,
+  contrast = c("condition", "IFNg", "naive"),
+  lfcThreshold = 1, alpha = 0.05
+)
+
+IFNg_both <- results(dds_macrophage,
+  contrast = c("condition", "IFNg_SL1344", "IFNg"),
+  lfcThreshold = 1, alpha = 0.05
+)
+
+Salm_naive <- results(dds_macrophage,
+  contrast = c("condition", "SL1344", "naive"),
+  lfcThreshold = 1, alpha = 0.05
+)
+
+Salm_both <- results(dds_macrophage,
+  contrast = c("condition", "IFNg_SL1344", "SL1344"),
+  lfcThreshold = 1, alpha = 0.05
+)
+
+dde_macrophage <- DeeDeeExperiment(
+  sce = dds_macrophage,
+  de_results = list(
+    IFNg_naive = IFNg_naive,
+    IFNg_both  = IFNg_both,
+    Salm_naive = Salm_naive,
+    Salm_both  = Salm_both
+  )
+)
+
+save(dde_macrophage, file = "data/dde_macrophage.RData", compress = "xz")
 ```
 
 \pagebreak
@@ -115,10 +161,10 @@ The function `deedee_qq()` compares the statistical distributions of two input d
 deedee_qq(data = dde_macrophage, select1 = 1, select2 = 3, color_by = "pval2", pthresh = 0.05)
 ```
 
-The function `deedee_qqmult()` makes the same calculations as `deedee_qq`, but it is capable of depicting multiple Q-Q lines of different contrasts against the same reference in one plot. The curves are then colored by contrast, a coloration by p-value, like what `deedee_qq()` allows for, is not possible with `deedee_qqmult()`.
+The function `deedee_qq()` makes the same calculations as `deedee_qq`, but it is capable of depicting multiple Q-Q lines of different contrasts against the same reference in one plot. The curves are then colored by contrast, a coloration by p-value, like what `deedee_qq()` allows for, is not possible with `deedee_qq()`.
 
 ```{r, echo = TRUE, warning = FALSE, message = FALSE}
-deedee_qqmult(data = dde_macrophage, ref = 1, pthresh = 0.05)
+deedee_qq(data = dde_macrophage, ref = 1, pthresh = 0.05)
 ```
 
 
@@ -130,38 +176,6 @@ The function `deedee_cat()` creates a plot depicting Concordance At the Top curv
 ```{r, echo = TRUE, warning = FALSE, message = FALSE}
 deedee_cat(data = dde_macrophage, ref = 2, maxrank = 800, pthresh = 0.05)
 ```
-
-\pagebreak
-## DeeDee Summary
-
-TODO decide fate then adapt
-
-`deedee_summary()` is the function to combine the results from the other DeeDee functions as a HTML document in a report-like manner. The function entails arguments to set the parameters for all included functions (for more information see the manual). The summary will be saved to a path specified with the argument `output_path` (default = "DeeDee_Summary.html" in the working directory). The parameter `overwrite` decides if a potentially existing document at the designated location will be overwritten (default = TRUE). Param `silent` can suppress messages (default = FALSE) and `open_file` decides if the resulting document will be opened (default = TRUE).
-
-```{r, echo = TRUE, warning = FALSE, message = FALSE, eval = FALSE}
-#deedee_summary(deedee_list = dde_macrophage,
-#               output_path = "DeeDee_Summary.html",
-#               overwrite = FALSE,
-#               pthresh = 0.05,
-#               scatter_select1 = 1,
-#               scatter_select2 = 2,
-#               scatter_color_by = "pval1",
-#               heatmap_show_first = 25,
-#               heatmap_show_gene_names = FALSE,
-#               heatmap_dist = "euclidean",
-#               heatmap_clust = "average",
-#               heatmap_show_na = FALSE,
-#               venn_mode = "both",                           
-#               upset_mode = "both_colored",
-#               upset_min_setsize = 10,
-#               qqmult_ref = 1,
-#               cat_ref = 1,
-#               cat_maxrank = 1000,
-#               cat_mode = "up",
-#               silent = FALSE,
-#               open_file = TRUE))
-```
-
 
 \pagebreak
 ## DeeDee Shiny App
