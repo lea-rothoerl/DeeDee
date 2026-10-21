@@ -52,7 +52,7 @@ mod_qq_server <- function(id, dde, source_label, code_data) {
       ref_idx <- match(input$ref, DeeDeeExperiment::getDEANames(dde()))
       shiny::req(ref_idx)
 
-      res <- deedee_qqmult(dde(),
+      res <- deedee_qq(dde(),
                            ref = ref_idx,
                            pthresh = input$pthresh,
                            ref_line = input$ref_line)
@@ -85,7 +85,7 @@ mod_qq_server <- function(id, dde, source_label, code_data) {
                           cd <- code_data()
                           ref_idx <- match(input$ref,
                                            DeeDeeExperiment::getDEANames(dde()))
-                          .deedee_code_text("deedee_qqmult", cd$data,
+                          .deedee_code_text("deedee_qq", cd$data,
                                             args = list(
                                               ref = as.numeric(ref_idx),
                                               pthresh = input$pthresh,

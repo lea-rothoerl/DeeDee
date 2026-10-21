@@ -1,6 +1,6 @@
 #' DeeDee QQ Plot with Multiple Contrasts
 #'
-#' @description `deedee_qqmult` creates a plot containing Q-Q-lines comparing
+#' @description `deedee_qq` creates a plot containing Q-Q-lines comparing
 #' the statistical distribution of the logFC of the genes in each input datasets
 #' to a contrast chosen from the input data.
 #'
@@ -16,12 +16,12 @@
 #' @examples
 #'
 #' data(dde_macrophage, package = "DeeDee")
-#' deedee_qqmult(dde_macrophage)
+#' deedee_qq(dde_macrophage)
 #'
 #' @export
 #'
 
-deedee_qqmult <- function(data,
+deedee_qq <- function(data,
                           ref = 1,
                           pthresh = 0.05,
                           ref_line = TRUE) {
