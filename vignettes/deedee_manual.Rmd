@@ -2,67 +2,81 @@
 title: "DeeDee User Guide"
 author:
 - name: Lea Schwarz
-  affiliation: Institute of Medical Biostatistics, Epidemiology and Informatics (IMBEI),
-    Mainz
-date: "`r Sys.Date()`"
-output:
-  html_document:
-    toc: yes
-    toc_float: yes
-    theme: cosmo
-    code_folding: show
-    code_download: yes
-  pdf_document:
-    toc: yes
-vignette: |
-  %\VignetteIndexEntry{The DeeDee User's Guide} 
-  %\VignetteEncoding{UTF-8}   
-  %\VignettePackage{DeeDee} 
-  %\VignetteEngine{knitr::rmarkdown}
-editor_options:
+  affiliation: 
+  - id: IMBEI
+    name: Institute of Medical Biostatistics, Epidemiology and Informatics (IMBEI), Mainz, Germany
+  email: schwarle@uni-mainz.de
+  orcid: 0000-0003-2554-0583
+- name: Federico Marini
+  affiliation: 
+  - ref: IMBEI
+  - id: FZI
+    name: Research Center for Immunotherapy (FZI) Mainz, Germany
+  email: marinif@uni-mainz.de
+  orcid: 0000-0003-3252-7758
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+format:
+  html:
+    ## for clarity but also for cross-referencing
+    ## this option makes the report one single file easiest to share
+    ## choosing a nice font
+    ## making links automatically open in a new window 
+    ## could embed also the source of the whole document!
+    ## controls the aesthetics of the whole thing
+    toc: true
+    number-sections: true
+    embed-resources: true
+    mainfont: "Atkinson Hyperlegible"
+    # mainfont: "IBM Plex Sans"
+    link-external-newwindow: true
+    # code-link: true ## does seem to interfere with the title... pity.
+    # code-tools: true
+    theme: 
+    - cosmo
+    - ummz_theme.scss
+    ## if needed/desired: one can move that scss file and put it to toplevel
+editor_options: 
   chunk_output_type: console
+## if needed/desired: one can move & rename that bib file and put it to toplevel
 ---
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-  echo = TRUE
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE
 )
 ```
 
 # What DeeDee is for
 
-When you want to compare results from multiple Differential Expression Analyses (DEAs), the DeeDee package is your friend. It contains various functions, and a Shiny App combining them all, that help shed light on the similarities and differences between the experiments in question. DeeDee is designed to be used after the application of a DE analysis program (like DESeq2, edgeR or limma) on a collective DeeDeeExperiment object. 
+An experiment rarely produces just one differential expression analysis (DEA): there are different treatments, time points, cell types or tissues, each with its own set of results. The questions that follow are about how these analyses relate to each other. Which genes respond in more than one contrast? Do two contrasts put the same genes at the top of their lists? Do they move genes in the same direction? 
+
+DeeDee brings the tools to answer these questions together in one package. It is designed to be used after the DE analyses have been run and it is closely intertwined with the `DeeDeeExperiment` package: all DEAs live together in a single `DeeDeeExperiment` object (DDE), which is the input of every DeeDee function.
+
+There are two ways to work with DeeDee:
+
+* **Standalone functions** (`deedee_venn()`, `deedee_scatter()`, ...) that return a plot or table. They fit into scripts and reports, and are described in the [first part](#standalone-functions) of this guide.
+* **A Shiny app** (`deedee_app()`) that combines all functions in an interactive interface, adds an overview of your data and a functional enrichment analysis, and can show the code behind every plot it draws. It is described in the [second part](#the-shiny-app).
 
 # How to Install
 
 You can install the current development version from GitHub:
-```
+```{r, eval = FALSE}
 library("remotes")
 remotes::install_github("lea-rothoerl/DeeDee", 
                         dependencies = TRUE, build_vignettes = TRUE)
 ```
 
-
 # Example Dataset Used in this Vignette
 
-The examples in the following chapters utilize the data from the Bioconductor package `macrophage`([Human macrophage immune response](https://bioconductor.org/packages/release/data/experiment/html/macrophage.html "Bioconductor - macrophage")). The macrophage dataset includes data from 24 RNA-seq samples of human macrophages exposed to different conditions: naive, associated with IFNg (an interferon), SL1344 (a strain of Salmonella), or both. The preprocessing of the data was done using DESeq2, obtaining the following four DEAs: naive vs. IFNg, IFNg vs. both, naive vs. Salmonella, and Salmonella vs. both. All contrasts are weaved into a DeeDeeExperiment, on which DeeDee operates.
+The examples in the following chapters utilize the data from the Bioconductor package `macrophage`([Human macrophage immune response](https://bioconductor.org/packages/release/data/experiment/html/macrophage.html "Bioconductor - macrophage")). The dataset comprises data from 24 RNA-seq samples of human macrophages exposed to different conditions: naive, associated with IFNg (an interferon), SL1344 (a strain of Salmonella), or both. Differential Expression Analysis was run using DESeq2, obtaining the following four contrasts: naive vs. IFNg, IFNg vs. both, naive vs. Salmonella, and Salmonella vs. both. All contrasts are woven into a DeeDeeExperiment, on which DeeDee operates.
 
-# What to Provide
+If you're interested in how the example dataset was built, you can view the code here:
 
-As a part of the DeeDee universe, all functions as well as the Shiny App in this package require DeeDeeExperiment object (DDE) as their primary input. For more information on DeeDeeExperiment, please refer to the original package.
+```{r}
+#| code-fold: true
+#| eval: false
 
-Beside the DeeDeeExperiment object, each < [DeeDee main function](#main-functions) takes a threshold for p-values that can be specified with the parameter `pthresh` (default = 0.05). Further, most functions have additional parameters that will be explained in the respective sections below. All functions produce colorblind-friendly output.
-
-For our example, we use `dde_macrophage` given in the package data, which contains DEA results for four contrasts from the [macrophage](#example-dataset-used-in-this-vignette) data package (naive vs. IFNg, IFNg vs. both, naive vs. Salmonella, and Salmonella vs. both), all combined into one DeeDeeExperiment object.
-
-```{r, warning = FALSE, message = FALSE, results = "hide"}
-library("DeeDee")
-data(dde_macrophage, package = "DeeDee")
-```
-
-If you're interested in how the example dataset was built:
-
-```{r, warning = FALSE, message = FALSE, code-fold = TRUE, eval = FALSE}
 library("macrophage")
 library("DESeq2")
 library("DeeDeeExperiment")
@@ -108,28 +122,55 @@ dde_macrophage <- DeeDeeExperiment(
 save(dde_macrophage, file = "data/dde_macrophage.RData", compress = "xz")
 ```
 
+# What to Provide
+
+As a part of the DeeDee universe, all functions as well as the Shiny App in this package require a *DeeDeeExperiment object* (DDE) as their primary input. For more information on DeeDeeExperiment, please refer to the [original package](https://bioconductor.org/packages/release/bioc/html/DeeDeeExperiment.html).
+
+Beside the DeeDeeExperiment object, each [DeeDee main function](#main-functions) takes a threshold for p-values that can be specified with the parameter `pthresh` (default = 0.05). Further, the functions have additional parameters that will be explained in the respective sections below. All functions produce colorblind-friendly output.
+
+For our example, we use `dde_macrophage` given in the package data:
+
+```{r, warning = FALSE, message = FALSE, results = "hide"}
+library("DeeDee")
+data(dde_macrophage, package = "DeeDee")
+```
+
+# Which Function Answers which Question?
+
+| Question | Function |
+|:---------|:---------|
+| Which genes are DE in several contrasts? | `deedee_venn()` (2 to 4 contrasts), `deedee_upset()` (any number), `deedee_overlap()` (the gene list itself) |
+| Do two contrasts have the same genes at the top of their ranked lists? | `deedee_cat()` |
+| Do the contrasts show similar distributions of logFC values? | `deedee_qq()` |
+| Which genes drive the agreement or disagreement between two contrasts? | `deedee_scatter()` |
+| What is the overall expression pattern across all contrasts? | `deedee_heatmap()` |
+| How many genes are DE in each contrast, up and down? | the overview on the Input tab of the app |
+
 \pagebreak
-# Exported Functions
+# Standalone Functions
 ## DeeDee Scatter Plot
 
-The function `deedee_scatter()` creates a scatterplot of logFC values of the genes in two input datasets. If the input DeeDeeExperiment contains more than two datasets (like our example `dde_macrophage` does),  the `select1` (default = 1) and `select2` (default = 2) parameters specify which ones will be plotted (selected by list index). `deedee_scatter()` includes a `color_by` parameter that can be set to "pval1" (default) or "pval2". The points will be colored according to the color scheme given on the right side of the output. 
+The function `deedee_scatter()` creates a scatterplot of logFC values of the genes that are differentially expressed (p-value below `pthresh`) in both of two contrasts. If the input DeeDeeExperiment contains more than two datasets (like our example `dde_macrophage` does),  the `select1` (default = 1) and `select2` (default = 2) parameters specify which ones will be plotted (selected by list index). Genes close to the diagonal behave alike in both contrasts, genes away from it differ in the size or even the direction of their response. The points are colored by the p-value of the first (`color_by = "pval1"`, default) or the second (`"pval2"`) contrast, and the dashed lines at zero can be switched off with `ref_lines = FALSE`.
 
-```{r, echo = TRUE, warning = FALSE, message = FALSE}
-deedee_scatter(data = dde_macrophage, select1 = 2, select2 = 3, color_by = "pval1", pthresh = 0.05)
+The result is an interactive plot: hovering over a point shows the gene's symbol and Ensembl ID as well as logFC and p-value in both contrasts. 
+
+```{r scatter}
+deedee_scatter(data = dde_macrophage, select1 = 2, select2 = 3, 
+               color_by = "pval1", pthresh = 0.05)
 ```
 
 
-\pagebreak
 ## DeeDee Heatmap
 
-The function `deedee_heatmap()` creates a heatmap of the logFC values for all common genes in every input dataset. The color key is given on the right side of the plot. Additionally to the standard parameters explained in [Input](#what-to-provide), the function takes a numeric `show_first` value (default = 25), specifying the number of genes depicted (if the total number of genes is smaller than `show_first`, all genes are shown). It also digests a logical `show_gene_names` value (default = FALSE) that determines if the gene identifiers (rownames in `deedee_prepare` results) will be displayed in the heatmap, and a logical `show_na`, defining if genes with NAs (in less than half of the contrasts) are included. The distance measure (`dist`, values: `euclidean` (default), `manhattan`, `pearson`, `spearman`) and clustering method (`clust`, values: `single`, `complete`, `average` (default), `centroid`) can be chosen as well. 
+The function `deedee_heatmap()` creates a heatmap of the logFC values for all common genes in every input dataset. The color key is given on the right side of the plot. The numeric `show_first` (default = 25) specifies the number of genes depicted (if the total number of genes is smaller, all genes are shown). The logical `show_gene_names` (default = FALSE) determines whether gene identifiers are displayed next to the heatmap, with `show_symbols` choosing between gene symbols (default) and Ensembl IDs. The logical `show_na` defines whether genes with NAs (in less than half of the contrasts) are included. The distance measure (`dist`, values: `euclidean` (default), `manhattan`, `pearson`, `spearman`) and the clustering method (`clust`, values: `single`, `complete`, `average` (default), `centroid`) can be chosen as well. 
 
-```{r, echo = TRUE, warning = FALSE, message = FALSE}
-deedee_heatmap(data = dde_macrophage, show_first = 25, show_gene_names = FALSE, dist = "manhattan", clust = "centroid", show_na = FALSE, pthresh = 0.05)
+```{r heatmap}
+deedee_heatmap(data = dde_macrophage, show_first = 25, show_gene_names = FALSE, 
+               dist = "manhattan", clust = "centroid", show_na = FALSE, 
+               pthresh = 0.05)
 ```
 
-Because the heatmap is produced with the [InteractiveComplexHeatmap](https://bioconductor.org/packages/release/bioc/html/InteractiveComplexHeatmap.html) package, a Shiny window with the heatmap and entailed interactivity can be opened by executing the command `InteractiveComplexHeatmap::ht_shiny(res)` to a result `res` of `deedee_heatmap()`. For more information, please refer to the [InteractiveComplexHeatmap Vignette](https://bioconductor.org/packages/release/bioc/vignettes/InteractiveComplexHeatmap/inst/doc/InteractiveComplexHeatmap.html).
-
+The heatmap is produced with the [InteractiveComplexHeatmap](https://bioconductor.org/packages/release/bioc/html/InteractiveComplexHeatmap.html) package. A Shiny window with the heatmap and its interactivity can be opened by running `InteractiveComplexHeatmap::ht_shiny(res)` on a result `res` of `deedee_heatmap()`. For more information, please refer to the [InteractiveComplexHeatmap Vignette](https://bioconductor.org/packages/release/bioc/vignettes/InteractiveComplexHeatmap/inst/doc/InteractiveComplexHeatmap.html).
 
 \pagebreak
 ## DeeDee Venn Diagram
@@ -144,7 +185,7 @@ deedee_venn(data = dde_macrophage, mode = "both", pthresh = 0.05)
 \pagebreak
 ## DeeDee UpSet Plot
 
-The function `deedee_upset()` creates an UpSet plot depicting the overlaps of differentially expressed genes in the input datasets. Contrary to [`deedee_venn()`](#deedee-venn-diagram), the UpSet plot can compare multiple (and even more than four) datasets in a visually pleasing way. The parameter `mode` can be set to `up`, `down`, `both`, or `both_colored` (default), specifying if only up-regulated, down-regulated or both DE genes shall be depicted. If `both_colored` is chosen, the result is the same UpSet plot as for `both`, but the shares of the intersections where all samples have positive/negative logFC values are colored accoring to the color key. The minimum size for an intersection to be included in the plot can be defined via the parameter `min_setsize`, default is 10.
+The function `deedee_upset()` creates an UpSet plot depicting the overlaps of differentially expressed genes in the input datasets. Contrary to [`deedee_venn()`](#deedee-venn-diagram), the UpSet plot can compare multiple (and even more than four) datasets in a visually pleasing way. The parameter `mode` can be set to `up`, `down`, `both`, or `both_colored` (default), specifying if only up-regulated, down-regulated or both DE genes shall be depicted. If `both_colored` is chosen, the result is the same UpSet plot as for `both`, but the shares of the intersections where all samples have positive/negative logFC values are colored according to the color key. The minimum size for an intersection to be included in the plot can be defined via the parameter `min_setsize`, default is 10.
 
 ```{r, echo = TRUE, warning = FALSE, message = FALSE}
 deedee_upset(data = dde_macrophage, mode = "both_colored", min_setsize = 15, pthresh = 0.05)
@@ -158,7 +199,7 @@ deedee_upset(data = dde_macrophage, mode = "both_colored", min_setsize = 15, pth
 The function `deedee_qq()` compares the statistical distributions of two input datasets. If the input data list contains more than two datasets (like our example `dde_macrophage` does),  the `select1` (default = 1) and `select2` (default = 2) parameters specify which ones are to be used. If the resulting curve resembles a straight line with a slope of 1, the distributions are similar (perfect straight line = identical distributions). `deedee_qq()` includes a `color_by` parameter that can be set to `pval1` (default) or `pval2`. The points generating the curve will be colored according to the color key displayed on the right of the output. 
 
 ```{r, echo = TRUE, warning = FALSE, message = FALSE}
-deedee_qq(data = dde_macrophage, select1 = 1, select2 = 3, color_by = "pval2", pthresh = 0.05)
+deedee_qq(data = dde_macrophage, pthresh = 0.05)
 ```
 
 The function `deedee_qq()` makes the same calculations as `deedee_qq`, but it is capable of depicting multiple Q-Q lines of different contrasts against the same reference in one plot. The curves are then colored by contrast, a coloration by p-value, like what `deedee_qq()` allows for, is not possible with `deedee_qq()`.
@@ -177,18 +218,24 @@ The function `deedee_cat()` creates a plot depicting Concordance At the Top curv
 deedee_cat(data = dde_macrophage, ref = 2, maxrank = 800, pthresh = 0.05)
 ```
 
+
+
+
+
 \pagebreak
 ## DeeDee Shiny App
 
-Besides the standalone functions, the DeeDee package also contains an interactive Shiny web application. To open it, run the following command:
+DeeDee's centerpiece is the DeeDeeApp, which provides you with an interface to interactively explore your DEA results' comparisons. To open it, run the following command:
 
 ```{r, echo = TRUE, warning = FALSE, message = FALSE, eval = FALSE}
-deedee_app()
+deedee_app(dde_macrophage)
 ```
 To explore a dataset with the app, one can either call the function with the DDE as an argument, or upload the DDE as an RDS in the App's input tab. 
 
-The App entails one tab for each of the above presented functions. The respective parameters can be set via self-explanatory input boxes in each tab and outputs are delivered in an interactive manner.
+The DeeDeeApp entails one tab for each of the above presented functions. The respective parameters can be set via self-explanatory input boxes in each tab and outputs are delivered in an interactive manner.
 More information on the usage of each DeeDee function can be found in the `INFO` panel in each respective tab.
+
+
 
 # Session Info {-}
 
