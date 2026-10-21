@@ -172,7 +172,7 @@ deedee_heatmap(data = dde_macrophage, show_first = 25, show_gene_names = FALSE,
 
 The heatmap is produced with the [InteractiveComplexHeatmap](https://bioconductor.org/packages/release/bioc/html/InteractiveComplexHeatmap.html) package. A Shiny window with the heatmap and its interactivity can be opened by running `InteractiveComplexHeatmap::ht_shiny(res)` on a result `res` of `deedee_heatmap()`. For more information, please refer to the [InteractiveComplexHeatmap Vignette](https://bioconductor.org/packages/release/bioc/vignettes/InteractiveComplexHeatmap/inst/doc/InteractiveComplexHeatmap.html).
 
-\pagebreak
+
 ## DeeDee Venn Diagram
 
 The function `deedee_venn()` creates a Venn diagram depicting the overlaps of differentially expressed genes in the input datasets. To keep the Venn diagram easy on the eye, the `data` list may contain no more than four datasets. To compare more DEAs in a similar, set-based manner, please make use of [`deedee_upSet()`](#deedee-upset-plot). The parameter `mode` can be set to `up`, `down`, or `both` (default), specifying if only up-regulated, down-regulated or both DE genes will be counted. 
@@ -182,34 +182,33 @@ deedee_venn(data = dde_macrophage, mode = "both", pthresh = 0.05)
 ```
 
 
-\pagebreak
 ## DeeDee UpSet Plot
 
-The function `deedee_upset()` creates an UpSet plot depicting the overlaps of differentially expressed genes in the input datasets. Contrary to [`deedee_venn()`](#deedee-venn-diagram), the UpSet plot can compare multiple (and even more than four) datasets in a visually pleasing way. The parameter `mode` can be set to `up`, `down`, `both`, or `both_colored` (default), specifying if only up-regulated, down-regulated or both DE genes shall be depicted. If `both_colored` is chosen, the result is the same UpSet plot as for `both`, but the shares of the intersections where all samples have positive/negative logFC values are colored according to the color key. The minimum size for an intersection to be included in the plot can be defined via the parameter `min_setsize`, default is 10.
+The function `deedee_upset()` creates an UpSet plot depicting the overlaps of differentially expressed genes in the input datasets. Contrary to [`deedee_venn()`](#deedee-venn-diagram), the UpSet plot can compare multiple (and even more than four) datasets in a visually pleasing way. The parameter `mode` can be set to `up`, `down`, `both`, or `both_colored` (default), specifying if only up-regulated, down-regulated or both DE genes shall be depicted. With `both_colored`, the plot is the same as for `both`, but the shares of the intersections in which all contrasts have positive or negative logFC values are colored according to the color key. The minimum size for an intersection to be included in the plot can be defined via the parameter `min_setsize`, default is 10.
 
-```{r, echo = TRUE, warning = FALSE, message = FALSE}
-deedee_upset(data = dde_macrophage, mode = "both_colored", min_setsize = 15, pthresh = 0.05)
+```{r upset}
+deedee_upset(data = dde_macrophage, mode = "both_colored", min_setsize = 15, 
+             pthresh = 0.05)
 ```
 
+## DeeDee Overlap List
 
+While the Venn and UpSet plots show how many genes are shared, `deedee_overlap()` returns which ones: a data frame of the genes that are differentially expressed in all selected contrasts (`select`, by default all), with their symbol, and logFC and p-value in each contrast. The parameter `mode` (`up`, `down`, `both` (default)) works as for the Venn diagram. If no gene is shared by all contrasts, the result is `NULL`. The example below lists the genes behind the scatter plot above: those that are DE in both the second and the third contrast.
 
-\pagebreak
+```{r overlap}
+overlap <- deedee_overlap(data = dde_macrophage, mode = "both", 
+                          pthresh = 0.05, select = c(2, 3))
+head(overlap)
+```
+
 ## DeeDee Q-Q Plot
 
-The function `deedee_qq()` compares the statistical distributions of two input datasets. If the input data list contains more than two datasets (like our example `dde_macrophage` does),  the `select1` (default = 1) and `select2` (default = 2) parameters specify which ones are to be used. If the resulting curve resembles a straight line with a slope of 1, the distributions are similar (perfect straight line = identical distributions). `deedee_qq()` includes a `color_by` parameter that can be set to `pval1` (default) or `pval2`. The points generating the curve will be colored according to the color key displayed on the right of the output. 
+The function `deedee_qq()` compares the statistical distributions of the logFC values of several contrasts against one reference contrast (`ref`, selected by position, default = 1) in a single plot, with one line per contrast. If a line follows the angle bisector (a straight line with slope 1), the two distributions are similar; deviations show where they differ, e.g. in the tails. The bisector is drawn as a reference unless `ref_line = FALSE`.
 
-```{r, echo = TRUE, warning = FALSE, message = FALSE}
-deedee_qq(data = dde_macrophage, pthresh = 0.05)
-```
-
-The function `deedee_qq()` makes the same calculations as `deedee_qq`, but it is capable of depicting multiple Q-Q lines of different contrasts against the same reference in one plot. The curves are then colored by contrast, a coloration by p-value, like what `deedee_qq()` allows for, is not possible with `deedee_qq()`.
-
-```{r, echo = TRUE, warning = FALSE, message = FALSE}
+```{r qq}
 deedee_qq(data = dde_macrophage, ref = 1, pthresh = 0.05)
 ```
 
-
-\pagebreak
 ## DeeDee CAT Plot
 
 The function `deedee_cat()` creates a plot depicting Concordance At the Top curves for a reference contrast (parameter `ref`, select contrast by list index). For each contrast except the reference, a curve indicating the concordance of the top genes in the contrast's logFC-sorted gene list, against the reference's, is displayed. The argument `mode` specifies the way of sorting the genes: by highest (`up`, default), lowest (`down`) or highest absolute (`both`) logFC value. The highest rank for which the concordance is calculated is given by the `maxrank` (default = 1000) parameter. 
@@ -219,17 +218,28 @@ deedee_cat(data = dde_macrophage, ref = 2, maxrank = 800, pthresh = 0.05)
 ```
 
 
-
-
-
 \pagebreak
-## DeeDee Shiny App
+# The Shiny App
 
-DeeDee's centerpiece is the DeeDeeApp, which provides you with an interface to interactively explore your DEA results' comparisons. To open it, run the following command:
+DeeDee's centerpiece is the DeeDeeApp, which provides you with an interface to interactively explore your DEA results' comparisons. It offers every plot above, an overview of the submitted data, an interactive functional enrichment analysis for genes selected in the scatter plot, table and plot downloads, and the code needed to reproduce each plot. 
 
-```{r, echo = TRUE, warning = FALSE, message = FALSE, eval = FALSE}
+## Starting the App
+
+There are two ways to bring your data into the app: hand the DDE to the function, or call it without argument and upload the data as an RDS file on the Input tab. 
+
+```{r, eval = FALSE}
+# the DDE is given directly
 deedee_app(dde_macrophage)
+
+# or: start empty and upload an RDS file in the app
+deedee_app()
 ```
+
+The app opens in your default web browser. If the DDE was given in the function call, the upload field on the Input tab is collapsed, since there is nothing to upload.
+
+TODO SCREENSHOT AND REST 
+
+
 To explore a dataset with the app, one can either call the function with the DDE as an argument, or upload the DDE as an RDS in the App's input tab. 
 
 The DeeDeeApp entails one tab for each of the above presented functions. The respective parameters can be set via self-explanatory input boxes in each tab and outputs are delivered in an interactive manner.
