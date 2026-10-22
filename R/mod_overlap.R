@@ -41,7 +41,6 @@ mod_overlap_ui <- function(id) {
 }
 
 #' @keywords internal
-#' @param dde reactive DeeDeeExperiment from mod_input_server()
 mod_overlap_server <- function(id, dde, show_symbols, species) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns

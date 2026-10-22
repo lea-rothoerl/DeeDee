@@ -29,7 +29,6 @@ mod_qq_ui <- function(id) {
 }
 
 #' @keywords internal
-#' @param dde reactive DeeDeeExperiment from mod_input_server()
 mod_qq_server <- function(id, dde, source_label, code_data) {
   shiny::moduleServer(id, function(input, output, session) {
     ns <- session$ns

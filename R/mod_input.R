@@ -47,8 +47,6 @@ mod_input_ui <- function(id, collapse_upload = FALSE) {
 }
 
 #' @keywords internal
-#' @param dde_arg a DeeDeeExperiment passed in the call of deedee_app(),
-#'   or NULL if the user will upload one instead
 mod_input_server <- function(id, dde_arg = NULL, arg_label = NULL) {
   shiny::moduleServer(id, function(input, output, session) {
 

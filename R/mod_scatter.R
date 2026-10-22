@@ -68,7 +68,6 @@ mod_scatter_ui <- function(id) {
 }
 
 #' @keywords internal
-#' @param dde reactive DeeDeeExperiment from mod_input_server()
 mod_scatter_server <- function(id,
                                dde,
                                show_symbols,
