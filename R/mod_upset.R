@@ -57,11 +57,11 @@ mod_upset_server <- function(id, dde, source_label, code_data) {
         input$mode
       }
 
-      res <- deedee_upset(dde(),
+      suppressWarnings(res <- deedee_upset(dde(),
                           mode = mode,
                           pthresh = input$pthresh,
                           min_setsize = input$min_setsize
-      )
+      ))
 
       shiny::validate(shiny::need(
         !is.null(res),

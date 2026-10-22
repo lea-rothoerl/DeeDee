@@ -57,12 +57,12 @@ mod_cat_server <- function(id, dde, source_label, code_data) {
       ref_idx <- match(input$ref, DeeDeeExperiment::getDEANames(dde()))
       shiny::req(ref_idx)
 
-      res <- deedee_cat(dde(),
+      suppressWarnings(res <- deedee_cat(dde(),
                         ref = ref_idx,
                         maxrank = input$maxrank,
                         mode = input$mode,
                         pthresh = input$pthresh
-      )
+      ))
 
       shiny::validate(shiny::need(
         !is.null(res),
