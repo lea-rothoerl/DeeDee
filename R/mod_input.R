@@ -39,7 +39,7 @@ mod_input_ui <- function(id, collapse_upload = FALSE) {
 
       shiny::numericInput(
         ns("overview_pthresh"),
-        "P-value threshold (for the DE count overview)",
+        "Adjusted p-value threshold (for the DE count overview)",
         value = 0.05, min = 0.01, max = 1, step = 0.01
       )
     )

@@ -61,5 +61,5 @@ deedee_overview_plot <- function(data, pthresh = 0.05) {
     ggplot2::scale_fill_manual(values = c(up = col_up, down = col_down)) +
     ggplot2::labs(x = NULL, y = paste0("DE genes (p < ", pthresh, ")"), fill = NULL) +
     ggplot2::theme_light() +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1, size = 14))
 }
