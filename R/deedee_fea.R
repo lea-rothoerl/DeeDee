@@ -39,17 +39,34 @@ deedee_fea <- function(data,
                     "Mus_musculus" = "org.Mm.eg.db"
   )
 
-  for (pkg in c("AnnotationDbi", "topGO")) {
-    if (!requireNamespace(pkg, quietly = TRUE)) {
-      stop(
-        "Package '", mapping, "' is required for functional enrichment analysis ",
-        "but not installed."
-      )
-    }
-    library(org.Hs.eg.db)
-    library(org.Mm.eg.db)
-    library(topGO)
+  required_pkgs <- c("topGO", "AnnotationDbi", mapping)
+
+  missing_pkgs <- required_pkgs[
+    !vapply(
+      required_pkgs,
+      requireNamespace,
+      logical(1),
+      quietly = TRUE
+    )
+  ]
+
+  if (length(missing_pkgs) > 0) {
+    stop(
+      "Install the following packages to use functional enrichment: ",
+      paste(missing_pkgs, collapse = ", "),
+      call. = FALSE
+    )
   }
+
+  suppressPackageStartupMessages(
+    library("topGO", character.only = TRUE)
+  )
+  suppressPackageStartupMessages(
+    library("AnnotationDbi", character.only = TRUE)
+  )
+  suppressPackageStartupMessages(
+    library(mapping, character.only = TRUE)
+  )
 
   # --------------------------------- universe --------------------------------
   bg <- dplyr::inner_join(

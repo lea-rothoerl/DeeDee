@@ -14,10 +14,9 @@ Authors@R:
     )
 Description: DeeDee is a collection of functions to compare the results of two 
     or more Differential Expression Analyses. From data preparation to different
-    forms of graphic output, DeeDee has your back. Aside from a data preparation 
-    function and six graphical-output producing functions, the package contains
-    a Shiny web application that contains the package's full functionality and 
-    more. TODO get up to date
+    forms of graphic output, DeeDee has your back. Aside from the standalone
+    functions, the package contains a Shiny App that contains the package's full 
+    functionality and more.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -37,8 +36,6 @@ Imports:
     grid,
     InteractiveComplexHeatmap,
     mosdef,
-    org.Hs.eg.db,
-    org.Mm.eg.db,
     plotly,
     shiny, 
     shinycssloaders,
@@ -48,16 +45,20 @@ Imports:
     utils, 
     viridis,
     writexl
-Suggests: 
+Suggests:
+    AnnotationDbi,
+    knitr,
     macrophage,
     methods,
+    quarto,
     rmarkdown,
-    knitr,
-    org.Rn.eg.db,
-    org.Dm.eg.db,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    topGO,
+    org.Hs.eg.db,
+    org.Mm.eg.db
 Config/testthat/edition: 3
-VignetteBuilder: knitr
+VignetteBuilder: quarto
+SystemRequirements: quarto
 biocViews: GUI, GeneExpression, Software, Transcription, Transcriptomics, 
     Visualization, DifferentialExpression
 Config/roxygen2/version: 8.1.0

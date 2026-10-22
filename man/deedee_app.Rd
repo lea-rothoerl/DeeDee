@@ -21,7 +21,9 @@ graphical user interface.
 }
 \examples{
 
-data(dde_macrophage, package = "DeeDee")
-deedee_app(dde_macrophage)
+if (interactive()) {
+  data(dde_macrophage, package = "DeeDee")
+  deedee_app(dde_macrophage)
+}
 
 }

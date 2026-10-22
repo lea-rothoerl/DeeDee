@@ -13,8 +13,10 @@
 #'
 #' @examples
 #'
-#' data(dde_macrophage, package = "DeeDee")
-#' deedee_app(dde_macrophage)
+#' if (interactive()) {
+#'   data(dde_macrophage, package = "DeeDee")
+#'   deedee_app(dde_macrophage)
+#' }
 #'
 deedee_app <- function(deedee_obj = NULL) {
 

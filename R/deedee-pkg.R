@@ -7,7 +7,7 @@
 #'   multiple functions that create graphical output and give an impression of
 #'   similarities and differences in the expression profiles. The functions are
 #'   contained individually as well as included in an interactive Shiny Web App.
-#'
+#' @importClassesFrom DeeDeeExperiment DeeDeeExperiment
 #' @name DeeDee-pkg
 "_PACKAGE"
 NULL

@@ -15,7 +15,7 @@
 #' @examples
 #'
 #' data(dde_macrophage, package = "DeeDee")
-#' deedee_cat(dde_macrophage, maxrank = 500)
+#' deedee_overview(dde_macrophage)
 #'
 #' @export
 #'

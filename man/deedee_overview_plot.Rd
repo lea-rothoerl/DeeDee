@@ -24,6 +24,6 @@ color-coded bars for each contrast in a collective ggplot.
 \examples{
 
 data(dde_macrophage, package = "DeeDee")
-deedee_cat(dde_macrophage, maxrank = 500)
+deedee_overview_plot(dde_macrophage)
 
 }
