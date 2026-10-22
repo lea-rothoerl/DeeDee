@@ -17,27 +17,20 @@ author:
 date: "`r format(Sys.Date(), '%d %B %Y')`"
 format:
   html:
-    ## for clarity but also for cross-referencing
-    ## this option makes the report one single file easiest to share
-    ## choosing a nice font
-    ## making links automatically open in a new window 
-    ## could embed also the source of the whole document!
-    ## controls the aesthetics of the whole thing
     toc: true
     number-sections: true
     embed-resources: true
     mainfont: "Atkinson Hyperlegible"
-    # mainfont: "IBM Plex Sans"
     link-external-newwindow: true
-    # code-link: true ## does seem to interfere with the title... pity.
-    # code-tools: true
     theme: 
     - cosmo
     - ummz_theme.scss
-    ## if needed/desired: one can move that scss file and put it to toplevel
+vignette: >
+  %\VignetteIndexEntry{The DeeDee User Guide}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
 editor_options: 
   chunk_output_type: console
-## if needed/desired: one can move & rename that bib file and put it to toplevel
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
