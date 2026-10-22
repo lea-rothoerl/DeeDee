@@ -130,9 +130,10 @@ Beside the DeeDeeExperiment object, each [DeeDee main function](#main-functions)
 
 For our example, we use `dde_macrophage` given in the package data:
 
-```{r, warning = FALSE, message = FALSE, results = "hide"}
+```{r, warning = FALSE, message = FALSE}
 library("DeeDee")
 data(dde_macrophage, package = "DeeDee")
+print(dde_macrophage)
 ```
 
 # Which Function Answers which Question?
@@ -144,7 +145,7 @@ data(dde_macrophage, package = "DeeDee")
 | Do the contrasts show similar distributions of logFC values? | `deedee_qq()` |
 | Which genes drive the agreement or disagreement between two contrasts? | `deedee_scatter()` |
 | What is the overall expression pattern across all contrasts? | `deedee_heatmap()` |
-| How many genes are DE in each contrast, up and down? | the overview on the Input tab of the app |
+| How many genes are DE in each contrast, up and down? | `deedee_overview()` and `deedee_overview_plot()` |
 
 \pagebreak
 # Standalone Functions
@@ -237,15 +238,36 @@ deedee_app()
 
 The app opens in your default web browser. If the DDE was given in the function call, the upload field on the Input tab is collapsed, since there is nothing to upload.
 
-TODO SCREENSHOT AND REST 
+## The Input tab
 
+The Input tab shows an overview of your DDE and holds the settings that apply to all other tabs:
 
-To explore a dataset with the app, one can either call the function with the DDE as an argument, or upload the DDE as an RDS in the App's input tab. 
+* **Overview of your DDE:** a table with one row per contrast, giving the tool that produced the DEA (e.g. DESeq2), the number of genes, and the number of DE genes in total, up- and down-regulated, together with a bar plot of the up- and down-regulated genes per contrast. The adjusted p-value threshold below the table defines what counts as DE here.
+* **Select contrasts to use:** untick contrasts you do not want to use. They are removed from all other tabs; the overview above always shows the DDE as submitted.
+* **Show gene symbols instead of Ensembl IDs:** switches the gene identifiers shown in the plots and tables.
+* **Detected species:** detected automatically from the Ensembl IDs (human and mouse are supported) and used for gene links and the enrichment analysis. If the IDs are neither human nor mouse, the scatter plot and the overlap list cannot be created.
 
-The DeeDeeApp entails one tab for each of the above presented functions. The respective parameters can be set via self-explanatory input boxes in each tab and outputs are delivered in an interactive manner.
-More information on the usage of each DeeDee function can be found in the `INFO` panel in each respective tab.
+![DeeDee Input Tab](DeeDee_input_tab.png)
 
+## The Plot tabs
 
+The tabs are arranged in categories: **Overlap** (Venn, UpSet, Overlap List), **Concordance** (CAT, QQ), followed by **Scatter** and **Heatmap**. Each tab corresponds to a standalone function of the previous part; its parameters are set in the box on the left, and the result updates accordingly. The collapsible `INFO` panel on each tab gives a short explanation of the function and output.
+
+Below each plot, there are two buttons next to each other:
+* **Download plot (PNG)** saves the plot as an image. The switch *Include data source in downloaded image* adds a small footer to the image that names where the data comes from: the name of the uploaded file, or the name of the object that was handed to `deedee_app()`.
+* **Show code** opens a window with the R code that can be used to reproduce the plot currently on screen, including all parameters as they are set, and a button to copy it to the clipboard. Please note that, in the case of an uploaded RDS file, the path needs to be adjusted since DeeDee can only see the filename, not the full system path. 
+
+![DeeDee UpSet Tab](DeeDee_upset_tab.png)
+
+## The Scatter Tab: from Plot to Pathway
+
+The scatter tab holds one additional functionality:
+
+* **Hover** over a point to see the gene's symbol, Ensembl ID, and logFC and adjusted p-value in both contrasts.
+* **Click** a point to display the same details in a box below the plot, together with clickable links to the gene's NCBI or Ensembl page, depending on the identifier setting on the Input tab.
+* **Select** a group of genes with the lasso or the box tool of the plot (top right) to run a functional enrichment analysis on the selected subset. Open the panel *Functional enrichment analysis on selected genes* below the plot, choose a GO ontology (Biological Process, Molecular Function or Cellular Component) and click *Run enrichment analysis*. The selected genes are tested for over-representation of GO terms with clusterProfiler, against the background of all genes tested in both contrasts. After a short runtime, the results are shown in a table, in which the GO IDs link to the respective terms, and can be downloaded as an XLSX file. 
+
+![DeeDee Scatter Tab](DeeDee_scatter_tab.png)
 
 # Session Info {-}
 
