@@ -24,13 +24,13 @@ deedee_overview <- function(data, pthresh = 0.05) {
     package = unname(dea_package),
     genes = unname(vapply(dea_list, nrow, integer(1))),
     de_genes = unname(vapply(dea_list, function(d) {
-      sum(d$pval < pthresh, na.rm = TRUE)
+      sum(d$padj < pthresh, na.rm = TRUE)
     }, integer(1))),
     up = unname(vapply(dea_list, function(d) {
-      sum(d$pval < pthresh & d$logFC > 0, na.rm = TRUE)
+      sum(d$padj < pthresh & d$logFC > 0, na.rm = TRUE)
     }, integer(1))),
     down = unname(vapply(dea_list, function(d) {
-      sum(d$pval < pthresh & d$logFC < 0, na.rm = TRUE)
+      sum(d$padj < pthresh & d$logFC < 0, na.rm = TRUE)
     }, integer(1))),
     stringsAsFactors = FALSE
   )

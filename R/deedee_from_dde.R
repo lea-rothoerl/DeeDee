@@ -17,14 +17,14 @@ deedee_from_dde <- function(dde) {
     res <- DeeDeeExperiment::getDEA(dde, name)
     df <- data.frame(
       logFC = res[[1]],
-      pval  = res[[2]],
+      padj  = res[[3]],
       row.names = rownames(res)
     )
     if (!is.null(symbols)) {
       df$symbol <- symbols[rownames(res)]
     }
     df$logFC <- as.numeric(df$logFC)
-    df$pval  <- as.numeric(df$pval)
+    df$padj  <- as.numeric(df$padj)
     df
   })
 

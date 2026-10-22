@@ -7,7 +7,8 @@
 #' @param mode show all overlapping DE genes (`both`, default),
 #'             only conjointly up-regulated (`up`)
 #'             or only conjointly down-regulated (`down`) genes
-#' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
+#' @param pthresh threshold for adjusted p-values to be in-/excluded
+#'                (default = 0.05)
 #' @param select vector of DEA slot indexes to use for plotting, must be 2 to 4
 #'
 #' @return ggplot object (plottable with show()/print())
@@ -57,7 +58,7 @@ deedee_venn <- function(data,
   for (i in 1:length(data)) {
     data[i][[1]] <- subset(
       data[i][[1]],
-      data[i][[1]]$pval < pthresh
+      data[i][[1]]$padj < pthresh
     )
 
     if (length(data[i][[1]][[1]]) == 0) {

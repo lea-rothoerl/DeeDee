@@ -74,7 +74,7 @@ mod_overlap_server <- function(id, dde, show_symbols, species) {
       shiny::validate(shiny::need(
         !is.null(res),
         "No overlapping genes found.
-        Maybe your specified p-value threshold is too low?"
+        Maybe your specified adjusted p-value threshold is too low?"
       ))
       res
     })
@@ -99,7 +99,7 @@ mod_overlap_server <- function(id, dde, show_symbols, species) {
       ) |>
         DT::formatRound(columns = grep("_logFC$", names(tbl), value = TRUE),
                         digits = 3) |>
-        DT::formatSignif(columns = grep("_pval$", names(tbl), value = TRUE),
+        DT::formatSignif(columns = grep("_padj$", names(tbl), value = TRUE),
                          digits = 3)
     })
 

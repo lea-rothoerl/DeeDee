@@ -13,7 +13,8 @@ deedee_venn(data, mode = "both", pthresh = 0.05, select = NULL)
 only conjointly up-regulated (\code{up})
 or only conjointly down-regulated (\code{down}) genes}
 
-\item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
+\item{pthresh}{threshold for adjusted p-values to be in-/excluded
+(default = 0.05)}
 
 \item{select}{vector of DEA slot indexes to use for plotting, must be 2 to 4}
 }

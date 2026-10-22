@@ -55,7 +55,7 @@ deedee_heatmap <- function(data,
 
   # ---------------------------- data preparation -----------------------------
   for (i in 1:length(data)) {
-    data[i][[1]] <- subset(data[i][[1]], data[i][[1]]$pval < pthresh) # pthresh
+    data[i][[1]] <- subset(data[i][[1]], data[i][[1]]$padj < pthresh) # pthresh
     data[i][[1]] <- data[i][[1]][, c("logFC", "symbol")] # removing p-value column
     colnames(data[i][[1]])[1] <- names(data)[i] # creating unique colnames
     data[i][[1]] <- tibble::rownames_to_column(data[i][[1]])

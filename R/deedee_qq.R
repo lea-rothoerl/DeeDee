@@ -7,7 +7,8 @@
 #' @param data instance of the DeeDeeExperiment class
 #' @param ref index of the contrast in data to be used as reference contrast
 #'            (default = 1)
-#' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
+#' @param pthresh threshold for adjusted p-values to be in-/excluded
+#'                (default = 0.05)
 #' @param ref_line boolean, draws a line on the angle bisector as reference for
 #'                 optimal agreement (default = TRUE)
 #'
@@ -56,8 +57,8 @@ deedee_qq <- function(data,
     x <- sort(ref_data$logFC)
     y <- sort(other_data$logFC)
 
-    pval1 <- ref_data$pval[order(ref_data$logFC)]
-    pval2 <- other_data$pval[order(other_data$logFC)]
+    padj1 <- ref_data$padj[order(ref_data$logFC)]
+    padj2 <- other_data$padj[order(other_data$logFC)]
 
     lenx <- length(x)
     leny <- length(y)
@@ -68,13 +69,13 @@ deedee_qq <- function(data,
     }
 
     if (leny < lenx) {
-      pval1 <- stats::approx(seq_along(pval1), pval1,
+      padj1 <- stats::approx(seq_along(padj1), padj1,
                              n = leny)$y
       x <- stats::approx(seq_along(x), x, n = leny)$y
     }
 
     if (leny > lenx) {
-      pval2 <- stats::approx(seq_along(pval2), pval2,
+      padj2 <- stats::approx(seq_along(padj2), padj2,
                              n = lenx)$y
       y <- stats::approx(seq_along(y), y, n = lenx)$y
     }
@@ -83,12 +84,12 @@ deedee_qq <- function(data,
     qq <- data.frame(
       x = x,
       y = y,
-      pval1 = pval1,
-      pval2 = pval2
+      padj1 = padj1,
+      padj2 = padj2
     )
 
-    qq <- qq[!is.na(qq$pval1) & !is.na(qq$pval2) &
-               (qq$pval1 <= pthresh | qq$pval2 <= pthresh), ,
+    qq <- qq[!is.na(qq$padj1) & !is.na(qq$padj2) &
+               (qq$padj1 <= pthresh | qq$padj2 <= pthresh), ,
              drop = FALSE]
 
     if (nrow(qq) == 0) {

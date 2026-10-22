@@ -13,7 +13,8 @@ deedee_overlap(data, mode = "both", pthresh = 0.05, select = NULL)
 only conjointly up-regulated (\code{up})
 or only conjointly down-regulated (\code{down}) genes}
 
-\item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
+\item{pthresh}{threshold for adjusted p-values to be in-/excluded
+(default = 0.05)}
 
 \item{select}{vector of DEA slot indexes to use for plotting, must be at least 2}
 }
@@ -22,7 +23,7 @@ data.frame with one row per overlapping gene
 }
 \description{
 \code{deedee_overlap} computes the differentially expressed genes
-shared across all selected contrasts, filtered by p-value threshold and
+shared across all selected contrasts, filtered by padj threshold and
 regulation direction.
 }
 \examples{

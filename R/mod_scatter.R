@@ -7,10 +7,10 @@ mod_scatter_ui <- function(id) {
       shiny::uiOutput(ns("select1")),
       shiny::uiOutput(ns("select2")),
       shiny::selectInput(ns("color_by"), "Color by",
-                         choices = c("1st p-value" = "pval1",
-                                     "2nd p-value" = "pval2")
+                         choices = c("1st padj" = "padj1",
+                                     "2nd padj" = "padj2")
       ),
-      shiny::numericInput(ns("pthresh"), "P-value threshold",
+      shiny::numericInput(ns("pthresh"), "adjusted p-value threshold",
                           value = 0.05, min = 0.01, max = 1, step = 0.01
       ),
       shiny::checkboxInput(ns("ref_lines"), "Show reference lines", TRUE),
@@ -155,11 +155,11 @@ mod_scatter_server <- function(id,
         shiny::tags$span(paste0(" (", row$rowname, ")")),
         shiny::tags$br(),
         sprintf("%s: logFC = %.2f, p = %s", input$s1, row$logFC1,
-                formatC(row$pval1, format = "e", digits = 2)
+                formatC(row$padj1, format = "e", digits = 2)
         ),
         shiny::tags$br(),
         sprintf("%s: logFC = %.2f, p = %s", input$s2, row$logFC2,
-                formatC(row$pval2, format = "e", digits = 2)
+                formatC(row$padj2, format = "e", digits = 2)
         ),
         shiny::tags$br(),
         shiny::HTML(row$label)

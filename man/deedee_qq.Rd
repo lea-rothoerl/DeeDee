@@ -12,7 +12,8 @@ deedee_qq(data, ref = 1, pthresh = 0.05, ref_line = TRUE)
 \item{ref}{index of the contrast in data to be used as reference contrast
 (default = 1)}
 
-\item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
+\item{pthresh}{threshold for adjusted p-values to be in-/excluded
+(default = 0.05)}
 
 \item{ref_line}{boolean, draws a line on the angle bisector as reference for
 optimal agreement (default = TRUE)}

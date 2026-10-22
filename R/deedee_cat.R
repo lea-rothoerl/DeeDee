@@ -11,7 +11,8 @@
 #' @param maxrank highest rank that should be displayed (default = 1000)
 #' @param mode sort by highest logFC (`up`, default), lowest logFC (`down`) or
 #'             greatest deviation from zero (`both`)
-#' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
+#' @param pthresh threshold for adjusted p-values to be in-/excluded
+#'                (default = 0.05)
 #'
 #' @return ggplot object (plottable with show()/print())
 #'
@@ -42,7 +43,7 @@ deedee_cat <- function(data,
   for (i in 1:length(data)) {
     data[i][[1]] <- subset(
       data[i][[1]],
-      data[i][[1]]$pval < pthresh
+      data[i][[1]]$padj < pthresh
     )
 
     if (length(data[i][[1]][[1]]) == 0) {

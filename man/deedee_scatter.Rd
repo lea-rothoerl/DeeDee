@@ -8,7 +8,7 @@ deedee_scatter(
   data,
   select1 = 1,
   select2 = 2,
-  color_by = "pval1",
+  color_by = "padj1",
   pthresh = 0.05,
   show_symbols = TRUE,
   species = "Homo_sapiens",
@@ -24,9 +24,10 @@ deedee_scatter(
 \item{select2}{index of second data-list element to be used (default = 2)}
 
 \item{color_by}{indicates which set of values the output should be colored by
-(possible values = \code{pval1} (default), \code{pval2})}
+(possible values = \code{padj1} (default), \code{padj2})}
 
-\item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
+\item{pthresh}{threshold for adjusted p-values to be in-/excluded
+(default = 0.05)}
 
 \item{show_symbols}{boolean whether to show gene symbols instead of Ensembl
 .                    IDs, \code{TRUE} by default}

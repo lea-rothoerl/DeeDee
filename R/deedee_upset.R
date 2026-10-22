@@ -11,7 +11,8 @@
 #'             or only conjointly down-regulated (`down`) genes
 #' @param min_setsize the minimum size of intersections to be displayed in the
 #'                    UpSet plot (default = 10)
-#' @param pthresh threshold for p-values to be in-/excluded (default = 0.05)
+#' @param pthresh threshold for adjusted p-values to be in-/excluded
+#'                (default = 0.05)
 #'
 #' @return ggplot element (plottable with show()/print())
 #'
@@ -38,7 +39,7 @@ deedee_upset <- function(data,
 
   # ---------------------------- data preparation -----------------------------
   for (i in 1:length(data)) {
-    data[i][[1]] <- subset(data[i][[1]], data[i][[1]]$pval < pthresh) # pthresh
+    data[i][[1]] <- subset(data[i][[1]], data[i][[1]]$padj < pthresh) # pthresh
 
     if (length(data[i][[1]][[1]]) == 0) {
       return(NULL)

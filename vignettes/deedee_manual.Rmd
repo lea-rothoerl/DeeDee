@@ -126,7 +126,7 @@ save(dde_macrophage, file = "data/dde_macrophage.RData", compress = "xz")
 
 As a part of the DeeDee universe, all functions as well as the Shiny App in this package require a *DeeDeeExperiment object* (DDE) as their primary input. For more information on DeeDeeExperiment, please refer to the [original package](https://bioconductor.org/packages/release/bioc/html/DeeDeeExperiment.html).
 
-Beside the DeeDeeExperiment object, each [DeeDee main function](#main-functions) takes a threshold for p-values that can be specified with the parameter `pthresh` (default = 0.05). Further, the functions have additional parameters that will be explained in the respective sections below. All functions produce colorblind-friendly output.
+Beside the DeeDeeExperiment object, each [DeeDee main function](#main-functions) takes a threshold for adjusted p-values that can be specified with the parameter `pthresh` (default = 0.05). Further, the functions have additional parameters that will be explained in the respective sections below. All functions produce colorblind-friendly output.
 
 For our example, we use `dde_macrophage` given in the package data:
 
@@ -150,13 +150,13 @@ data(dde_macrophage, package = "DeeDee")
 # Standalone Functions
 ## DeeDee Scatter Plot
 
-The function `deedee_scatter()` creates a scatterplot of logFC values of the genes that are differentially expressed (p-value below `pthresh`) in both of two contrasts. If the input DeeDeeExperiment contains more than two datasets (like our example `dde_macrophage` does),  the `select1` (default = 1) and `select2` (default = 2) parameters specify which ones will be plotted (selected by list index). Genes close to the diagonal behave alike in both contrasts, genes away from it differ in the size or even the direction of their response. The points are colored by the p-value of the first (`color_by = "pval1"`, default) or the second (`"pval2"`) contrast, and the dashed lines at zero can be switched off with `ref_lines = FALSE`.
+The function `deedee_scatter()` creates a scatterplot of logFC values of the genes that are differentially expressed (adjusted p-value below `pthresh`) in both of two contrasts. If the input DeeDeeExperiment contains more than two datasets (like our example `dde_macrophage` does),  the `select1` (default = 1) and `select2` (default = 2) parameters specify which ones will be plotted (selected by list index). Genes close to the diagonal behave alike in both contrasts, genes away from it differ in the size or even the direction of their response. The points are colored by the p-value of the first (`color_by = "padj1"`, default) or the second (`"padj2"`) contrast, and the dashed lines at zero can be switched off with `ref_lines = FALSE`.
 
-The result is an interactive plot: hovering over a point shows the gene's symbol and Ensembl ID as well as logFC and p-value in both contrasts. 
+The result is an interactive plot: hovering over a point shows the gene's symbol and Ensembl ID as well as logFC and adjusted p-value in both contrasts. 
 
 ```{r scatter}
 deedee_scatter(data = dde_macrophage, select1 = 2, select2 = 3, 
-               color_by = "pval1", pthresh = 0.05)
+               color_by = "padj1", pthresh = 0.05)
 ```
 
 
@@ -193,7 +193,7 @@ deedee_upset(data = dde_macrophage, mode = "both_colored", min_setsize = 15,
 
 ## DeeDee Overlap List
 
-While the Venn and UpSet plots show how many genes are shared, `deedee_overlap()` returns which ones: a data frame of the genes that are differentially expressed in all selected contrasts (`select`, by default all), with their symbol, and logFC and p-value in each contrast. The parameter `mode` (`up`, `down`, `both` (default)) works as for the Venn diagram. If no gene is shared by all contrasts, the result is `NULL`. The example below lists the genes behind the scatter plot above: those that are DE in both the second and the third contrast.
+While the Venn and UpSet plots show how many genes are shared, `deedee_overlap()` returns which ones: a data frame of the genes that are differentially expressed in all selected contrasts (`select`, by default all), with their symbol, and logFC and adjusted p-value in each contrast. The parameter `mode` (`up`, `down`, `both` (default)) works as for the Venn diagram. If no gene is shared by all contrasts, the result is `NULL`. The example below lists the genes behind the scatter plot above: those that are DE in both the second and the third contrast.
 
 ```{r overlap}
 overlap <- deedee_overlap(data = dde_macrophage, mode = "both", 

@@ -70,7 +70,7 @@ mod_venn_server <- function(id, dde, source_label, code_data) {
       shiny::validate(shiny::need(
         !is.null(res),
         "No genes in your datasets.
-        Maybe your specified p-value threshold is too low?"
+        Maybe your specified adjusted p-value threshold is too low?"
       ))
       res
     })

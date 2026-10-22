@@ -18,7 +18,8 @@ or only conjointly down-regulated (\code{down}) genes}
 \item{min_setsize}{the minimum size of intersections to be displayed in the
 UpSet plot (default = 10)}
 
-\item{pthresh}{threshold for p-values to be in-/excluded (default = 0.05)}
+\item{pthresh}{threshold for adjusted p-values to be in-/excluded
+(default = 0.05)}
 }
 \value{
 ggplot element (plottable with show()/print())
