@@ -6,11 +6,18 @@ output: html_document
 ---
 
 <span style="color:darkblue"><font face="courier"> <font size="4">***i***</font></font></span> &nbsp;&nbsp;&nbsp;
-Upload one or more files. They can hold DeeDee objects or raw DEA result data from DESeq2, limma or edgeR. The raw results need to be supplied in .RDS format, while single DeeDee tables can be supplied as .RDS, .txt or .xlsx files. Lists of DeeDee tables can be provided as .RDS or .xlsx files. 
+Upload a DeeDeeExperiment object saved as an .RDS file (created with `saveRDS()`). 
+If you started the app with `deedee_app(your_dde)`, the data is already loaded and the upload field is collapsed.
 
-The .txt files have to be of the following form: The first row is made up of the column names '.logFC' and '.padj', denoting the second and third column in the file. The first column, unnamed in the .txt, holds the gene identifiers as row names. The next two columns comprise the logFC and p-values, respectively. In the .txt, the columns are separated by single spaces. The filename is used as the contrast name in DeeDee.
+The object needs Ensembl gene IDs as row names and gene symbols in the `SYMBOL` column of its `rowData`. 
+Human and mouse data are supported.
 
-.xlsx files with one DeeDee table have to consist of one sheet with one column called 'rowname', holding the gene identifiers, and two columns called 'logFC' and `padj', containing the respective values for each gene. In this case, the filename is used as the contrast name. An .xlsx file that comprises a list of multiple DeeDee tables needs to store each table, formatted like above, in a seperate sheet with the sheet names denoting the contrast names.
+**Overview:** The table lists every contrast in your object with the tool that produced it (e.g. DESeq2), the number of genes, and the number of differentially expressed genes in total, up-regulated and down-regulated. The bar plot shows the up- and down-regulated genes per contrast. A gene counts as differentially expressed if its p-value is below the threshold set above the table. The overview always shows the object as submitted.
 
-On the right side, choose the origin species and key type of your gene identifiers (note: it is essential that these are correct to perform an over-representation analysis!) and select the contrasts from your input data that are supposed to be used going forward.
-TODO: update
+**Settings:**
+
+* **Show gene symbols:** Switches between gene symbols and Ensembl IDs in plots and tables.
+* **Species:** Detected automatically from the Ensembl IDs (`ENSG...` = human, `ENSMUSG...` = mouse). 
+It is used for the gene links and the over-representation analysis. 
+If the IDs are neither human nor mouse, the scatter plot and the overlap list cannot be created.
+* **Contrasts to Analyze** (right side): Untick the contrasts you do not want to use. They are removed from the analysis in all other tabs.
