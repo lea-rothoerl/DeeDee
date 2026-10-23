@@ -165,6 +165,8 @@ deedee_app <- function(deedee_obj = NULL) {
 
     heatmap_output <- shiny::reactive({
       shiny::req(heatmap_obj())
+      grDevices::pdf(NULL)
+      on.exit(grDevices::dev.off(), add = TRUE)
       ComplexHeatmap::draw(heatmap_obj())
     })
 
