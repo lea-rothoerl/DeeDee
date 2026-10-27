@@ -112,7 +112,7 @@ deedee_qq <- function(data,
 
   res <- ggplot2::ggplot(
     qq_data,
-    ggplot2::aes_string("x", "y", colour = "contrast")
+    ggplot2::aes(x, y, colour = contrast)
   ) +
     ggplot2::xlab(paste0("reference ", contrasts[ref], " (logFC)")) +
     ggplot2::ylab("logFC (other contrasts, see legend)") +

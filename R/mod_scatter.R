@@ -16,9 +16,7 @@ mod_scatter_ui <- function(id) {
       shiny::checkboxInput(ns("ref_lines"), "Show reference lines", TRUE),
     ),
     bslib::card(
-      shinycssloaders::withSpinner(
-        shiny::uiOutput(ns("scatter_out"))
-      ),
+      shinycssloaders::withSpinner(plotly::plotlyOutput(ns("scatter_plotly"))),
       shiny::uiOutput(ns("gene_info")),
       .deedee_download_ui(ns)
     ),
@@ -127,6 +125,7 @@ mod_scatter_server <- function(id,
     })
 
     clicked_gene <- shiny::reactive({
+      shiny::req(plot_obj())
       ed <- plotly::event_data("plotly_click", source = scatter_src)
       prep <- scatter_data()
       if (is.null(ed) || nrow(ed) == 0 || is.null(prep)) {
@@ -166,6 +165,7 @@ mod_scatter_server <- function(id,
     })
 
     selected_genes <- shiny::reactive({
+      shiny::req(plot_obj())
       ed <- plotly::event_data("plotly_selected", source = scatter_src)
       prep <- scatter_data()
       if (is.null(ed) || nrow(ed) == 0 || is.null(prep)) {
@@ -239,10 +239,6 @@ mod_scatter_server <- function(id,
     output$scatter_plotly <- plotly::renderPlotly({
       shiny::req(plot_obj())
       plot_obj()
-    })
-
-    output$scatter_out <- shiny::renderUI({
-      plotly::plotlyOutput(ns("scatter_plotly"))
     })
 
     .deedee_download_server(input, output,
