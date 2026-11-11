@@ -16,6 +16,7 @@ remotes::install_github("lea-rothoerl/DeeDee",
 
 Save your DEA results in a [DeeDeeExperiment](https://bioconductor.org/packages/release/bioc/html/DeeDeeExperiment.html) object. Open the DeeDee App by running 
 ```
+library(DeeDee)
 deedee_app()
 ```
 and use the interactive graphical user interface to analyze your data.

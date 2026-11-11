@@ -46,6 +46,10 @@ deedee_app <- function(deedee_obj = NULL) {
          }
        }"
     ))),
+    footer = shiny::tags$div(
+      class = "text-center text-muted small py-2",
+      "Made by Lea Schwarz | IMBEI Mainz 2026"
+    ),
     bslib::nav_panel("Input",
                      mod_input_ui("input",
                                   collapse_upload = !is.null(deedee_obj))),
@@ -117,7 +121,19 @@ deedee_app <- function(deedee_obj = NULL) {
                          )
                        )
                      )
-    )
+    ),
+   bslib::nav_spacer(),
+   bslib::nav_item(
+     shiny::tags$a(
+       shiny::icon("github"),
+       href = "https://github.com/lea-rothoerl/DeeDee",
+       target = "_blank",
+       rel = "noopener noreferrer",
+       title = "DeeDee on GitHub",
+       `aria-label` = "DeeDee on GitHub",
+       class = "nav-link"
+     )
+   )
   )
 
   server <- function(input, output, session) {
